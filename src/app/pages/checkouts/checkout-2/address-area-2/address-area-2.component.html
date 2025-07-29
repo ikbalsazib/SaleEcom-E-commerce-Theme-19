@@ -1,0 +1,168 @@
+<div class="address-area">
+  <app-title [title]="'deliveryAddress'  | translate" urlTitle="Manage saved address"
+             [url]="addresses.length ? '/my-address' : null"></app-title>
+
+  @if (addresses.length) {
+    <div class="user-offer-area">
+      <div class="item-container">
+        @for (item of addresses; track item?._id; let i = $index) {
+          <div class="item-card" (click)="onSelectAddress(item)" [class.active]="item._id === selectedAddress?._id">
+            <div class="checked-icon">
+              @if (item._id === selectedAddress?._id) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="49.305" height="49.305" viewBox="0 0 49.305 49.305">
+                  <path id="checked-icon"
+                        d="M28.028,3.375A24.653,24.653,0,1,0,52.68,28.028,24.649,24.649,0,0,0,28.028,3.375ZM40.65,21.213,24.8,37.13h-.012a2.14,2.14,0,0,1-1.375.652,2.075,2.075,0,0,1-1.387-.676l-6.637-6.637a.472.472,0,0,1,0-.676l2.11-2.11a.458.458,0,0,1,.664,0l5.262,5.262L37.889,18.38a.468.468,0,0,1,.332-.142h0a.43.43,0,0,1,.332.142l2.074,2.145A.467.467,0,0,1,40.65,21.213Z"
+                        transform="translate(-3.375 -3.375)"/>
+                </svg>
+              } @else {
+                <svg id="Group_774" data-name="Group 774" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24">
+                  <path id="Path_1689" data-name="Path 1689" d="M0,0H24V24H0Z" fill="none"/>
+                  <path id="Path_1690" data-name="Path 1690"
+                        d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+                        fill="#bfbfbf"/>
+                </svg>
+              }
+
+            </div>
+            <div class="info">
+              <h2>{{ item?.addressType | titlecase }}</h2>
+            </div>
+          </div>
+        }
+        @if (addresses.length < 3) {
+          <div class="item-card add-new" (click)="onAddNewAddress()" [ngClass]="!selectedAddress ? 'active' : ''">
+            <div class="checked-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+              </svg>
+            </div>
+            <div class="info">
+              <h2>Add New Address</h2>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <form [formGroup]="dataForm" #formElement="ngForm">
+    <div class="user-area">
+      <div class="form-input-select w-50 w-100">
+        <mat-form-field class="mat-input-field" appearance="outline">
+          <mat-label>{{ 'fullName'  | translate }}</mat-label>
+          <input required matInput formControlName="name" placeholder="{{ 'fullName'  | translate }}"/>
+          <mat-error>{{'fieldRequired'  | translate}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="form-input-select w-50 w-100">
+
+
+
+        <mat-form-field class="mat-input-field" appearance="outline">
+<!--          <mat-label class="phone-label">{{ 'phoneNumber'  | translate }}</mat-label>-->
+          <mat-label>{{ 'phoneNumber' | translate }}</mat-label>
+          <input
+            matInput
+            type="tel"
+            formControlName="phoneNo"
+            placeholder="{{ 'phoneNumber'  | translate }}"
+            [maxlength]="orderPhoneValidation?.maxLength ?? 11"
+            [minlength]="orderPhoneValidation?.minLength ?? 11"
+          />
+<!--          <mat-error>{{'fieldRequired'  | translate}}</mat-error>-->
+          @if (dataForm.get('phoneNo')?.hasError('invalidInput')) {
+            <mat-error>
+              {{ 'fieldRequired' | translate }}
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+
+
+
+      @if (
+   (!deliveryOptionType?.isEnableInsideCityOutsideCity && productSetting?.productType !== 'digitalProduct') ||
+   (productSetting?.productType === 'digitalProduct' && productSetting?.digitalProduct?.isDivisionEnable)
+ ) {
+    <div class="form-input-select w-50 w-100">
+      @if (!isMobile) {
+        <mat-form-field class="example-full-width" appearance="outline">
+          <mat-label>{{ 'selectDivision' | translate }}</mat-label>
+          <mat-select formControlName="division">
+            @for (option of filteredDivisions$ | async; track option) {
+              <mat-option [value]="option?.name">{{ option?.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+      @if (isMobile) {
+        <button
+          type="button"
+          (click)="openDivisionSelectMobile()"
+          class="division-select-mobile"
+        >
+          <span>
+            {{ dataForm.get('division').value || ('selectDivision' | translate) }}
+          </span>
+          <span style="margin-left:auto;">
+            <mat-icon>arrow_drop_down</mat-icon>
+          </span>
+        </button>
+      }
+    </div>
+  }
+
+<!--      }-->
+    </div>
+
+    @if (productSetting?.productType === 'digitalProduct' && productSetting?.digitalProduct?.isEmailEnable || country?.code !== 'BD'){
+      <div class="form-input-select  w-100">
+        <mat-form-field class="mat-input-field" appearance="outline">
+          <mat-label class="phone-label">{{ 'email'  | translate }}</mat-label>
+          <input
+            required
+            matInput
+            type="email"
+            formControlName="email"
+            placeholder="{{ 'email'  | translate }}"
+          />
+          <mat-error>{{'fieldRequired'  | translate}}</mat-error>
+        </mat-form-field>
+      </div>
+
+    }
+
+    @if ((productSetting?.productType === 'digitalProduct' && productSetting?.digitalProduct?.isAddressEnable) || (productSetting?.productType !== 'digitalProduct')){
+    <div class="form-input-select full-address">
+      <mat-form-field class="mat-input-field" appearance="outline">
+        <mat-label>{{ 'fullAddress'  | translate }}</mat-label>
+        <textarea required matInput formControlName="shippingAddress"
+                  placeholder="{{ 'fullAddress'  | translate }}" rows="4"></textarea>
+        <mat-error>{{'fieldRequired'  | translate}}</mat-error>
+      </mat-form-field>
+    </div>
+    }
+
+    @if (deliveryOptionType?.isEnableInsideCityOutsideCity && productSetting?.productType !=='digitalProduct') {
+      <app-title [title]="titleDataForDeliveryOption"></app-title>
+
+      <mat-radio-group  class="delivery-option"   formControlName="division" required>
+        <mat-radio-button [checked]="user && selectedAddress?.division == this.deliveryCharge?.city" [value]="this.deliveryCharge?.city" >Inside {{ this.deliveryCharge?.city }} ({{deliveryCharge?.insideCity | currencyCtr}})</mat-radio-button>
+        <mat-radio-button [checked]="user && selectedAddress?.division !== this.deliveryCharge?.city"  [value]="'outside-dhaka'" >Outside {{ this.deliveryCharge?.city }} ({{deliveryCharge?.outsideCity | currencyCtr}})</mat-radio-button>
+<!---->
+        @if(dataForm.get('division')?.invalid && dataForm.get('division')?.touched) {
+          <div class="error-message" style="padding-left: 5px;">
+            Please select a delivery option.
+          </div>
+        }
+      </mat-radio-group>
+
+    }
+  </form>
+</div>
+
+<!--(click)="updateDivisionValue(this.deliveryCharge?.city)"-->
+<!--(click)="updateDivisionValue('unknown')"-->

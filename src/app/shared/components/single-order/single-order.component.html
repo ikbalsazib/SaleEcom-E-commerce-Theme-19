@@ -1,0 +1,59 @@
+<a class="order-card" [routerLink]="['/order-details', inputData?._id]" [queryParams]="{orderId: inputData?.orderId}">
+  <div class="card-details">
+    <div class="order-header">
+      <div class="status-badge-progress"
+      [ngClass]="{
+        'pendingDesign': inputData?.orderStatus === 'pending',
+        'deliveredDesign': inputData?.orderStatus === 'delivered',
+        'confirmDesign': inputData?.orderStatus === 'confirmed',
+        'processingDesign': inputData?.orderStatus === 'processing',
+        'shippingDesign': inputData?.orderStatus === 'shipped',
+        'cancelDesign': inputData?.orderStatus === 'cancelled',
+      }"
+      >
+        <span class="dot"></span>{{ inputData?.orderStatus | titlecase}}
+      </div>
+      <div class="status-badge-delivered">
+        <span class="dot"></span>Delivered
+      </div>
+      <span>|</span>
+<!--      <div class="order-date">{{ inputData?.createdAt | date }} | 05:53 PM</div>-->
+      <div class="order-date">{{ inputData?.createdAt | date : 'MMM d, y, h:mm a' }} </div>
+    </div>
+    <div class="order-body">
+<!--      <img-->
+<!--        src="{{ inputData?.orderedItems[0]?.image }}"-->
+<!--        alt="Product Image"-->
+<!--        class="product-image"-->
+<!--      />-->
+      <img [src]="getProductImage(inputData?.orderedItems[0])"  class="product-image" alt="">
+      <div class="order-details">
+        <p class="order-id">
+          Order ID: <strong>{{ inputData?.orderId }}</strong>
+        </p>
+
+        @if(inputData?.orderedItems?.length === 1){
+          <p class="order-description" >
+            <span>{{ inputData?.orderedItems[0]?.name }}</span>
+          </p>
+        }@else if(inputData?.orderedItems?.length === 2){
+          <p class="order-description" >
+          <span
+          >{{ inputData?.orderedItems[0]?.name }} |
+            {{ inputData?.orderedItems[1]?.name }}</span>
+          </p>
+        }@else if(inputData?.orderedItems?.length > 2){
+          <p class="order-description">
+          <span
+          >{{ inputData?.orderedItems[0]?.name }} |
+            {{ inputData?.orderedItems[0]?.name }} <a > & {{inputData?.orderedItems.length-2}} more items</a></span>
+          </p>
+        }
+        <p class="order-price">{{ inputData?.grandTotal | currencyCtr}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="order-arrow">
+    <div>&#8250;</div>
+  </div>
+</a>

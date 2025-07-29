@@ -1,0 +1,23 @@
+.category-card {
+  width: 100%;
+  border: 0.1px solid rgb(224, 224, 224);
+  border-radius: 5px;
+  padding: 10px 10px 0 10px;
+
+  .img-thumb {
+    width: 100px;
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+
+@media (max-width: 599px) {
+  .category-card .img-thumb {
+    text-align: center;
+    margin: 0 auto;
+    height: 24vw;
+    overflow: hidden;
+    width: 22vw;
+  }
+}

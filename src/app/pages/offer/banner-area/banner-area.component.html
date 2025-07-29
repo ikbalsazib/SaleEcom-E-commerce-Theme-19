@@ -1,0 +1,25 @@
+<div class="">
+  <div class="banner-area">
+    <div class="top-banner">
+      @if(data?.images && data?.images[0] !== null ){
+        <img [src]="data?.images[0]" alt="">
+      }@else{
+        <iframe class="responsive-iframe" [src]="this.getEmbeddedLink(data?.url)
+                    +
+                      '?autoplay=1&mute=0&loop=1&color=white&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1'
+                      | safeUrl
+                  " title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      }
+    </div>
+
+    @if(data?.description){
+      <div class="content-area">
+          <div [innerHTML]="data?.description | safeHtmlCustom"></div>
+      </div>
+    }
+
+  </div>
+</div>

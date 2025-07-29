@@ -1,0 +1,168 @@
+@import "variables";
+
+
+.profile-review {
+  padding: 15px 10px;
+  border-bottom: 1px solid lighten($color-gray, 20%);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .profile-rating-svg {
+    svg {
+      margin-right: 2px;
+    }
+
+    .profile-verified {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+
+      p {
+        font-size: $font-readable;
+        font-weight: 500;
+      }
+
+      span {
+        font-size: $font-readable-sm;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        color: $color-success;
+      }
+    }
+  }
+
+  .profile-comment {
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+
+    .comment-img {
+      margin-top: 20px;
+
+      img {
+        height: 90px;
+        width: 90px;
+        border: 2px solid lighten($color-gray, 20%);
+        border-radius: 8px;
+        margin-right: 10px;
+        cursor: pointer;
+      }
+    }
+
+    h4 {
+      font-size: $font-readable;
+      font-weight: 400;
+    }
+
+    p {
+      font-size: $font-readable-sm;
+    }
+
+    svg {
+      margin-top: 10px;
+      height: 15px;
+      width: 15px;
+      cursor: pointer;
+    }
+  }
+
+  .seller-response {
+    background-color: lighten($color-gray, 40%);
+    padding: 15px;
+    margin-top: 15px;
+    margin-left: 25px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+
+    .seller-info {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+      }
+
+      .seller-details {
+        display: flex;
+        align-items: center;
+        font-size: $font-readable-sm;
+
+        .response-title {
+          color: $color-orange;
+          font-weight: bold;
+        }
+
+        .response-time {
+          color: $color-gray;
+          margin-left: 4px;
+        }
+      }
+
+
+    }
+
+    .response-text {
+      margin-bottom: 10px;
+      font-size: $font-readable;
+    }
+
+
+  }
+
+}
+
+
+@media only screen and (max-width: 599px) {
+  .profile-review {
+    .seller-response {
+      margin-left: 6px;
+    }
+
+    .profile-comment {
+      display: flex;
+      flex-direction: row;
+      .comments {
+        display: flex;
+        flex-direction: column;
+
+        h4 {
+          padding-top: 20px;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        p {
+          font-size: 14px;
+        }
+      }
+
+      .mobile-device-comments {
+        .comment-img {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 18px;
+          position: relative;
+
+          img {
+            height: 70px !important;
+            width: 70px !important;
+            margin-right: 2px !important;
+          }
+
+        }
+      }
+
+    }
+  }
+}

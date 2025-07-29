@@ -1,0 +1,170 @@
+@import "variables";
+
+.order-card {
+  margin-top: 20px;
+  border: 1px solid #e6e6e6;
+  border-radius: 10px;
+  padding: 17px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+
+  &:hover{
+    box-shadow: $box-shadow-black;
+  }
+
+  .card-details {
+    width: 97%;
+  }
+  .order-header {
+    display: flex;
+    gap: 10px;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 10px;
+
+  }
+
+  .status-badge-progress {
+    background-color: $color-secondary;
+    color: $color-white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-family: $font-en-primary;
+    font-size: $font-readable-sm;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    .dot {
+      display: block;
+      background-color: $color-white;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+  }
+
+  .pendingDesign {
+    background-color: #f5932a;
+    color: $color-white;
+  }
+
+  .deliveredDesign {
+    background-color: green;
+    color: $color-white;
+  }
+
+  .confirmDesign {
+    background-color: #007BFF;
+    color: $color-white;
+  }
+
+  .processingDesign {
+    background-color: #17A2B8;
+    color: $color-white;
+  }
+
+  .shippingDesign {
+    background-color: violet;
+    color: $color-white;
+  }
+
+  .cancelDesign {
+    background-color: #DC3545;
+    color: $color-white;
+  }
+
+  .status-badge-delivered {
+    background-color: #e9f1da;
+    color: #7da035;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-family: $font-en-primary;
+    font-size: $font-readable-sm;
+    font-weight: bold;
+    align-items: center;
+    gap: 5px;
+    display: none !important;
+    .dot {
+      display: block;
+      background-color: #7da035;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+    }
+  }
+  .order-date {
+    font-family: $font-en-primary;
+    font-size: $font-readable-sm;
+    color: lighten($color-black, 25%);
+  }
+
+  .order-body {
+    display: flex;
+    align-items: center;
+  }
+
+  .product-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+    margin-right: 15px;
+  }
+
+  .order-details {
+    flex-grow: 1;
+  }
+
+  .order-id {
+    margin: 0;
+    font-family: $font-en-primary;
+    font-size: $font-readable;
+    color: $color-primary;
+  }
+
+  .order-description {
+    margin: 5px 0;
+    font-family: $font-en-primary;
+    font-size: $font-readable;
+    color: lighten($color-black, 25%);
+  }
+
+  .order-description a {
+    color: $color-warn;
+    text-decoration: none;
+  }
+
+  .order-description a:hover {
+    text-decoration: underline;
+  }
+
+  .order-price {
+    font-family: $font-en-primary;
+    font-size: $font-title-desc;
+    font-weight: bold;
+    color: lighten($color-black, 10%);
+  }
+
+  .order-arrow {
+    display: flex;
+    justify-content: flex-end;
+    font-family: $font-en-primary;
+    font-size: $font-sub-title-sm;
+    color: $color-secondary;
+    margin-left: 15px;
+    transition: all 0.3s ease;
+    &:hover{
+      transform: translateX(5px);
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .order-card{
+    background-color: $color-white;
+    margin-top: 15px;
+  }
+}

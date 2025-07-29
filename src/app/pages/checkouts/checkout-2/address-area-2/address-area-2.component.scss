@@ -1,0 +1,203 @@
+@import "variables";
+@import "common/checkout-card-views";
+
+.error-message {
+  color: #d83333;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+
+.item-container {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.add-new {
+  border: 2px dashed darken($color-white, 20%);
+
+  .checked-icon {
+    svg {
+      fill: $color-black;
+    }
+  }
+}
+
+::ng-deep.mat-mdc-select-panel {
+  background-color: white!important;
+}
+
+.address-area {
+  margin-top: 15px;
+}
+
+.user-area {
+  display: flex;
+  gap: 10px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.form-input-select {
+  width: 100%;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+::ng-deep.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+  font-size: .875rem !important;
+  line-height: 1.25rem !important;
+}
+
+::ng-deep.mat-mdc-form-field:not(.mat-form-field-no-animations) .mdc-text-field__input {
+  transition: opacity 150ms 0ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: .875rem !important;
+  line-height: 1.25rem !important;
+}
+
+.division-area {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  grid-template-columns: calc(33% - 5px) calc(67% - 5px);
+
+  .area {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    grid-template-columns: calc(50% - 5px) calc(50% - 5px);
+  }
+}
+
+.phone-input-field {
+  width: 90%;
+  max-width: 400px;
+
+  .phone-prefix {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+
+    .flag-icon {
+      width: 25px;
+      height: 16px;
+      margin-right: 8px;
+    }
+
+    span {
+      font-size: 16px;
+    }
+  }
+
+  input {
+    padding-left: 4px;
+  }
+
+  .loading-spinner {
+    margin-right: 12px;
+  }
+}
+
+
+.phone-label {
+  padding-left: 3px;
+  padding-top: 3px;
+}
+
+@media only screen and (max-width: 599px) {
+  .address-area {
+    background-color: $color-white;
+    padding: 10px 10px 0 10px;
+    border-radius: 10px;
+
+    .user-area {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  .division-area {
+    gap: 0;
+    grid-template-columns: 100%;
+  }
+}
+
+::ng-deep .mdc-notched-outline__trailing {
+  border-color: #e5e7eb !important;
+}
+
+::ng-deep .mdc-notched-outline__leading {
+  border-color: #e5e7eb !important;
+}
+
+::ng-deep .mdc-notched-outline__notch {
+  border-color: #e5e7eb !important;
+}
+
+::ng-deep.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
+  border-left: none !important;
+}
+
+
+.delivery-option{
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+@media only screen and (max-width: 599px) {
+
+  .delivery-option{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-bottom: 10px;
+  }
+}
+
+
+::ng-deep .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled+.mdc-radio__background .mdc-radio__inner-circle, .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle{
+  border-color: $color-primary !important;
+}
+::ng-deep .mat-mdc-radio-button .mdc-radio .mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle{
+  border-color: $color-primary !important;
+}
+
+
+.division-select-mobile {
+  width: 100%;
+  text-align: left;
+  padding: 0 14px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 16px;
+
+  .division-select-label {
+    flex: 1;
+    color: #757575;
+  }
+
+  mat-icon {
+    color: #757575;
+    font-size: 24px;
+  }
+
+  &.active {
+    border: 2px solid $color-primary !important;
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .example-full-width{
+    display: none;
+  }
+}
+

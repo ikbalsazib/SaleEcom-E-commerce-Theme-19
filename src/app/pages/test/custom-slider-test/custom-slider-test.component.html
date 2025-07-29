@@ -1,0 +1,27 @@
+<div class="slider-wrapper">
+  <!-- Previous Button -->
+  <button (click)="prevSlide()">‹</button>
+
+  <!-- Slider Container -->
+  <div
+    #sliderContainer
+    class="slider-container"
+    (mousedown)="startDrag($event)"
+    (mousemove)="onDrag($event)"
+    (mouseup)="endDrag($event)"
+    (mouseleave)="endDrag($event)"
+    (touchstart)="startDrag($event)"
+    (touchmove)="onDrag($event)"
+    (touchend)="endDrag($event)"
+  >
+    <!-- Slider Items -->
+    @for(item of items; track item){
+      <div class="slider-item">
+        {{ item }}
+      </div>
+    }
+  </div>
+
+  <!-- Next Button -->
+  <button (click)="nextSlide()">›</button>
+</div>

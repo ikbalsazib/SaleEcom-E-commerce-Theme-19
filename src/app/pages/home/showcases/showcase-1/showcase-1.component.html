@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="left">
+    @defer (when !isLoading) {
+      @if(!isLoading){
+        <app-image-slider
+          [slides]="carousels"
+          class="carousel-component"
+          [showIndicators]="true"
+          [autoPlay]="true"
+          [autoPlayTime]="3000"
+          [showControls]="true"
+          [pauseOnHoverOrTouch]="true">
+        </app-image-slider>
+      }
+
+    } @placeholder(minimum 50ms)  {
+      <app-carousel-loader></app-carousel-loader>
+    }
+  </div>
+  <div class="right">
+    <app-small-advertise></app-small-advertise>
+  </div>
+</div>
+

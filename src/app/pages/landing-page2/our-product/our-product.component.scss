@@ -1,0 +1,104 @@
+@import "variables";
+
+.our-product {
+  //background-color: #FFFFFF;
+  background-color: #E5FFDA;
+}
+.containter{
+    max-width: 1300px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px 15px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.certification-badges {
+    display: grid;
+    gap: 19px;
+    grid-template-columns: 1fr;
+    align-items: center;
+    margin: 40px 0;
+    // flex-wrap: wrap;
+}
+.certification-badges img {
+    margin: 10px;
+    width: 100%;
+    display: block;
+}
+
+.product-section {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    span{
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: left;
+    }
+}
+.product-images {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    margin-bottom: 40px;
+    grid-gap: 15px;
+    // flex-wrap: wrap;
+}
+.product-images img {
+    width: 100%;
+    max-width: 100%;
+    // height: auto;
+    // margin: 10px;
+}
+.order-button {
+    // max-width: 150px;
+    background-color: $color-primary;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: bold;
+    padding: 8px 24px;
+    border: none;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    svg {
+      margin: 0px;
+      padding: 5px 10px;
+      background-size: cover;
+      // background-color: #01640D;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: scroll;
+      color: #fff;
+      font-size: 55px;
+      font-style: normal;
+      text-align: center;
+      font-weight: 400;
+      line-height: 36px;
+      text-decoration: none;
+    }
+
+    &:hover {
+      transform: translate(10px);
+      transition: transform 0.3s;
+    }
+  }
+
+  @media (max-width:599px) {
+    .product-section span {
+        text-align: center;
+    }
+    .product-section {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .product-section span {
+      font-size: 1.5rem;
+    }
+  }

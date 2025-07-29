@@ -1,0 +1,17 @@
+@for (item of [].constructor(4); track $index) {
+  <div class="list-container" >
+    <div class="left-skeleton">
+      <!-- Product Image -->
+      <ngx-skeleton-loader
+        [theme]="{ width: '100px', height: '80px' }"
+      ></ngx-skeleton-loader>
+    </div>
+    <!-- Product Details -->
+    <div class="middle-skeleton">
+      <ngx-skeleton-loader [theme]="{ width: '250px', height: '20px', marginBottom: '10px' }"></ngx-skeleton-loader>
+      <ngx-skeleton-loader [theme]="{ width: '100px', height: '15px' }"></ngx-skeleton-loader>
+      <ngx-skeleton-loader [theme]="{ width: '80px', height: '15px' }"></ngx-skeleton-loader>
+    </div>
+  </div>
+}
+

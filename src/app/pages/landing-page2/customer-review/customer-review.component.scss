@@ -1,0 +1,146 @@
+@import "variables";
+
+.faq-area{
+  //background-color: #FFFFFF;
+  background-color: #E5FFDA;
+}
+
+.container {
+  width: 100%;
+  max-width: 1300px;
+  margin: auto;
+  padding: 35px 15px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-decoration: underline;
+}
+
+.product-images {
+  display: flex;
+  //grid-template-columns: repeat(2,1fr);
+  margin-bottom: 40px;
+  grid-gap: 15px;
+  gap: 15px;
+  justify-content: center;
+  // flex-wrap: wrap;
+}
+.product-images img {
+  width: 100%;
+  max-width: 100%;
+  max-height: 350px;
+}
+
+.btn-area{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.order-button {
+  background-color: $color-primary;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: bold;
+  padding: 8px 24px;
+  border: none;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  svg {
+    margin: 0px;
+    padding: 5px 10px;
+    background-size: cover;
+    // background-color: #01640D;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
+    color: #fff;
+    font-size: 55px;
+    font-style: normal;
+    text-align: center;
+    font-weight: 400;
+    line-height: 36px;
+    text-decoration: none;
+  }
+
+  &:hover {
+    transform: translate(10px);
+    transition: transform 0.3s;
+  }
+}
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.review-card {
+  text-align: center;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 0 0 2px #f1f1f1;
+  }
+
+  .stars {
+    color: #ffc107;
+    font-size: 1.2rem;
+    margin: 0.3rem 0;
+  }
+  .star {
+    font-size: 20px;  /* Adjust size as needed */
+    color: gold;  /* Gold color for filled stars */
+  }
+
+  .star.empty {
+    color: gray;  /* Gray color for empty stars */
+  }
+  .message {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 0.8rem 0 1rem;
+  }
+
+  .name {
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+}
+
+@media (max-width: 599px) {
+  .review-grid{
+    display: flex;
+    overflow: scroll;
+    padding: 5px;
+  }
+  .review-card {
+    min-width: 280px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}

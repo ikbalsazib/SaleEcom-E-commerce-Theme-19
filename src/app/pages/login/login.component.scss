@@ -1,0 +1,89 @@
+@import "variables";
+
+.container {
+  width: 95%;
+  max-width: 600px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - ($header-height + 100px));
+  position: relative;
+}
+
+.card {
+  width: 95%;
+  max-width: 600px;
+  height: auto;
+  box-shadow: rgba(17, 17, 26, 0.02) 0 0 16px;
+  border-radius: 4px;
+  padding: 30px 24px;
+  margin: 20px auto 250px;
+  border: 1px solid darken($color-white, 15%);
+  transition: all 0.5s ease-in-out;
+
+  &:hover {
+    box-shadow: $box-shadow-black;
+  }
+}
+
+.logo {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto;
+  border-radius: 65px;
+  background: $color-primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    width: 40px;
+    fill: $color-white;
+  }
+}
+
+.header {
+  text-align: center;
+  margin: 8px 0;
+  h4 {
+    font-size: calc($font-sub-title);
+  }
+  p {
+    font-size: calc($font-readable);
+    margin-top: 10px;
+  }
+}
+
+.go-back{
+  margin-left: 5px;
+}
+
+@media only screen and (max-width: 599px) {
+
+  .card {
+    padding: 30px 16px;
+    margin-bottom: 113px;
+    background-color: $color-white;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    svg {
+      width: 32px;
+    }
+  }
+
+  .header {
+    margin: 12px 0;
+    h4 {
+      font-size: calc($font-sub-title-sm);
+    }
+    p {
+      font-size: calc($font-readable-sm);
+    }
+  }
+
+}
+

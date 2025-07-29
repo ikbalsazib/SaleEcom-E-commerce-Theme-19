@@ -1,0 +1,76 @@
+<app-mobile-header [navigateBackUrl]="'../'" title="order details"></app-mobile-header>
+
+<div class="container">
+
+
+  <div class="all-containers">
+    <div class="order-head">
+      <h3>Order ID: # {{order?.orderId}}</h3>
+      <p> <span></span>{{ order?.orderStatus | titlecase}}</p>
+    </div>
+    @if (!order) {
+      <app-timeline-loader></app-timeline-loader>
+    }
+    @if (order) {
+      <app-order-details-timeline [order]="order"></app-order-details-timeline>
+    }
+
+
+    @if (!order) {
+      <app-order-loader style="margin-top: 60px"></app-order-loader>
+    }
+    @if (order) {
+      <app-order-details-products [order]="order"></app-order-details-products>
+    }
+    @if (isLoading) {
+      <app-shipping-address-loader></app-shipping-address-loader>
+    }
+    @if (!isLoading) {
+      <app-order-details-shippingaddress [order]="order"></app-order-details-shippingaddress>
+    }
+
+    @if (isLoading) {
+      <app-button-loader></app-button-loader>
+    }
+    @if (!isLoading) {
+      <div class="button-group-order">
+        @if (order?.orderStatus !== 'cancelled' && order?.orderStatus !== 'delivered' && order?.orderStatus !== 'returned') {
+          <button class="btn-cancel" (click)="openCancelPopup()">
+            <mat-icon>do_not_disturb_on</mat-icon> Cancel Order
+          </button>
+        }
+        <button class="btn-invoice" [routerLink]="['/invoice', order?._id]">
+          <mat-icon>download_2</mat-icon> View Your Invoice
+        </button>
+      </div>
+    }
+
+    @if (showCancelPopup) {
+      <div class="modal" (click)="closeCancelPopup()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+      <span class="close" (click)="closeCancelPopup()">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" fill="#0F0F0F"></path>
+          </g>
+        </svg>
+      </span>
+          <h2>Cancel Order</h2>
+          <label for="reason">Reason for cancellation:</label>
+          <textarea
+            id="reason"
+            [(ngModel)]="cancellationReason"
+            rows="4"
+            cols="50"
+            placeholder="Enter your reason here..."
+          ></textarea>
+          <button class="btn-primary" (click)="submitCancellation()">Submit</button>
+        </div>
+      </div>
+    }
+
+  </div>
+
+</div>

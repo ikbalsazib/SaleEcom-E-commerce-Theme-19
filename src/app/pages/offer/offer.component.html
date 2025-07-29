@@ -1,0 +1,135 @@
+<section class="main-area" [ngStyle]="{ 'background-color': singleOfferPage?.background }">
+  <div class="container">
+    <app-banner-area [data]="singleOfferPage"></app-banner-area>
+
+    <div class="payment-area">
+      <app-offer-address (formData)="onChangeAddress($event)"
+                         [needRefreshForm]="needRefreshForm"></app-offer-address>
+      <h3 class="products-heading"> Your Products </h3>
+      <div class="cart-container">
+        <table class="cart-table">
+          <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+          </thead>
+          <tbody>
+          @for(cart of carts; let i = $index; track i){
+            <tr>
+              <td>{{ cart?.product?.name }} × {{ cart?.selectedQty }}</td>
+
+              <td>
+                <div class="quantity-control">
+                  <button
+                    class="quantity-btn"
+                    (click)="onDecrementQty( i)"
+                    [disabled]="cart?.selectedQty <= 1">-</button>
+
+                  <input
+                    type="number"
+                    class="quantity-input"
+                    [(ngModel)]="cart.selectedQty"
+                    [min]="1"
+                    (change)="updateCartQty(cart?._id, { selectedQty: cart?.selectedQty })"
+                  />
+
+                  <button
+                    class="quantity-btn"
+                    (click)="onIncrementQty(i)"
+                    [disabled]="cart?.selectedQty >= cartMaxQuantity">+</button>
+                </div>
+              </td>
+
+              <td>{{ (cart?.product | productPrice : "salePrice" : cart?.variation?._id : cart?.selectedQty) | currencyCtr }}</td>
+            </tr>
+          }
+
+
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="order_heading">আপনার অর্ডার</h3>
+
+      <div class="order-review">
+        <table class="table-area">
+          <thead>
+          <tr>
+            <th class="product-name">Product</th>
+            <th class="product-total">Subtotal</th>
+          </tr>
+          </thead>
+          <tbody>
+          @for(cart of carts; let i = $index; track i){
+            <tr class="cart_item">
+              <td class="product-name">
+                <div class="product-image">
+                  <div class="product-thumbnail">
+                    <img
+                      width="300"
+                      height="300"
+                      [src]="cart.product?.images[0] ?? ''"
+                      alt="{{ cart.product?.name || 'Placeholder' }}"
+                    />
+                  </div>
+                  <div class="product-name">{{ cart?.product?.name }}</div>
+                </div>&nbsp; <strong class="product-quantity">×&nbsp;{{ cart?.selectedQty }}</strong>
+              </td>
+              <td class="product-total">
+              <span class="amount">
+                <bdi>
+                  {{ (cart?.product | productPrice : "salePrice" : cart?.variation?._id : cart?.selectedQty) | currencyCtr}}</bdi>
+              </span>
+              </td>
+            </tr>
+          }
+
+          </tbody>
+          <tfoot>
+          <tr class="cart-subtotal">
+            <th>Subtotal</th>
+            <td>
+              <span class="amount">
+                  {{ cartSaleSubTotal | currencyCtr}}
+              </span>
+            </td>
+          </tr>
+          <tr class="order-total">
+            <th>Total</th>
+            <td>
+              <strong>
+                <span class="amount">
+                  {{ grandTotal | currencyCtr}}
+                </span>
+              </strong>
+            </td>
+          </tr>
+          </tfoot>
+        </table>
+
+        <div class="payment-type">
+          <label>{{ 'cashOnDelivery'  | translate }}</label>
+          <div class="payment_box payment_method_cod">
+            <p>{{ 'afterGettingProductPayment'  | translate }}</p>
+          </div>
+        </div>
+
+        <button class="submit-btn" (click)="onConfirmOrder()">
+          {{ 'placeOrder'  | translate }} {{ grandTotal | currencyCtr}}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="offer-footer-area">
+  <div class="container">
+    <div class="ft-main-area">
+      <a href="">{{ 'termsAndCondition'  | translate }}</a>
+      <a href="">{{ 'privacyAndPolicy'  | translate }}</a>
+      <a href="">{{ 'refundAndCancel'  | translate }}</a>
+    </div>
+  </div>
+</footer>

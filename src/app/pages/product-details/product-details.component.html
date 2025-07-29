@@ -1,0 +1,83 @@
+<div class="product-details-inside">
+  <div class="container">
+    @defer (when !isLoading) {
+      <div class="product-details-parent">
+        <div class="product-details-banner">
+          <app-product-details-banner [product]="product" [chatLink]="chatLink" [productDetailsViews]="productDetailsViews" [shop]="shop"></app-product-details-banner>
+          <div class="description-additional-info-review-container">
+            <div class="description-additional-info-review-parent">
+              <div class="tab-list-box">
+                <button
+                  (click)="toggleTab('description')"
+                  [class.active]="currentTab == 'description'"
+                >
+                  Description
+                </button>
+                @if (product?.specifications?.length) {
+                  <button
+                    (click)="toggleTab('additional-info')"
+                    [class.active]="currentTab == 'additional-info'"
+                  >
+                    Additional Info
+                  </button>
+                }
+                <button
+                  (click)="toggleTab('reviews')"
+                  [class.active]="currentTab == 'reviews'"
+                >
+                  Reviews({{ product?.reviewTotal }})
+                </button>
+              </div>
+              <div class="tab-list-details">
+                @if (currentTab == 'description') {
+                  <app-product-details-description [data]="product?.description"></app-product-details-description>
+                }
+                @if (currentTab == 'additional-info') {
+                  <app-product-details-additional-info
+                    [data]="product?.specifications"></app-product-details-additional-info>
+                }
+                @if (currentTab == 'reviews') {
+                  <app-product-details-reviews></app-product-details-reviews>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="new-product-card-main">
+          @if(relatedProducts?.length){
+            <div class="new-product-card-container ">
+              <div class="style-title">
+                <h2 class="new-product-title title">Related Products</h2>
+              </div>
+              @for (data of relatedProducts; track data?._id) {
+                <div class="new-product-card-child">
+                  <app-new-products-card [data]="data"></app-new-products-card>
+                </div>
+              }
+            </div>
+          }
+
+          <div class="product-filter-card-main">
+            <app-products-filter-category [data]="categories"></app-products-filter-category>
+          </div>
+          @if (banners.length) {
+            <div class="product-banner-card-main">
+              <app-products-card-banner [data]="banners[0]"></app-products-card-banner>
+            </div>
+          }
+        </div>
+      </div>
+    } @placeholder (minimum 50ms) {
+      <app-product-details-loader></app-product-details-loader>
+    }
+  </div>
+
+  @if(productSetting?.checkoutType === 'onePageCheckout'){
+     <div class="container">
+    <app-easy-checkout></app-easy-checkout>
+  </div>
+  }
+
+</div>
+<!--<app-product-details-footer [product]="product"></app-product-details-footer>-->

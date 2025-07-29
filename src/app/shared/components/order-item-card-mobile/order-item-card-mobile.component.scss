@@ -1,0 +1,119 @@
+@import "variables";
+
+.order-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+.current-price {
+  font-size: 17px;
+  font-weight: bold;
+  color: $color-black;
+  margin-right: 7px;
+}
+
+.original-price {
+  font-size: 13px;
+  color: darken($color-white, 30%);
+  text-decoration: line-through;
+}
+.order-data img {
+  max-width: 60px;
+  margin-right: 15px;
+}
+
+.data-details {
+  flex: 8;
+}
+
+.info-content{
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.title-container{
+  display: flex;
+  gap: 5px;
+}
+
+.delete-icon{
+  cursor: pointer;
+  svg{
+    width: 24px;
+    height: 24px;
+    fill: #b0b0b0;
+    transition: all .3s ease;
+    &:hover{
+      fill: $color-warn;
+    }
+  }
+}
+
+
+.price-area{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  margin-top: 10px;
+}
+
+.data-title {
+  font-size: 14px;
+  font-weight: 400;
+  font-family: $font-en-primary;
+  flex: 1;
+}
+
+.data-size,
+.data-price,
+.data-quantity {
+  font-size: 14px;
+  font-family: $font-en-primary;
+  color: #757575;
+}
+
+.data-quantity {
+  display: flex;
+  font-family: $font-en-primary;
+  align-items: center;
+}
+
+.data-quantity button {
+  border: none;
+  border-radius: 4px;
+  background: #e2e2e2;
+  color: $color-primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 500;
+  width: 24px;
+  font-family: $font-en-primary;
+  height: 24px;
+  cursor: pointer;
+  font-size: 18px;
+  &:hover {
+    background-color: $color-primary;
+    color: $color-white;
+  }
+}
+
+.data-quantity input {
+  width: 30px;
+  text-align: center;
+  font-family: $font-en-primary;
+  font-size: 12px;
+  border: none;
+  margin: 0 5px;
+}
+
+
+@media (max-width: 480px) {
+  .data-total {
+    align-self: flex-end;
+  }
+}

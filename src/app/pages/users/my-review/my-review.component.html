@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="sidebar">
+    <app-account-sidebar></app-account-sidebar>
+  </div>
+
+  <div class="list-order">
+    <div class="btn-sec">
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'Pending Review' }"
+        (click)="selectStatus('Pending Review')"
+      >
+        Pending Review
+      </div>
+
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'My Review' }"
+        (click)="selectStatus('My Review')"
+      >
+        My Review
+      </div>
+    </div>
+
+    @if(selectedStatus === 'Pending Review'){
+      <div class="review-area">
+      @for (item of allPendingReviews; track item) {
+          <app-pending-review [product]="item"></app-pending-review>
+      }
+      </div>
+    }
+
+    @if(selectedStatus === 'My Review'){
+      <div>
+        @for(item of allReviews; track item._id){
+          <div class="card">
+            <div class="left-side">
+              <img [src]="item?.product?.images && item?.product?.images?.length ? item?.product?.images[0]: 'https://cdn.saleecom.com/upload/images/placeholder.png' " alt="image" loading="lazy" />
+              <div class="card-details">
+                <h4>{{ item?.product?.name }}</h4>
+                <p>
+                  Order Id: {{item?.orderId}}
+                </p>
+                <div class="rating">
+
+                  @for(rating of getRatingArray(item?.rating); let i = $index; track i){
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="17px"
+                      viewBox="0 -960 960 960"
+                      width="17px"
+                      [attr.fill]="rating ? '#ffa500' : '#e0e0e0'"
+                    >
+                      <path
+                        d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"
+                      />
+                    </svg>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="button-group">
+              <button [routerLink]="['/edit-review',item?._id]" [queryParams]="{orderId:item?.order_Id,productId:item?.product?._id}"
+                      mat-icon-button
+                      class="edit-button"
+                      matTooltip="Edit the content"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button (click)="openConfirmDialog(item?._id)"
+                      mat-icon-button
+                      matTooltip="Delete this item"
+                      class="delete-button"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        }
+
+      </div>
+    }
+
+  </div>
+</div>

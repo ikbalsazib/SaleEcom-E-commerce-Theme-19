@@ -1,0 +1,121 @@
+@import "variables";
+
+.payment-area {
+  margin-bottom: 15px;
+}
+
+.checked-icon {
+  display: none;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 10px;
+  transform-origin: center;
+  transform: scale(1);
+  transition: transform 0.25s linear;
+
+  svg {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 50px;
+    fill: $color-secondary;
+  }
+}
+
+.visible {
+  display: block;
+}
+
+.online-payment {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  grid-template-rows: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+  user-select: none;
+  cursor: grab;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.online-payment::-webkit-scrollbar {
+  display: none;
+}
+
+.online-payment.grabbing {
+  cursor: grabbing;
+}
+
+.method-info {
+  cursor: pointer;
+  border: 2px solid darken($color-white, 15%);
+  padding: 5px 6px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  text-align: center;
+  min-width: 150px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  &.active {
+    border-color: $color-secondary;
+  }
+}
+
+.method-info img {
+  width: 55%;
+  margin: auto !important;
+  text-align: center;
+  display: block;
+  object-fit: contain;
+  height: 55px;
+  padding: 5px;
+}
+
+.method-info span {
+  color: #2d2d2d;
+  font-family: $font-en-primary;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .online-payment {
+    display: flex;
+    max-width: 500px;
+    overflow: scroll;
+    padding-bottom: 10px;
+    grid-gap: 10px;
+
+    .method-info {
+      min-width: 170px;
+
+      img {
+        height: 44px;
+        padding: 4px;
+      }
+    }
+  }
+  .payment-area {
+    margin-bottom: 10px;
+  }
+  .method-info {
+    border: 2px solid darken($color-white, 15%);
+    padding: 6px 6px;
+
+    img {
+      margin-bottom: 3px !important;
+    }
+
+    span {
+      font-size: 13px;
+    }
+  }
+}

@@ -1,0 +1,153 @@
+@import "variables";
+
+.faq-area{
+  //background-color: #E5FFDA;
+  background-color: #ffffff;
+}
+
+.slide-right {
+  animation: slide-right 1.2s ease forwards;
+}
+@keyframes slide-right {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
+.container {
+    width: 100%;
+    max-width: 1300px;
+    margin: auto;
+    padding: 35px 15px;
+}
+
+.question svg {
+  transition: transform 0.3s ease;
+}
+
+.faq-item.open .question svg {
+  transform: rotate(-90deg);
+}
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-decoration: underline;
+  }
+
+  .faq-item {
+    //background-color: #347525;
+    padding: 15px;
+    border-radius: 8px;
+    //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    .question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+      gap: 5px;
+
+      .icon {
+        font-size: 11px;
+        transition: transform 0.3s ease;
+      }
+      .qusn{
+        font-weight: 700;
+      }
+      svg{
+        width: 8px;
+        min-width: 8px;
+        fill: black;
+      }
+      span{
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: black;
+      }
+    }
+
+    .answer {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      font-size: 14px;
+      margin-top: 10px;
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+    }
+
+    &.open {
+      .icon {
+        //transform: rotate(45deg);
+      }
+
+      .answer {
+        max-height: 500px; // You can increase if needed
+        opacity: 1;
+      }
+    }
+  }
+.btn-area{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 15px;
+}
+
+.order-button {
+  background-color: $color-primary;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: bold;
+  padding: 8px 24px;
+  border: none;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  svg {
+    margin: 0;
+    padding: 5px 10px;
+    background-size: cover;
+    // background-color: #01640D;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: scroll;
+    color: #fff;
+    font-size: 55px;
+    font-style: normal;
+    text-align: center;
+    font-weight: 400;
+    line-height: 36px;
+    text-decoration: none;
+  }
+
+  &:hover {
+    transform: translate(10px);
+    transition: transform 0.3s;
+  }
+}
+
+@media (max-width: 599px) {
+  .faq-item {
+    padding: 5px 0;
+    margin-bottom: 0;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+}

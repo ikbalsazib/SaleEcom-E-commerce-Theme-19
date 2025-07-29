@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="sidebar">
+    <app-account-sidebar></app-account-sidebar>
+  </div>
+
+  @if(isLoading) {
+    <app-wishlist-loader></app-wishlist-loader>
+  }
+
+  @if(wishlists().length && !isLoading) {
+    <div class="content">
+      @for(data of wishlists(); track data){
+        <app-wishlist-card [wishlist]="data"></app-wishlist-card>
+      }
+    </div>
+  } @else if(!wishlists().length && !isLoading) {
+    <div class="wishlist">
+      <app-empty-data
+        [needBorder]="false"
+        [iconWidth]="'120px'"
+        [title]="'Your Wish List is Empty!'"
+        [titleSize]="'16px'"
+        [filePath]="'/lottie/no-data-1.json'"
+      >
+      </app-empty-data>
+    </div>
+  }
+
+</div>

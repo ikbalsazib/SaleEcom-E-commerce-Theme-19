@@ -1,0 +1,34 @@
+<div class="card">
+  <div class="header">
+    <h4>My Order</h4>
+    @if(orders.length) {
+      <a class="btn btn-outline" routerLink="/my-order-list">View all</a>
+    } @else {
+      <a class="btn btn-outline" routerLink="/products">Create Order</a>
+    }
+  </div>
+
+  <div class="content">
+
+    @defer (when !isLoading) { @for (item of orders; track item) {
+      <app-single-order [inputData]="item"></app-single-order>
+    } } @placeholder (minimum 50ms) { @for (data of [].constructor(1); track
+      data) {
+      <div class="list-loader-parent">
+        <app-order-loader />
+      </div>
+    }
+    } @if(!orders.length && !isLoading) {
+    <div class="empty-data">
+      <app-empty-data
+        [needBorder]="false"
+        [iconWidth]="'120px'"
+        [title]="'Your Order List is Empty!'"
+        [titleSize]="'16px'"
+        [filePath]="'/lottie/no-data-1.json'"
+      >
+      </app-empty-data>
+    </div>
+  }
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<div
+  class="custom-dropzone"
+  ngx-dropzone
+  [accept]="'image/*'"
+  (change)="onSelect($event)"
+  [style.background-color]="fileNotPicked ? '#ffc6c6': '#fff'"
+  [style.border]="fileNotPicked ? '2px dashed #f11': '1px dashed #d0d0d0'"
+>
+  <ngx-dropzone-label>
+    <div class="label">
+      <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M27.1671 27.0046L20.5004 20.3379L13.8337 27.0046" stroke="#A1A1A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M20.5 20.3379V35.3379" stroke="#A1A1A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M34.4838 30.9877C36.1093 30.1015 37.3935 28.6992 38.1335 27.0021C38.8736 25.305 39.0274 23.4098 38.5708 21.6155C38.1141 19.8213 37.0729 18.2302 35.6115 17.0934C34.1502 15.9567 32.3519 15.3389 30.5004 15.3377H28.4004C27.8959 13.3864 26.9557 11.5749 25.6503 10.0394C24.345 8.50379 22.7085 7.28412 20.8639 6.47205C19.0193 5.65998 17.0147 5.27663 15.0006 5.35084C12.9866 5.42504 11.0155 5.95487 9.23572 6.90048C7.4559 7.84609 5.91361 9.18287 4.72479 10.8103C3.53598 12.4378 2.73157 14.3136 2.37206 16.2967C2.01254 18.2798 2.10726 20.3186 2.64911 22.2598C3.19096 24.201 4.16583 25.9941 5.50042 27.5044" stroke="#A1A1A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M27.1671 27.0046L20.5004 20.3379L13.8337 27.0046" stroke="#A1A1A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      <div class="upload-size">
+        <p>Drag & drop here or Click to <a>Browse</a></p>
+      </div>
+    </div>
+  </ngx-dropzone-label>
+</div>
+<!-- END! custom-dropzone -->
+
+@if(files.length){
+  @if(files.length){
+    <div class="drop-zone-img-preview">
+      @for(f of files; track $index){
+        <ngx-dropzone-image-preview
+          ngProjectAs="ngx-dropzone-preview"
+          [file]="f"
+          [removable]="true"
+          (removed)="onRemove(f)"
+        >
+        </ngx-dropzone-image-preview>
+      }
+
+    </div>
+  }
+
+}
+
+@if(images?.length){
+  <div class="drop-zone-img-preview" >
+    @for(data of images; let index = $index; track index){
+      <div class="img-thumb" >
+        <button mat-icon-button type="button" (click)="removeOldImage(index)">
+          <i class="fa fa-times"></i>
+        </button>
+        <img [src]="data" alt="">
+      </div>
+    }
+  </div>
+}
+

@@ -1,0 +1,53 @@
+@import'variables';
+
+.time-container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    position: relative;
+    box-sizing: border-box;
+    background-color: $color-white;
+    max-width: 430px;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+.time-counter-item {
+  width: 40px;
+  height: 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border: 2px solid $color-tertiary;
+  border-radius: 5px;
+
+  .time-counter-time {
+    color: $color-tertiary;
+    font-size:  calc($font-readable - 2px);
+    font-weight: 700;
+    line-height: 12px;
+    font-family: $font-en-primary;
+  }
+
+  .time-counter-text {
+    color: $color-tertiary;
+    filter: brightness(120%);
+    font-size:  calc($font-readable - 3px);
+    font-weight: 500;
+    line-height: 12px;
+    font-family: $font-en-primary;
+  }
+}
+
+@media(max-width:599px) {
+  .time-container {
+    width: auto;
+    background: none;
+  }
+
+}

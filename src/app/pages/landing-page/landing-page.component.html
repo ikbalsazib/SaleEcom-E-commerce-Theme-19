@@ -1,0 +1,174 @@
+<section class="main-area" #payment>
+  <div class="container">
+
+    @if(!singleLandingPage?.isHtml){
+      <div [innerHTML]="singleLandingPage?.template?.theme | safeHtmlCustom"></div>
+    }@else{
+      <div [innerHTML]="singleLandingPage?.htmlBase | safeHtmlCustom"></div>
+    }
+
+
+
+   <div class="payment-area-main" [ngStyle]="{ 'background-color': singleLandingPage?.background || 'var(--shop-color-primary)'}" id="payment">
+     <div class="payment-area" >
+       <app-offer-address (formData)="onChangeAddress($event)"
+                          [deliveryCharge]="deliveryCharge"
+                          [needRefreshForm]="needRefreshForm"></app-offer-address>
+
+       <h3 class="products-heading"> {{ 'yourProduct'  | translate }} </h3>
+       <div class="cart-container">
+         <table class="cart-table">
+           <thead>
+           <tr>
+             <th>{{ 'product'  | translate }}</th>
+             <th>{{ 'quantity'  | translate }}</th>
+             <th>{{ 'price'  | translate }}</th>
+           </tr>
+           </thead>
+           <tbody>
+             @for(cart of carts; let i = $index; track i){
+               <tr>
+                 <td>{{ cart?.product?.name }} × {{ cart?.selectedQty }}</td>
+
+                 <td>
+                   <div class="quantity-control">
+                     <button
+                       class="quantity-btn"
+                       (click)="onDecrementQty( i)"
+                       [disabled]="cart?.selectedQty <= 1">-</button>
+
+                     <input
+                       type="number"
+                       class="quantity-input"
+                       [(ngModel)]="cart.selectedQty"
+                       [min]="1"
+                       (change)="updateCartQty(cart?._id, { selectedQty: cart?.selectedQty })"
+                     />
+
+                     <button
+                       class="quantity-btn"
+                       (click)="onIncrementQty(i)"
+                       [disabled]="cart?.selectedQty >= cartMaxQuantity">+</button>
+                   </div>
+                 </td>
+
+                 <td>{{ (cart?.product | productPrice : "salePrice" : cart?.variation?._id : cart?.selectedQty) | currencyCtr }}</td>
+               </tr>
+             }
+
+
+           </tbody>
+         </table>
+       </div>
+
+       <h3 id="order_heading">{{ 'yourOrder'  | translate }}</h3>
+
+       <div class="order-review">
+         <table class="table-area">
+           <thead>
+           <tr>
+             <th class="product-name">{{ 'product'  | translate }}</th>
+             <th class="product-total">{{ 'subTotal'  | translate }}</th>
+           </tr>
+           </thead>
+           <tbody>
+             @for(cart of carts; let i = $index; track i){
+               <tr class="cart_item">
+                 <td class="product-name">
+                   <div class="product-image">
+                     <div class="product-thumbnail">
+                       <img
+                         width="300"
+                         height="300"
+                         [src]="cart.product?.images && true ? cart.product?.images[0] : ''"
+                         alt="{{ cart.product?.name || 'Placeholder' }}"
+                       />
+                     </div>
+                     <div class="product-name">{{ cart?.product?.name }}</div>
+                   </div>&nbsp; <strong class="product-quantity">×&nbsp;{{ cart?.selectedQty }}</strong>
+                 </td>
+                 <td class="product-total">
+              <span class="amount">
+                <bdi>
+                  {{ (cart?.product | productPrice : "salePrice" : cart?.variation?._id : cart?.selectedQty) | currencyCtr }}</bdi>
+              </span>
+                 </td>
+               </tr>
+             }
+
+           </tbody>
+           <tfoot>
+
+           <tr class="cart-subtotal">
+             <th>{{ 'subTotal'  | translate }}</th>
+             <td>
+              <span class="amount">
+                  {{ cartSaleSubTotal | currencyCtr}}
+              </span>
+             </td>
+           </tr>
+
+           <tr class="cart-subtotal charge">
+             <th>{{ 'deliveryCharge'  | translate }}  ({{shippingAddress?.division === 'Dhaka' ? 'Inside Dhaka':'OutSide Dhaka'}})</th>
+             <td>
+              <span class="amount">
+                 {{ ((deliveryChargeAmount) | currencyCtr) ?? 0 }}
+              </span>
+             </td>
+           </tr>
+
+           <tr class="order-total">
+             <th>{{ 'total'  | translate }}</th>
+             <td>
+               <strong>
+                <span class="amount">
+                  {{ grandTotal | currencyCtr}}
+                </span>
+               </strong>
+             </td>
+           </tr>
+           </tfoot>
+         </table>
+         <div class="payment-area1">
+           <app-delivery-charge (onChangeDeliveryCharge)="onChangeDeliveryCharge($event)"
+                                [division]="division"></app-delivery-charge>
+
+           <!--           <app-payment-method-->
+           <!--             (onChangePaymentMethod)="onChangePaymentMethod($event)"-->
+           <!--             (onChangePaymentType)="onChangePaymentType($event)"-->
+           <!--             (allPaymentMethod)="allPaymentMethod($event)">-->
+           <!--           </app-payment-method>-->
+
+           <div class="delivery">
+             <h2>Shipping</h2>
+             <div>
+               <p>ঢাকার ভিতরে: {{deliveryCharge?.insideCity}}</p>
+               <p>ঢাকার বাহিরে: {{deliveryCharge?.outsideCity}}</p>
+             </div>
+           </div>
+         </div>
+         <div class="payment-type">
+           <label>{{ 'cashOnDelivery'  | translate }}</label>
+           <div class="payment_box payment_method_cod">
+             <p>{{ 'afterGettingProductPayment'  | translate }}</p>
+           </div>
+         </div>
+
+         <button class="submit-btn" (click)="onConfirmOrder()">
+           {{ 'placeOrder'  | translate }} {{ grandTotal | currencyCtr}}
+         </button>
+       </div>
+     </div>
+   </div>
+  </div>
+</section>
+
+<footer class="offer-footer-area">
+  <div class="container">
+    <div class="ft-main-area">
+      <a href="">{{ 'termsAndCondition'  | translate }}</a>
+      <a href="">{{ 'privacyAndPolicy'  | translate }}</a>
+      <a href="">{{ 'refundAndCancel'  | translate }}</a>
+    </div>
+  </div>
+</footer>

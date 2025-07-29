@@ -1,0 +1,41 @@
+<div></div>
+<div class="our-product" [ngStyle]="{ 'background-color': singleLandingPage?.backgroundColor,'color': singleLandingPage?.textColor ? singleLandingPage?.textColor : 'black' }">
+    <div class="containter">
+        <!-- Product Images Section -->
+        <div class="product-section">
+            <span>{{ 'productShownImage'  | translate }}</span>
+        </div>
+      @if ((isMobile > 600)) {
+        <div class="product-images" >
+            <img  (click)="openGallery($event, singleLandingPage?.product?.images,i)" *ngFor="let data of singleLandingPage?.product?.images;let i= index" [src]="data" alt="Close-up of assorted sweets in a box">
+        </div>
+      }@else{
+        <div class="product-images" >
+          <img  (click)="openGalleryMobile($event, singleLandingPage?.product?.images,i)" *ngFor="let data of singleLandingPage?.product?.images;let i= index" [src]="data" alt="Close-up of assorted sweets in a box">
+        </div>
+      }
+
+        <!-- Order Button -->
+        <button class="order-button" (click)="onScrollWithNavigate('payment')">
+          {{ 'placeOrder'  | translate }}
+            <svg data-v-e8d572f6="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="icon mr-2" width=".8em" height=".8em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10M9.75 9a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-2.69l-4.72 4.72a.75.75 0 0 1-1.06-1.06l4.72-4.72H10.5A.75.75 0 0 1 9.75 9" clip-rule="evenodd"></path></svg>
+        </button>
+    </div>
+</div>
+
+@if (isGalleryOpen && (isMobile > 600)) {
+  <app-gallery-image-viewer
+    [images]="galleryImages"
+    [startIndex]="selectedImageIndex"
+    (closeEvent)="closeGallery()"
+  >
+  </app-gallery-image-viewer>
+}
+
+@if(showModal && (isMobile < 600)){
+  <app-image-gallery [selectedIndex]="selectedImageIndex" [images]="galleryImages" [isVisible]="showModal"
+                     (close)="closeModal1()"
+  ></app-image-gallery>
+}
+
+

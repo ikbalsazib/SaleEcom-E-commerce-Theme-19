@@ -1,0 +1,10 @@
+@import 'variables';
+
+/* --- snack-message --- */
+.snack-message {
+  font-size: 16px !important;
+  font-weight: 500;
+  font-family: $font-en-primary;
+  color: $color-white;
+  z-index: 111111111111;
+}

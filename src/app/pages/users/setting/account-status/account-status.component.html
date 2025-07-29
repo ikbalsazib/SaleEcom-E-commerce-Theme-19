@@ -1,0 +1,25 @@
+<div class="content">
+<div class="reset-deactiva">
+  <div class="form-group">
+    <h1>Account Status</h1>
+    @if (user?.status == 'diactive') {
+      <p>Your account is <span class="deactive-color">deactive</span>.</p>
+    }
+    @if (user?.status == 'active') {
+      <p>Your account status is <span class="active-color">active</span>. You can disable or inactive account below.</p>
+    }
+    <div class="input-wrapper">
+      <h3>Explain the reason</h3>
+      <textarea id="w3review" name="w3review" rows="5" cols="70" placeholder="Write Reason for inactive account"></textarea>
+    </div>
+    @if (user?.status === 'diactive') {
+      <button class="active-btn">Active</button>
+    }
+    @if (user?.status === 'active') {
+      <button class="deactivate-btn" (click)="statusChange('diactive')">
+        Deactivate Account
+      </button>
+    }
+  </div>
+</div>
+</div>

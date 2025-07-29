@@ -1,0 +1,152 @@
+<div class="border-container">
+  <div class="header">
+    <h4 class="title">Timeline</h4>
+  </div>
+
+  <div class="section1-main">
+    @if(order?.orderTimeline?.cancelled?.date){
+    <div class="section1-details" >
+     <div class="date" [class.cancel-color]="order?.orderTimeline?.cancelled?.date">
+       @if (order?.orderTimeline?.cancelled?.date){
+    <span>
+                {{ order?.orderTimeline?.cancelled?.date | date:'dd/MM/yyyy' || '' }},
+      {{ order?.orderTimeline?.cancelled?.time || '' }}
+             </span>
+    }
+    </div>
+
+    <div class="other-details">
+      <div class="icon" [class.cancel]="order?.orderTimeline?.cancelled?.date">
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 507.506 507.506" style="enable-background:new 0 0 507.506 507.506;" xml:space="preserve" width="512" height="512">
+<g>
+<path d="M163.865,436.934c-14.406,0.006-28.222-5.72-38.4-15.915L9.369,304.966c-12.492-12.496-12.492-32.752,0-45.248l0,0   c12.496-12.492,32.752-12.492,45.248,0l109.248,109.248L452.889,79.942c12.496-12.492,32.752-12.492,45.248,0l0,0   c12.492,12.496,12.492,32.752,0,45.248L202.265,421.019C192.087,431.214,178.271,436.94,163.865,436.934z"/>
+</g></svg>
+        </span>
+      </div>
+      <div class="other-text-details">
+        <h3 [class.cancel-color]="order?.orderTimeline?.cancelled?.date">Cancel </h3>
+        <span [class.cancel-color]="order?.orderTimeline?.cancelled?.date">
+    {{ !order?.orderTimeline?.cancelled ? 'Your order has not yet been cancel.' : 'Your order has been cancel.' }}
+    </span>
+  </div>
+</div>
+</div>
+    }
+
+
+    <!-- Section 1: Delivery -->
+    <div class="section1-details">
+        <div class="date" [class.active-color]="order?.orderTimeline?.delivered?.date">
+          @if (order?.orderTimeline?.delivered?.date){
+             <span>
+                {{ order?.orderTimeline?.delivered?.date | date:'dd/MM/yyyy' || '' }},
+                {{ order?.orderTimeline?.delivered?.time || '' }}
+             </span>
+          }
+        </div>
+
+      <div class="other-details">
+        <div class="icon" [class.active-bg]="order?.orderTimeline?.delivered?.date">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 507.506 507.506" style="enable-background:new 0 0 507.506 507.506;" xml:space="preserve" width="512" height="512">
+<g>
+	<path d="M163.865,436.934c-14.406,0.006-28.222-5.72-38.4-15.915L9.369,304.966c-12.492-12.496-12.492-32.752,0-45.248l0,0   c12.496-12.492,32.752-12.492,45.248,0l109.248,109.248L452.889,79.942c12.496-12.492,32.752-12.492,45.248,0l0,0   c12.492,12.496,12.492,32.752,0,45.248L202.265,421.019C192.087,431.214,178.271,436.94,163.865,436.934z"/>
+</g></svg>
+          </span>
+        </div>
+        <div class="other-text-details">
+          <h3 [class.active-color]="order?.orderTimeline?.delivered?.date">Delivery (Expected Date)</h3>
+          <span [class.active-color]="order?.orderTimeline?.delivered?.date">
+            {{ !order?.orderTimeline?.delivered ? 'Your order has not yet been delivered.' : 'Your order has been delivered.' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Shipping -->
+    <div class="section1-details">
+      <div class="date" [class.active-color]="order?.orderTimeline?.shipped?.date">
+        @if (order?.orderTimeline?.shipped?.date){
+          <span>
+            {{ order?.orderTimeline?.shipped?.date | date:'dd/MM/yyyy' || '' }},
+            {{ order?.orderTimeline?.shipped?.time || '' }}
+          </span>
+        }
+      </div>
+      <div class="other-details">
+        <div class="icon" [class.active-bg]="order?.orderTimeline?.shipped?.date">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 507.506 507.506" style="enable-background:new 0 0 507.506 507.506;" xml:space="preserve" width="512" height="512">
+<g>
+	<path d="M163.865,436.934c-14.406,0.006-28.222-5.72-38.4-15.915L9.369,304.966c-12.492-12.496-12.492-32.752,0-45.248l0,0   c12.496-12.492,32.752-12.492,45.248,0l109.248,109.248L452.889,79.942c12.496-12.492,32.752-12.492,45.248,0l0,0   c12.492,12.496,12.492,32.752,0,45.248L202.265,421.019C192.087,431.214,178.271,436.94,163.865,436.934z"/>
+</g></svg>
+          </span>
+        </div>
+        <div class="other-text-details">
+          <h3 [class.active-color]="order?.orderTimeline?.shipped?.date">Shipping (Expected Date)</h3>
+          <span [class.active-color]="order?.orderTimeline?.shipped?.date">
+            {{ order?.orderTimeline?.shipped ? 'Your order has been picked by a delivery man or shipped yet.' : 'Your order has not been picked by a delivery man or shipped yet.' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Processing -->
+    <div class="section1-details">
+      <div class="date" [class.active-color]="order?.orderTimeline?.processing?.date">
+        @if (order?.orderTimeline?.processing?.date){
+          <span>
+            {{ order?.orderTimeline?.processing?.date | date:'dd/MM/yyyy' || '' }},
+            {{ order?.orderTimeline?.processing?.time || '' }}
+          </span>
+        }
+      </div>
+      <div class="other-details">
+        <div class="icon" [class.active-bg]="order?.orderTimeline?.processing?.date">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 507.506 507.506" style="enable-background:new 0 0 507.506 507.506;" xml:space="preserve" width="512" height="512">
+<g>
+	<path d="M163.865,436.934c-14.406,0.006-28.222-5.72-38.4-15.915L9.369,304.966c-12.492-12.496-12.492-32.752,0-45.248l0,0   c12.496-12.492,32.752-12.492,45.248,0l109.248,109.248L452.889,79.942c12.496-12.492,32.752-12.492,45.248,0l0,0   c12.492,12.496,12.492,32.752,0,45.248L202.265,421.019C192.087,431.214,178.271,436.94,163.865,436.934z"/>
+</g></svg>
+          </span>
+        </div>
+        <div class="other-text-details">
+          <h3 [class.active-color]="order?.orderTimeline?.processing?.date">Processing (Expected Date)</h3>
+          <span [class.active-color]="order?.orderTimeline?.processing?.date">
+            {{ order?.orderTimeline?.processing ? 'Your order has been processed yet.': 'Your order has not been processed yet.' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Pending -->
+    <div class="section1-details">
+      <div class="date active-color">
+        @if (order?.orderTimeline?.pending?.date){
+          <span>
+            {{ order?.orderTimeline?.pending?.date | date:'dd/MM/yyyy' || '' }},
+            {{ order?.orderTimeline?.pending?.time || '' }}
+          </span>
+        }
+
+      </div>
+      <div class="other-details">
+        <div class="icon active-bg">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 507.506 507.506" style="enable-background:new 0 0 507.506 507.506;" xml:space="preserve" width="512" height="512">
+<g>
+	<path d="M163.865,436.934c-14.406,0.006-28.222-5.72-38.4-15.915L9.369,304.966c-12.492-12.496-12.492-32.752,0-45.248l0,0   c12.496-12.492,32.752-12.492,45.248,0l109.248,109.248L452.889,79.942c12.496-12.492,32.752-12.492,45.248,0l0,0   c12.492,12.496,12.492,32.752,0,45.248L202.265,421.019C192.087,431.214,178.271,436.94,163.865,436.934z"/>
+</g></svg>
+          </span>
+        </div>
+        <div class="other-text-details">
+          <h3 class="active-color">Pending</h3>
+          <span class="active-color">
+            {{ order?.orderTimeline?.pending?.status || 'Your order has not yet been confirmed.' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

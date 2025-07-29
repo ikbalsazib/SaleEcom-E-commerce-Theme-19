@@ -1,0 +1,58 @@
+
+<div class="footer-area" [class.show-footer]="isHomeRoute">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-details">
+        <div class="footer-logo">
+          <b>Contact Support</b>
+        </div>
+        <div class="button-group">
+          <a [href]="getSocialLink('join-group')" class="btn">Join Group</a>
+          <a [href]="getSocialLink('telegram')" class="btn">Telegram</a>
+        </div>
+      </div>
+      <!---footer-address-->
+
+      <div class="footer-link">
+        <div class="footer-title">
+          <b>Payment Accept</b>
+        </div>
+
+        <ul>
+          <li>
+            <img src="https://cdn.saleecom.com/upload/static/payment-methods-row.png" alt="">
+          </li>
+        </ul>
+
+      </div>
+    </div>
+    <!---end-->
+
+
+  </div>
+</div>
+<div class="ntt">
+  <div class="ntt-main container">
+    <div class="footer-title">
+      <b style="color: white">Quick Links</b>
+    </div>
+    <div class="ntt-top">
+      <ul>
+        <li><a routerLink="/pages/about-us">About Us</a></li>
+        <li><a routerLink="/pages/return-and-refund-policy">Refund and Returns</a></li>
+        <li><a routerLink="/pages/terms-and-conditions">Terms & Condition</a></li>
+        <li><a routerLink="/pages/privacy-policy">Privacy Policy</a></li>
+      </ul>
+    </div>
+    <div class="ntt-left">
+      <b>Copyright © 2025 <a routerLink="/">{{ domain }}</a> <br>
+        @if(shopInfo?.showBranding === false && shopInfo?.brandingText){
+          <a style="font-weight: bold" [routerLink]="'/'" target="_blank">{{shopInfo?.brandingText}}</a>
+        }
+        @if(shopInfo?.showBranding){
+          Powered by <a style="font-weight: bold" href="https://www.saleecom.com/" target="_blank">Saleecom</a>
+        }
+      </b>
+    </div>
+  </div>
+</div>

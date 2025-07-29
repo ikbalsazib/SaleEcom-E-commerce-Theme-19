@@ -1,0 +1,125 @@
+@import "variables";
+
+.border-container{
+  width: 100%;
+  border: 1px solid lighten($color-black, 25%)-light;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: $box-shadow-black;
+}
+.header{
+  font-size: calc($font-readable + 2px);
+  font-weight: 500;
+  border-bottom: 1px solid lighten($color-black, 25%)-light;
+  padding-bottom: 15px;
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background-color: $color-primary;
+    position: absolute;
+    top: 35px;
+    left: 0;
+  }
+}
+
+.rmv-border{
+  border: none !important;
+}
+
+.tracking{
+  margin-top: 15px;
+  p{
+    font-weight: bold;
+  }
+}
+
+.content-lists{
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  border-bottom: 1px solid lighten($color-black, 25%)-light;
+  padding-bottom: 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  .content-img-left {
+    border: 1px solid $color-primary;
+    border-radius: 50%;
+    min-width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 20px;
+
+    img,
+    svg {
+      width: 52px;
+      height: 60px;
+      object-fit: cover;
+    }
+    .cls-2 {
+      fill: $color-primary;
+    }
+  }
+
+  .content-right{
+    display: grid;
+    gap: 5px;
+    width: 100%;
+
+    h3{
+      font-size: $font-title-desc;
+      font-weight: 500;
+    }
+
+    p{
+      font-size: $font-readable;
+      font-weight: 500;
+    }
+
+    span{
+      font-size: calc($font-readable + 1px);
+      font-family: $font-en-primary;
+      font-weight: 500;
+    }
+  }
+}
+
+.products-type{
+  display: flex;
+  justify-content: space-between;
+
+  p{
+    font-size: $font-readable;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 599px) {
+  .border-container{
+    background-color: $color-white;
+  }
+
+  .header{
+    .title{
+      color: darken($color-white, 93%)!important;
+      font-size: 4.26667vw!important;
+      font-weight: 700!important;
+      line-height: 4.8vw!important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .tracking {
+    margin-top: 12px;
+  }
+}

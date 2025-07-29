@@ -1,0 +1,17 @@
+<div class="filter-card">
+  <h3>Fill by price</h3>
+  <div class="price-slider">
+    <mat-slider min="0" max="100000">
+      <input value="0" matSliderStartThumb (valueChange)="onLowChange($event)">
+      <input value="100000" matSliderEndThumb (valueChange)="onHighChange($event)">
+    </mat-slider>
+    <div class="price-range">
+      <span>From: <span id="min-price-val">{{ lowValue?? 0 }}</span></span>
+      <span>To: <span id="max-price-val">{{highValue ?? 0}}</span></span>
+    </div>
+  </div>
+  <button class="filter-button" (click)="onPriceRangeChange()">
+    <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="300" height="300" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"><g transform="matrix(1,0,0,1,0,0)"><path d="m15,24.011l-6-3.6v-6.221L1,5.19v-2.69C1,1.121,2.122,0,3.5,0h17c1.379,0,2.5,1.121,2.5,2.5v2.69l-8,9v9.82Zm-5-4.166l4,2.4v-8.436l8-9v-2.31c0-.827-.673-1.5-1.5-1.5H3.5c-.827,0-1.5.673-1.5,1.5v2.31l8,9v6.035Z" fill="#ffffffff" data-original-color="#000000ff" stroke="white"/></g></svg>
+    Filter
+  </button>
+</div>

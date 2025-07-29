@@ -1,0 +1,51 @@
+.pcontainer {
+    line-height: 40px;
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+    justify-content: center;
+    max-width: 1200px;
+    max-height: 350px;
+  }
+  .card {
+    height: 350px;
+    width: 400px;
+    padding: 20px;
+    border: 1px solid #00a426;
+    margin: 10px;
+    align-items: center;
+  }
+
+  .card.active {
+    transform: rotateX(0deg);
+    color:  $color-black;
+    border: 2px solid rgb(0, 152, 109);
+      font-weight: bold;
+    background-color: rgb(198, 255, 226);
+  }
+  .item{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  button {
+    gap: 10px;
+    display: flex;
+    padding: 13px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #008578;
+    color: $color-white;
+    align-items: center;
+    justify-content: center;
+    margin: 25px auto;
+  }
+  @media only screen and (max-width: 599px){
+    .pcontainer{
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+  }

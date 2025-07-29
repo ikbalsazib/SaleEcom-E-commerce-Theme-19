@@ -1,0 +1,30 @@
+@import "variables";
+
+.loader {
+  width: 22px;
+  height: 22px;
+  border: 3px solid $color-primary;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: flex;
+  place-content: center;
+  place-items: center;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+
+  &.btn-loader {
+    width: 18px;
+    height: 18px;
+    border: 2px solid $color-white;
+    border-bottom-color: transparent;
+  }
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

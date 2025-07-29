@@ -1,0 +1,21 @@
+@if(data?.length){
+  <section>
+    <div class="details-section-container">
+      <div class="details-section">
+        <table class="nutrition-facts">
+          <tbody>
+            @for(d of data;track d){
+              <tr >
+                <td class="td-title">{{ d?.name }}</td>
+                <td>{{ d?.value }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+}@else{
+  <p>No Additional Info</p>
+}

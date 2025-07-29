@@ -1,0 +1,31 @@
+@import "variables";
+@import "common/user-account-xl";
+
+@media only screen and (max-width: 599px) {
+  .sidebar {
+    display: none;
+  }
+  .content {
+    padding: 0 10px;
+  }
+  .wishlist{
+    background-color: $color-white;
+    border-radius: 10px;
+    margin: 0 12px;
+    padding-bottom: 15px;
+  }
+  .container{
+    display: block!important;
+  }
+}
+
+.wishlist{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.container{
+  margin-bottom: 250px;
+}

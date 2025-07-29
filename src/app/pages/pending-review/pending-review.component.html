@@ -1,0 +1,24 @@
+<div class="review-area">
+    <div class="card">
+      <div class="left-side">
+        <img [src]="product?.image ?? 'https://cdn.saleecom.com/upload/images/placeholder.png'" alt="image" loading="lazy" />
+        <div class="card-details">
+          <h4>{{product?.name}}</h4>
+          <p>
+            Order Id: {{product?.orderId}}
+          </p>
+          <div class="button-group mobile-btn">
+            <button [routerLink]="'/add-review/'" [queryParams]="{orderId:product?.order_Id,productId:product?.product}" class="add-review-btn">
+              Add Review
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-group pc-btn">
+        <button [routerLink]="'/add-review/'" [queryParams]="{orderId:product?.order_Id,productId:product?.product}" class="add-review-btn">
+          Add Review
+        </button>
+      </div>
+    </div>
+  </div>

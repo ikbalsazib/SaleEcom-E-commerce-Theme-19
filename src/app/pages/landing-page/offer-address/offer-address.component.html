@@ -1,0 +1,84 @@
+<div class="man-area">
+  <form [formGroup]="dataForm" #formElement="ngForm">
+  <div class="input-area">
+    <label for="name" class="">{{ 'writeYourName'  | translate }}&nbsp;<sup class="required" title="required">*</sup></label>
+    <span class="input-wrapper">
+          <input type="text" class="input-text field-required" name="name" id="name" formControlName="name" placeholder="{{ 'writeYourName'  | translate }}" value=""
+                 aria-required="true" autocomplete="given-name">
+          @if (dataForm.get('name')?.invalid && dataForm.get('name')?.touched) {
+          <span class="required-error">{{ 'name'  | translate }} is required</span>
+         }
+        </span>
+  </div>
+
+    @if (!deliveryOptionType?.isEnableInsideCityOutsideCity) {
+      <div class="custom-select-container">
+        <label for="division" class="">{{ 'selectDivision'  | translate }}&nbsp;<sup class="required" title="required">*</sup></label>
+        <div id="division" class="custom-select" #selectContainer>
+          <div class="custom-select__selected" (click)="toggleDropdown()">
+            {{ selectedDivision || ('selectDivision' | translate) }}
+          </div>
+          @if (dropdownVisible) {
+            <div class="custom-select__options">
+              @for (item of divisions; track $index) {
+                <div
+                  (click)="selectDivision(item)"
+                  class="custom-select__option"
+                >
+                  {{ item?.name }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+
+
+
+    <div class="input-area">
+    <label for="address" class="">{{ 'writeYourFullAddress'  | translate }}&nbsp;<sup class="required"
+                                                                        title="required">*</sup></label>
+    <span class="input-wrapper">
+          <input type="text" class="input-text field-required" formControlName="shippingAddress"  name="address" id="address"
+                 placeholder="{{ 'writeYourAddressWithThanaZilla'  | translate }}" value="" aria-required="true" autocomplete="given-name">
+         @if (dataForm.get('shippingAddress')?.invalid && dataForm.get('shippingAddress')?.touched) {
+         <span class="required-error">{{ 'address'  | translate }} is required</span>
+        }
+        </span>
+  </div>
+
+  <div class="input-area">
+    <label for="phone" class="">{{ 'phoneNumber'  | translate }}&nbsp;<sup class="required"
+                                                                     title="required">*</sup></label>
+    <span class="input-wrapper">
+          <input type="tel" [attr.maxlength]="11" class="input-text field-required" name="phone" formControlName="phoneNo" id="phone" placeholder="{{ 'phoneNumber'  | translate }}"
+                 value="" aria-required="true" (input)="restrictMaxLength($event)"
+                autocomplete="given-name">
+          @if (dataForm.get('phoneNo')?.invalid && dataForm.get('phoneNo')?.touched) {
+          <span class="required-error">{{ 'validPhone'  | translate }} is required</span>
+        }
+        </span>
+  </div>
+
+    @if (deliveryOptionType?.isEnableInsideCityOutsideCity) {
+      <h3 class="payment-title">{{ 'deliveryOption'  | translate }}</h3>
+      <mat-radio-group class="delivery-option" formControlName="division" required>
+        <mat-radio-button [value]="deliveryCharge?.city" class="color-white">{{ 'inside'  | translate }} {{ deliveryCharge?.city }}
+          ({{ deliveryCharge?.insideCity | currencyCtr }})
+        </mat-radio-button>
+        <mat-radio-button [value]="'outside-dhaka'">{{ 'outside'  | translate }} {{ deliveryCharge?.city }}
+          ({{ deliveryCharge?.outsideCity | currencyCtr }})
+        </mat-radio-button>
+        <!---->
+        @if (dataForm.get('division')?.invalid && dataForm.get('division')?.touched) {
+          <div class="error-message" style="padding-left: 5px;">
+            {{ 'selectDeliveryOption'  | translate }}
+          </div>
+        }
+      </mat-radio-group>
+    }
+
+  </form>
+</div>

@@ -1,0 +1,19 @@
+<div class="mobile-hidden-content" >
+  <div class="modal-content">
+    <div class="cart-items-heading">
+      <h3>{{'orderSummary' | translate}}</h3>
+    </div>
+    <div class="checkout-border-element"></div>
+    <div class="cost-summary">
+      <div class="summary-item"><span>{{'subTotal' | translate}}</span><span>{{ data?.cartRegularSubTotal | currencyCtr}}</span></div>
+      <div class="summary-item"><span>{{'discount' | translate}}</span><span>{{ data?.cartDiscountAmount | currencyCtr}}</span></div>
+      <div class="summary-item total"><span>{{'grandTotal' | translate}}</span><span>{{ data?.cartSaleSubTotal | currencyCtr }}</span></div>
+      <div class="checkout-btn-mobile-view" (click)="isLoggin()">
+        <button class="btn web-d-none">{{'checkout' | translate}}</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-close">
+    <span (click)="closeBottomSheet()">X</span>
+  </div>
+</div>

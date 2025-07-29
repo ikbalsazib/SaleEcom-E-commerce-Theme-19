@@ -1,0 +1,21 @@
+.star-rating{
+  display: flex;
+  gap: 4px;
+
+  svg {
+    width: var(--rating-star-size);
+    height: var(--rating-star-size);
+    path {
+      fill: var(--rating-star-color) !important;
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  svg{
+    display: inline-block;
+    height: 2.4vw!important;
+    width: 2.4vw!important;
+  }
+
+}

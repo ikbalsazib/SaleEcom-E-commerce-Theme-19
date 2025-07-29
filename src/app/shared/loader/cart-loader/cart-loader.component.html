@@ -1,0 +1,36 @@
+<div class="cart-container">
+  <div class="cart-items-skeleton">
+    <!-- Skeleton for each cart item -->
+    @for(item of [1, 2, 3,4,5]; track $index){
+      <div class="cart-item-skeleton">
+        <!-- Checkbox -->
+        <ngx-skeleton-loader [theme]="{ width: '20px', height: '20px', marginRight: '10px' }"></ngx-skeleton-loader>
+
+        <!-- Product Image -->
+        <ngx-skeleton-loader [theme]="{ width: '60px', height: '60px', borderRadius: '4px', marginRight: '20px' }"></ngx-skeleton-loader>
+
+        <!-- Product Details -->
+        <div class="product-details">
+          <ngx-skeleton-loader [theme]="{ width: '200px', height: '20px', marginBottom: '10px' }"></ngx-skeleton-loader>
+          <ngx-skeleton-loader [theme]="{ width: '100px', height: '15px' }"></ngx-skeleton-loader>
+        </div>
+      </div>
+    }
+
+  </div>
+
+  <!-- Right Side: Order Summary Skeleton -->
+  <div class="order-summary-skeleton">
+    <!-- Promo Code Skeleton -->
+    <ngx-skeleton-loader [theme]="{ width: '100%', height: '20px', marginBottom: '20px' }"></ngx-skeleton-loader>
+    <ngx-skeleton-loader [theme]="{ width: '80%', height: '40px', marginBottom: '20px' }"></ngx-skeleton-loader>
+
+    <!-- Subtotal, Discount, and Grand Total Skeletons -->
+    <ngx-skeleton-loader [theme]="{ width: '80%', height: '20px', marginBottom: '10px' }"></ngx-skeleton-loader>
+    <ngx-skeleton-loader [theme]="{ width: '70%', height: '20px', marginBottom: '10px' }"></ngx-skeleton-loader>
+    <ngx-skeleton-loader [theme]="{ width: '70%', height: '20px', marginBottom: '10px' }"></ngx-skeleton-loader>
+
+    <!-- Checkout Button Skeleton -->
+    <ngx-skeleton-loader class="btn-view" [theme]="{ width: '85%', height: '40px' }"></ngx-skeleton-loader>
+  </div>
+</div>

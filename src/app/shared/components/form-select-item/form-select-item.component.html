@@ -1,0 +1,27 @@
+<div class="input-item"
+     [style.margin-bottom]="touched && invalid ? '-2px': '15px'">
+  <div class="input-label">
+    <label>
+      {{ label }}
+      @if (required) {
+        <span>*</span>
+      }
+    </label>
+  </div>
+
+  <div class="input-area">
+    <select [formControl]="controlName"  [class.input-error-bg]="touched && invalid">
+      <option [value]="null" class="placeholder">Select one</option>
+      @for(d of data; track d._id){
+        <option [value]="d?._id" >{{d?.name}}</option>
+      }
+    </select>
+  </div>
+
+  @if (touched && invalid) {
+    <div class="input-error">
+      <p>{{ inputErrorMsg }}</p>
+    </div>
+  }
+
+</div>  <!-- End Input Item -->

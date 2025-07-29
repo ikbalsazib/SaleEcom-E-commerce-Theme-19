@@ -1,0 +1,88 @@
+<div class="cart">
+  <div routerLink="/cart" class="cart-button">
+    <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0)">
+        <path
+          d="M24.4941 3.36652H4.73614L4.69414 3.01552C4.60819 2.28593 4.25753 1.61325 3.70863 1.12499C3.15974 0.636739 2.45077 0.366858 1.71614 0.366516L0.494141 0.366516V2.36652H1.71614C1.96107 2.36655 2.19748 2.45647 2.38051 2.61923C2.56355 2.78199 2.68048 3.00626 2.70914 3.24952L4.29414 16.7175C4.38009 17.4471 4.73076 18.1198 5.27965 18.608C5.82855 19.0963 6.53751 19.3662 7.27214 19.3665H20.4941V17.3665H7.27214C7.02705 17.3665 6.79052 17.2764 6.60747 17.1134C6.42441 16.9505 6.30757 16.7259 6.27914 16.4825L6.14814 15.3665H22.3301L24.4941 3.36652ZM20.6581 13.3665H5.91314L4.97214 5.36652H22.1011L20.6581 13.3665Z"
+          fill="#253D4E"/>
+        <path
+          d="M7.49414 24.3665C8.59871 24.3665 9.49414 23.4711 9.49414 22.3665C9.49414 21.2619 8.59871 20.3665 7.49414 20.3665C6.38957 20.3665 5.49414 21.2619 5.49414 22.3665C5.49414 23.4711 6.38957 24.3665 7.49414 24.3665Z"
+          fill="#253D4E"/>
+        <path
+          d="M17.4941 24.3665C18.5987 24.3665 19.4941 23.4711 19.4941 22.3665C19.4941 21.2619 18.5987 20.3665 17.4941 20.3665C16.3896 20.3665 15.4941 21.2619 15.4941 22.3665C15.4941 23.4711 16.3896 24.3665 17.4941 24.3665Z"
+          fill="#253D4E"/>
+      </g>
+      <defs>
+        <clipPath id="clip0">
+          <rect width="24" height="24" fill="white" transform="translate(0.494141 0.366516)"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <span>{{ carts.length }}</span>
+  </div>
+
+
+  <div [ngClass]="{'cart-dropdown-wrap': true, 'hidden': currentUrl === '/cart' || currentUrl === '/checkout'}">
+    @if(carts?.length){
+      <ul>
+        @for (item of carts; track $index) {
+          <li>
+            <div class="shopping-cart-img">
+              <!--            <img alt="Nest" [src]="item.product?.images && item.product?.images.length ? item.product?.images[0] : ''">-->
+              <img [src]="getProductImage(item)"  alt="">
+            </div>
+            <div class="shopping-cart-title">
+              <a [routerLink]="['/product-details', item?.product?.slug]">{{ item?.product?.name }}</a>
+              @if (item.variation) {
+                <p class="variation-info">{{ item.variation | variationInfoInline }}</p>
+              }
+
+              <p>
+                <span>{{ item?.selectedQty }} × </span>
+                <span>{{ (item?.product | productPrice : "salePrice" : item?.variation?._id : item?.selectedQty :item?.isWholesale) | currencyCtr }}</span>
+                @if ((item?.product | productPrice : "discountAmount" : item?.variation?._id : item?.selectedQty :item?.isWholesale) > 0) {
+                  <del>{{ item?.product | productPrice : "regularPrice" : item?.variation?._id : item?.selectedQty }}</del>
+                }
+              </p>
+
+            </div>
+            <div class="shopping-cart-delete" (click)="onDeleteCartItem(item._id, item?.product?._id)">
+              <a>
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 32 32">
+                  <path
+                    d="M 15 4 C 14.476563 4 13.941406 4.183594 13.5625 4.5625 C 13.183594 4.941406 13 5.476563 13 6 L 13 7 L 7 7 L 7 9 L 8 9 L 8 25 C 8 26.644531 9.355469 28 11 28 L 23 28 C 24.644531 28 26 26.644531 26 25 L 26 9 L 27 9 L 27 7 L 21 7 L 21 6 C 21 5.476563 20.816406 4.941406 20.4375 4.5625 C 20.058594 4.183594 19.523438 4 19 4 Z M 15 6 L 19 6 L 19 7 L 15 7 Z M 10 9 L 24 9 L 24 25 C 24 25.554688 23.554688 26 23 26 L 11 26 C 10.445313 26 10 25.554688 10 25 Z M 12 12 L 12 23 L 14 23 L 14 12 Z M 16 12 L 16 23 L 18 23 L 18 12 Z M 20 12 L 20 23 L 22 23 L 22 12 Z"></path>
+                </svg>
+              </a>
+            </div>
+          </li>
+        }
+
+      </ul>
+      <div class="shopping-cart-footer">
+        <div class="shopping-cart-total">
+          <h4>{{'subTotal' | translate}} <span>{{ cartSubTotal | currencyCtr}}</span></h4>
+        </div>
+        <div class="shopping-cart-button">
+          <a routerLink="/cart" class="outline">{{'viewCart' | translate}}</a>
+          <a routerLink="/checkout">{{'checkout' | translate}}</a>
+        </div>
+      </div>
+    } @else {
+      <div class="no-data" >
+        <app-empty-data
+          [needBorder]="false"
+          [iconWidth]="'150px'"
+          [title]="'Your Cart List is Empty!'"
+          [titleSize]="'20px'"
+          [desc]="'Sorry! your cart has no item to show. Please add some product to see here.'"
+          [filePath]="'/lottie/no-data-1.json'"
+          [btnTitle]="'Continue Shopping'"
+          [btnUrl]="'/products'"
+        >
+        </app-empty-data>
+      </div>
+    }
+  </div>
+
+
+</div>

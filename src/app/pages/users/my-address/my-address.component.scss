@@ -1,0 +1,15 @@
+@import "variables";
+@import "common/user-account-xl";
+
+@media only screen and (max-width: 599px) {
+  .sidebar {
+    display: none;
+  }
+  .container{
+    display: block;
+  }
+}
+
+.container{
+  margin-bottom: 200px;
+}

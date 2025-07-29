@@ -1,0 +1,105 @@
+@import "variables";
+.subtitle {
+  color: black;
+  font-size: 1.25rem;
+  margin-bottom: 26px;
+  text-align: center;
+}
+.slide-right {
+  animation: slide-right 1.2s ease forwards;
+}
+@keyframes slide-right {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 40px 15px;
+}
+.main-area{
+  //background-color: #E5FFDA;
+  background-color: #ffffff;
+}
+.why-us {
+  //background-color: #E5FFDA;
+  background-color: #ffffff;
+  text-align: center;
+  padding: 40px 20px;
+
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    //margin-bottom: 90px;
+  }
+
+  .btn-area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 60px;
+  }
+  .order-button {
+    // max-width: 150px;
+    background-color: $color-primary;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: bold;
+    padding: 8px 24px;
+    border: none;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    svg {
+      margin: 0px;
+      padding: 5px 10px;
+      background-size: cover;
+      // background-color: #01640D;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: scroll;
+      color: #fff;
+      font-size: 55px;
+      font-style: normal;
+      text-align: center;
+      font-weight: 400;
+      line-height: 36px;
+      text-decoration: none;
+    }
+
+    &:hover {
+      transform: translate(10px);
+      transition: transform 0.3s;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .why-us .title {
+    margin-bottom: 34px;
+  }
+
+}
+
+
+@media (max-width: 599px) {
+  ::ng-deep.why-us {
+    ul {
+      li {
+        text-align: left;
+      }
+    }
+  }
+}

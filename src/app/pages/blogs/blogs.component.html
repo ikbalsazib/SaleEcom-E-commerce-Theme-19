@@ -1,0 +1,36 @@
+<app-blog-banner></app-blog-banner>
+<!-- END! blog-banner -->
+
+
+<main class="all-blogs">
+  <div class="container">
+    <section class="all-blogs-child">
+<!--      <div class="products-header">-->
+<!--        <div class="flash-title-counter">-->
+<!--          <b></b>-->
+<!--          <h2>  All Blogs</h2>-->
+<!--          <b></b>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="show-product-header">
+        <form class="table-search" #searchForm=ngForm>
+          <input type="text" #searchInput  name="searchTerm"
+                 autocomplete="off"
+                 ngModel placeholder="Search Blogs" />
+          <button><mat-icon>search</mat-icon></button>
+        </form>
+      </div>
+
+      <div class="show-product-main grid">
+        @for(data of allBlog; track $index){
+          <ng-container>
+            <app-blog-card-one [data]="data">
+            </app-blog-card-one>
+          </ng-container>
+        }
+      </div>
+    </section>
+    <!-- END! all-blogs-child -->
+  </div>
+</main>
+<!-- END! all-blogs -->

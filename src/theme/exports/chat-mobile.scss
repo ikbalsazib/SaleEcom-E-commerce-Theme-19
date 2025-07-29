@@ -1,0 +1,154 @@
+@import "variables";
+
+.icon-bar {
+  position: absolute;
+  bottom: 62px;
+  left: 50%;
+  transform: translateX(-52%);
+  z-index: 10001;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#socialicon {
+  display: flex;
+  width: 62px;
+  flex-direction: column; // Normal order
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.char-card {
+  position: absolute;
+  bottom: 50px;
+  opacity: 0;
+  width: 45px;
+  height: 45px;
+  cursor: pointer !important;
+  transition: 0.5s;
+  border-radius: 50%;
+  margin: 4px;
+  box-shadow: 0 16px 24px 0 rgb(73 104 126 / 16%);
+}
+
+.google svg {
+  display: block;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  outline: 0;
+  min-width: unset;
+}
+
+.chat-close {
+  display: block;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  outline: 0;
+  min-width: unset;
+  opacity: 1;
+}
+
+.chat-icon {
+  transition: all 0.5s ease-in-out;
+  transform: rotate(540deg);
+}
+
+.rotated {
+  animation: rotate 0.5s ease-in-out;
+  transform: rotate(540deg);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+.google {
+  position: relative;
+  display: inline-block;
+}
+
+#toggle {
+  transition: 0.5s;
+  box-shadow: 0 16px 24px 0 rgb(73 104 126 / 16%);
+  border-radius: 50%;
+  transform: rotate(540deg);
+}
+
+/* Tooltip styles */
+.phone[data-title]:hover::after {
+  position: absolute;
+  content: attr(data-title);
+  font-size: 14px;
+  padding: 5px;
+  left: -233%;
+  background-color: #ffffff;
+  top: 22%;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+}
+
+.whatsapp[data-title]:hover::after {
+  position: absolute;
+  content: attr(data-title);
+  font-size: 14px;
+  padding: 5px;
+  left: -160%;
+  background-color: #ffffff;
+  top: 22%;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+}
+
+.facebook[data-title]:hover::after {
+  position: absolute;
+  content: attr(data-title);
+  font-size: 14px;
+  padding: 5px;
+  background-color: #ffffff;
+  left: -290%;
+  top: 22%;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+  transition: transform 0.3s ease;
+  pointer-events: auto !important;
+
+  .char-card {
+    opacity: 1;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  @for $i from 1 through 4 {
+    .char-card:nth-child(#{$i}) {
+      transform: translateY(-#{($i - 1) * 56}px);
+    }
+  }
+}
+
+/* Smooth transition when icons are hidden */
+.hide .google {
+  transform: translateY(0);
+}

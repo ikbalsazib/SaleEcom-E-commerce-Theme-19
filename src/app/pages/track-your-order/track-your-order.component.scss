@@ -1,0 +1,145 @@
+@import "variables";
+@import "exports/form-input-phone-no";
+@import "exports/form-input-primary";
+@import "exports/custom-button";
+@import "exports/spinner";
+
+.container{
+  max-width: 600px;
+}
+.header {
+  text-align: center;
+  margin: 40px 0 8px 0;
+  h4 {
+    font-size: calc($font-sub-title);
+  }
+  p {
+    margin-top: 10px;
+    font-size: calc($font-readable);
+  }
+}
+
+form {
+  margin-top: 20px;
+}
+
+.input-otp {
+  width: 100%;
+  max-width: 380px;
+  margin: 20px auto 0;
+}
+
+.form-group {
+  margin-top: 20px;
+
+  .input-icon {
+    &.password-eye {
+      right: 12px;
+    }
+  }
+}
+
+.action {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .btn-primary {
+    padding: 10px 12px;
+  }
+}
+
+
+
+
+
+.input-area {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 0 12px;
+  margin: 20px 0;
+
+  .flag {
+    line-height: 0;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: $color-primary;
+    }
+
+  }
+
+  .edit {
+    line-height: 0;
+    cursor: pointer;
+    background-color: $color-white;
+    transition: background-color 0.2s ease;
+    color: $color-black;
+    font-weight: 600;
+    font-family: $font-en-primary;
+
+    &:hover {
+      background-color: lighten(#4285F4, 36%);
+    }
+
+    svg {
+      width: 20px;
+    }
+  }
+
+  .country-code {
+    margin: 0 8px;
+    color: #555;
+    font-size: calc($font-readable + 1px);
+    font-weight: 500;
+    font-family: var(--font-primary);
+  }
+
+  input {
+    height: 54px;
+    border: none;
+    outline: none;
+    padding: 0 8px;
+    flex: 1;
+    font-size: calc($font-readable + 1px);
+    color: #3e3e3e;
+    font-family: var(--font-primary);
+  }
+
+  &.is-invalid {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    input {
+      background-color: #f8d7da;
+    }
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  label {
+    font-size: calc($font-readable-sm + 1px);
+  }
+  .input-area {
+    .flag {
+      svg {
+        width: 24px;
+      }
+    }
+
+    .country-code {
+      font-size: calc($font-readable-sm + 1px);
+    }
+
+    input {
+      font-size: calc($font-readable-sm + 1px);
+    }
+
+  }
+
+}

@@ -1,0 +1,97 @@
+<div class="payment-area">
+
+  <div class="close" (click)="closeDialog()">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M19.207 6.207a1 1 0 0 0-1.414-1.414L12 10.586 6.207 4.793a1 1 0 0 0-1.414 1.414L10.586 12l-5.793 5.793a1 1 0 1 0 1.414 1.414L12 13.414l5.793 5.793a1 1 0 0 0 1.414-1.414L13.414 12l5.793-5.793z"></path>
+      </g>
+    </svg>
+  </div>
+
+  <div class="advance-payment-area">
+    <p>To Complete this order you have to pay <span>{{ (data?.amount ?? 0) | currencyCtr}}</span> in advance.</p>
+  </div>
+  @defer (when !isLoading) {
+    <div class="online-payment">
+      @for (item of filterPaymentMethods; track item; let i = $index) {
+        <div class="method-info active"
+             [class.active]="item.providerName === selectedPaymentProvider" (click)="onSelectPaymentMethod(item)">
+          <img [src]="item?.image ?? 'https://cdn.saleecom.com/upload/images/placeholder.png' " alt="image"
+               loading="lazy" draggable="false">
+          <div class="checked-icon" [class.visible]="item.providerName === selectedPaymentProvider">
+            <svg xmlns="http://www.w3.org/2000/svg" width="49.305" height="49.305" viewBox="0 0 49.305 49.305">
+              <path id="checked-icon"
+                    d="M28.028,3.375A24.653,24.653,0,1,0,52.68,28.028,24.649,24.649,0,0,0,28.028,3.375ZM40.65,21.213,24.8,37.13h-.012a2.14,2.14,0,0,1-1.375.652,2.075,2.075,0,0,1-1.387-.676l-6.637-6.637a.472.472,0,0,1,0-.676l2.11-2.11a.458.458,0,0,1,.664,0l5.262,5.262L37.889,18.38a.468.468,0,0,1,.332-.142h0a.43.43,0,0,1,.332.142l2.074,2.145A.467.467,0,0,1,40.65,21.213Z"
+                    transform="translate(-3.375 -3.375)"/>
+            </svg>
+          </div>
+          <span>{{ item?.name }}</span>
+        </div>
+      }
+    </div>
+  } @placeholder (minimum 50ms) {
+    <app-payment-card-loader/>
+  }
+
+  <div class="manual-payment-form"
+       [style.display]="(selectedPaymentProviderType === 'sent-money' || selectedPaymentProviderType === 'payment') ? 'block' : 'none'">
+    <div class="payment-head">
+      <img [src]="providerLogo " alt="image"
+           loading="lazy" draggable="false">
+      <h4>{{ selectedPayment?.accountNumber }}</h4>
+    </div>
+    <div class="payment-instructions" [innerHTML]="selectedPayment?.paymentInstruction | safeHtmlCustom"></div>
+
+    <form [formGroup]="dataForm">
+      <div class="form-group">
+        <div class="form-input-select w-50 w-100">
+          <p>{{ selectedPaymentProvider }} Number: </p>
+          <mat-form-field class="mat-input-field" appearance="outline">
+            <mat-label>017XXXXXXXX</mat-label>
+            <input
+              [required]="selectedPaymentProviderType === 'sent-money' || selectedPaymentProviderType === 'payment'"
+              matInput formControlName="customerPaymentNo"
+              placeholder="017XXXXXXXX"/>
+            <mat-error>{{ 'Number Required' }}</mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="form-input-select w-50 w-100">
+          <p>Transaction ID: </p>
+          <mat-form-field class="mat-input-field" appearance="outline">
+            <mat-label>{{ 'Transaction Id' }}</mat-label>
+            <input
+              [required]="selectedPaymentProviderType === 'sent-money' || selectedPaymentProviderType === 'payment'"
+              matInput formControlName="paymentTransactionId"
+              placeholder="Enter Transaction ID"/>
+            <mat-error>{{ 'Transaction ID Required' }}</mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <div class="button-area">
+    @if (!isLoading) {
+      <button type="button" class="order-button" (click)="onConfirmOrder()">
+        <svg height="30px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1"
+             viewBox="0 0 512 512" width="30px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+        ><g><path d="M223.9,329.7c-2.4,2.4-5.8,4.4-8.8,4.4s-6.4-2.1-8.9-4.5l-56-56l17.8-17.8l47.2,47.2l124.8-125.7l17.5,18.1L223.9,329.7z"/></g></svg>
+        <span>{{ 'confirmOrder'  | translate }}</span>
+      </button>
+    }
+    @if (isLoading) {
+      <button type="button" class="order-button wait-btn">
+        <div><span class="loader btn-loader"></span></div>
+        <div>{{ 'pleaseWait'  | translate }}</div>
+      </button>
+    }
+  </div>
+
+
+</div>

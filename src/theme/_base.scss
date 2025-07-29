@@ -1,0 +1,145 @@
+@import "variables";
+@import "fonts";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  display: block;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+  font-family: $font-en-primary;
+  font-style: normal;
+  scroll-behavior: smooth;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.container {
+  width: 95%;
+  max-width: $container-max-width;
+  margin: 0 auto;
+}
+
+
+/* --- Global notification --- */
+
+.success {
+  --mdc-snackbar-container-color: #00bf61 !important;
+  .close-btn{
+    color: $color-white !important;
+  }
+  span{
+    color: $color-white !important;
+  }
+  .message {
+    mat-icon {
+      background-color: $color-white !important;
+      color: #00bf61 !important;
+    }
+  }
+  .view-cart {
+    background-color: $color-white !important;
+    color: #00bf61 !important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    &:hover {
+      background-color: lighten(#00bf61, 25%);
+      cursor: pointer;
+    }
+  }
+}
+
+.warn {
+  --mdc-snackbar-container-color: #ff7515 !important;
+  .close-btn{
+    color: $color-white !important;
+  }
+  span{
+    color: $color-white !important;
+  }
+  .message {
+    mat-icon {
+      background-color: $color-white !important;
+      color: #ff7515 !important;
+    }
+  }
+  .view-cart {
+    background-color: $color-white !important;
+    color: #ff7515 !important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    &:hover {
+      background-color: lighten(#ff7515, 35%);
+      cursor: pointer;
+    }
+  }
+}
+
+.wrong {
+  --mdc-snackbar-container-color: #fe3030 !important;
+  .close-btn{
+    color: $color-white !important;
+  }
+  span{
+    color: $color-white !important;
+  }
+  .message {
+    mat-icon {
+      background-color: $color-white !important;
+      color: #fe3030 !important;
+    }
+  }
+  .view-cart {
+    background-color: $color-white !important;
+    color: #fe3030 !important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+    &:hover {
+      background-color: lighten(#fe3030, 35%);
+      cursor: pointer;
+    }
+  }
+}
+
+
+.dialog {
+  padding: 10px !important;
+}
+
+@media (max-width: 599px) {
+  body{
+    background-color: $body-color !important;
+  }
+  .style-title{
+    .title {
+      color: darken($color-white, 93%)!important;
+      font-size: 4.26667vw!important;
+      font-weight: 700!important;
+      line-height: 4.8vw!important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      margin-bottom: 20px;
+    }
+
+    a {
+      font-size: 3.46667vw;
+      line-height: 4vw;
+      color: $color-black;
+      .arrow-icon{
+        margin-left: 0;
+      }
+    }
+  }
+}

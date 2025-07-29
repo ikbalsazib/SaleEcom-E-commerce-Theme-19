@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+@defer (when !isLoading) {
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="printInvoice()">
+      Print
+    </button>
+  </div>
+
+  <div class="preview-container" [style.--bill-invoice-color]="invoice?.color ?? '#5d36ff'">
+    <div id="print-section" class="invoice-container"  >
+      <div class="header-content">
+        <a href="/"  class="logo" routerLink="/">
+          @if(invoice?.shopLogo){
+            <img [src]="invoice?.shopLogo" alt="image" loading="lazy">
+          }@else {
+            <p>{{invoice?.websiteName}}</p>
+          }
+        </a>
+        <div class="heater-right">
+          <span>{{ invoice?.shopAddress }}</span>
+          <span>Visit: {{ invoice?.domain }}</span>
+          <span>Mobile: {{ invoice?.shopPhoneNo }}</span>
+        </div>
+      </div>
+
+      <div class="invoice-content">
+        <h4>Order Date: {{invoice?.date}}</h4>
+        <div class="shipping-info">
+          <p>Ship to:{{invoice?.address}}</p>
+          <p class="order-number">Order Number: {{invoice?.orderId}}</p>
+        </div>
+        <div class="customer-info">
+          <span>Name: {{invoice?.name}}</span>
+          <span>Address: {{invoice?.shippingAddress}}</span>
+          <span>Phone: {{invoice?.phoneNo}}</span>
+        </div>
+        <div class="total-amount">
+          <p>Total Amount: {{invoice?.grandTotal | currencyCtr}}</p>
+          <input type="hidden" id="yourID" name="msg" value="item?.orderedItems" style="display:none"/>
+          <p class="quantity" >Total Quantity: {{getTotaQuantity(invoice?.items)}}</p>
+        </div>
+      </div>
+
+      <div class="product-infos">
+        <div class="product-info-header">
+          <p class="border header-style">Product</p>
+          <p class="border header-style">Image</p>
+          <p class="border header-style">Price</p>
+          <p class="border header-style">Qty</p>
+          <p class="border header-style">Tax</p>
+          <p class="border header-style">Total</p>
+        </div>
+
+        @for(order of invoice?.items; track order._id){
+          <div class="product-info-content" >
+            <p class="border">{{order?.name}}</p>
+            <p class="border"><img [src]="order?.image" alt=""></p>
+            <p class="border">{{order?.salePrice | currencyCtr}}</p>
+            <p class="border">{{order?.quantity}}</p>
+            <p class="border">{{0 | currencyCtr}}</p>
+            <p class="border">{{(order?.quantity * order?.salePrice) | currencyCtr}}</p>
+          </div>
+        }
+
+      </div>
+
+      <div class="bottom-area">
+
+        <div class="product-total-content">
+          <div class="product-total">
+            <div class="product-total-price">
+              <p >SubTotal :</p>
+              <p class="quantity">{{invoice?.subTotal | currencyCtr}}</p>
+            </div>
+            <div class="product-total-price">
+              <p>Shipping Cost :</p>
+              <p class="quantity">{{invoice?.deliveryCharge | currencyCtr}}</p>
+            </div>
+            <div class="product-total-price">
+              <p >Discount Amount :</p>
+              <p class="quantity">{{(invoice?.discount ?? 0) | currencyCtr}}</p>
+            </div>
+            <div class="product-total-price">
+              <p >Coupon Discount :</p>
+              <p class="quantity">{{(invoice?.couponDiscount ?? 0) | currencyCtr}}</p>
+            </div>
+            <div class="product-total-price border-btm">
+              <p >Grand Total :</p>
+              <p class="quantity">{{invoice?.grandTotal | currencyCtr}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="invoice-bottom">
+        <p>Thank you for your order from {{ invoice?.domain }}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  </body>
+  </html>
+
+} @placeholder (minimum 200ms) {
+}
+
+
+
+
+
+
+
+

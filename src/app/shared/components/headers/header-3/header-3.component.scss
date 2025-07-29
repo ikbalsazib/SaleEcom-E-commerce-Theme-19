@@ -1,0 +1,22 @@
+@import "variables";
+app-header-xl-3 {
+  display: block;
+}
+
+app-header-sm-3 {
+  display: none;
+}
+
+@media only screen and (max-width: 599px) {
+  app-header-sm-3 {
+    display: block;
+  }
+
+  app-header-xl-3 {
+    display: none;
+  }
+}
+
+
+
+

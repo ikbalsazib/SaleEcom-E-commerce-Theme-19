@@ -1,0 +1,23 @@
+<div class="no-card" [style.border]="!needBorder ? 'none' : ''">
+  <div class="lottie-animation" [style.width]="iconWidth">
+    @if(isPlatformBrowser(this.platformId)){
+      <ng-lottie [options]="{path: filePath}" />
+    }
+
+  </div>
+
+  <div class="info">
+    <h3 [style.font-size]="titleSize">{{title}}</h3>
+    @if(desc) {
+      <p>{{desc}}</p>
+    }
+
+  </div>
+
+  @if(btnTitle) {
+    <div class="action">
+      <a class="btn" (click)="onBtnClick()" [routerLink]="btnUrl">{{btnTitle}}</a>
+    </div>
+  }
+
+</div>

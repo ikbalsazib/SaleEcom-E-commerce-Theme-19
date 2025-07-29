@@ -1,0 +1,11 @@
+@import "common/headers/header-cart";
+
+
+::ng-deep.cart-button {
+
+  span {
+    background-color: $color-tertiary !important;
+    color: $color-white !important;
+  }
+
+}

@@ -1,0 +1,32 @@
+@import "variables";
+
+.product-container{
+  border: 1px solid darken($color-white,10%);
+  border-radius: 10px;
+  padding: 10px;
+}
+.list-container{
+    display: flex;
+    max-width: 280px;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    border-radius: 10px;
+    padding: 5px 5px 0 5px;
+    margin-bottom: 7px;
+    border: 1px solid darken($color-white,10%);
+  ::ng-deep.skeleton-loader{
+    margin-bottom: 0!important;
+  }
+}
+
+.right-skeleton{
+    border-radius: 40px;
+}
+
+@media only screen and (max-width: 599px) {
+
+    .list-container{
+        display: flex;
+        width:20%;
+    }}

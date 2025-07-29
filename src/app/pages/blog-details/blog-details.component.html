@@ -1,0 +1,72 @@
+<div class="main-container">
+  <div class="container blog-details-top">
+    <div class="top-section">
+      <div class="title">
+        <h1>{{ blog?.title }}</h1>
+        <div class="title-right">
+          <h4 *ngIf="blog?.authorName"><span class="blog-user-profile"><mat-icon>person</mat-icon>
+            {{ blog?.authorName }}</span></h4>
+          <div class="date">
+            <mat-icon>date_range</mat-icon>
+            <span>Date : {{ blog?.createdAt | date }}</span>
+          </div>
+          <div class="date">
+            <mat-icon>visibility</mat-icon>
+            <span style="font-weight: 600">Total View : {{ blog?.totalView }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-section">
+      <div class="container1">
+        <img checkImageDefault [src]="blog?.images && blog?.images.length ? blog?.images[0] : ''"
+             alt="Slide"/>
+        <p class="description" [innerHTML]="blog?.description | safeHtmlCustom"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="comment-area">
+  <div class="container">
+    <form #formElement="ngForm" [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+      <div class="form-input">
+        <label for="comment">Add a Comment</label>
+        <textarea cols="20" rows="7" formControlName="review" placeholder="Write Your Comment Here..."></textarea>
+      </div>
+      <div class="sub-btn">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-all-comments class="container blog-comments" [data]="blog"></app-all-comments>
+
+<!--  <app-related-blog [slug]="slug"></app-related-blog>-->
+
+<div class="section" *ngIf="blogs?.length">
+  <div class="container">
+    <div class="title-area">
+      <h1>Related Advices</h1>
+    </div>
+
+    <!-- Swiper Component for Related Articles -->
+    <app-swiper
+      [visibleSlides]="4"
+      [gap]="20"
+      [navigation]="true"
+      [pagination]="true"
+      [loop]="false"
+      [autoplay]="false"
+      [breakpoints]="breakpoints">
+      @for (blog of blogs; track blog._id) {
+        <div #sliderItem class="slider__item">
+          <app-blog-card-one [data]="blog"></app-blog-card-one>
+        </div>
+      }
+    </app-swiper>
+  </div>
+</div>

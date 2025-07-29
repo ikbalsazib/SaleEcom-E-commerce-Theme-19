@@ -1,0 +1,116 @@
+<div class="all-categories-list">
+  <div class="container">
+    <div class="category-section">
+      <h3 class="title">Categories</h3>
+
+
+        @defer (when !isLoading) {
+          @switch (categoryCardViews) {
+            @case ('Category 1') {
+              <div class="categories-cards">
+              @for (item of categories; track item?._id) {
+                <app-categories-card [category]="item"></app-categories-card>
+              }
+              </div>
+            }
+            @case ('Category 2') {
+              <div class="categories-cards">
+              @for (item of categories; track item?._id) {
+                <app-category-card-2 [category]="item"></app-category-card-2>
+              }
+              </div>
+            }
+            @case ('Category 3') {
+              <div class="categories-cards">
+              @for (item of categories; track item?._id) {
+                <app-categories-card-3 [category]="item"></app-categories-card-3>
+              }
+              </div>
+            }
+            @case ('Category 4') {
+              <div class="categories-cards-new">
+              @for (item of categories; track item?._id) {
+                <app-category-card-4 [category]="item"></app-category-card-4>
+              }
+              </div>
+            }
+          }
+        } @placeholder (minimum 50ms) {
+          <div class="categories-cards">
+          @for (data of [].constructor(8); track $index) {
+            <app-category-loader />
+          }
+          </div>
+        }
+
+
+    </div>
+
+
+    <div class="recent-product-section"  (scroll)="onScroll($event)">
+
+      <div class="recent-header">
+        <h2>Recent Product</h2>
+        <a [routerLink]="'/products'" >
+          View All
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368"
+               class="arrow-icon">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="products-cards">
+
+        @defer (when !isLoading) {
+          @switch (productCardViews) {
+            @case ('Product Card 1') {
+              @for (item of products; track $index) {
+                <app-product-card-1 [product]="item"></app-product-card-1>
+              }
+            }
+            @case ('Product Card 2') {
+              @for (item of products; track $index) {
+                <app-product-card-2 [product]="item"></app-product-card-2>
+              }
+            }
+            @case ('Product Card 3') {
+              @for (item of products; track $index) {
+                <app-product-card-3 [product]="item"></app-product-card-3>
+              }
+            }
+            @case ('Product Card 4') {
+              @for (item of products; track $index) {
+                <app-product-card-4 [product]="item"></app-product-card-4>
+              }
+            }
+          }
+
+        } @placeholder (minimum 50ms) {
+          @for (data of [].constructor(8); track $index) {
+            <app-product-card-loader />
+          }
+        }
+
+      </div>
+      @if(!products?.length && !isLoading){
+        <div class="no-data" >
+          <app-empty-data
+            [needBorder]="false"
+            [iconWidth]="'150px'"
+            [title]="'No Product Found!'"
+            [titleSize]="'20px'"
+            [desc]="'Try to search another category.'"
+            [filePath]="'/lottie/no-data-1.json'"
+            [btnTitle]="'Continue Shopping'"
+            [btnUrl]="'/products'"
+          >
+          </app-empty-data>
+        </div>
+      }
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="left">
+    <button class="icon-btn" (click)="removeWishlistById(wishlist?._id)">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368">
+        <path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+      </svg>
+    </button>
+
+    <div class="image">
+      <img [src]="wishlist?.product?.images[0]" alt="image" loading="lazy"/>
+    </div>
+
+    <div class="description">
+      <a [routerLink]="['/product-details', wishlist?.product?.slug]">
+        <h4>{{ wishlist?.product?.name }}</h4>
+      </a>
+      <p><span>Category: </span>{{ wishlist?.product?.category?.name }}</p>
+      <p><span>Quantity: </span>{{ wishlist?.selectedQty }}</p>
+    </div>
+  </div>
+  <div class="right">
+
+    @if (!wishlist?.product?.isVariation && wishlist?.product?.salePrice) {
+      <div class="price">
+        @if (wishlist?.product?.discountAmount > 0) {
+          <div class="old-price">{{( wishlist?.product?.salePrice) | currencyCtr }}</div>
+        }
+        <div class="new-price">{{ (wishlist?.product | price : "salePrice") | currencyCtr }}</div>
+
+      </div>
+    }
+
+    @if (wishlist?.product?.isVariation && wishlist?.product?.variationList && wishlist?.product?.variationList[0]) {
+      <div class="price">
+        @if (wishlist?.product?.variationList[0]?.discountAmount > 0) {
+          <div class="old-price">{{ (wishlist?.product?.variationList[0]?.salePrice) | currencyCtr }}</div>
+        }
+        <div class="new-price">{{ (wishlist?.product?.variationList[0] | price : "salePrice") | currencyCtr }}</div>
+
+      </div>
+    }
+    <button class="btn" (click)="onAddToCart($event)">Add to Cart</button>
+
+  </div>
+</div>
+
+<app-add-to-cart [product]="wishlist?.product" [data]="wishlist?._id" [isVisible]="isPopupVisible" (closePopup)="closePopup()"></app-add-to-cart>
+

@@ -1,0 +1,96 @@
+@import "variables";
+.container{
+  max-width: 850px;
+}
+
+.cards-section {
+  margin-bottom: 20px;
+}
+
+.list-order {
+  width: 100%;
+  margin-bottom: 30px;
+
+  .btn-sec {
+    display: flex;
+    gap: 10px;
+    position: sticky;
+    top: 86px;
+    background: $color-white;
+    z-index: 100;
+    padding-block: 11px;
+  }
+
+  .button {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid rgb(212, 207, 207);
+    transition: all 0.5s ease;
+    cursor: pointer;
+  }
+
+  .button.active {
+    border: 1px solid $color-primary;
+    background: $color-primary;
+    color: $color-white;
+    transition: all 0.4s ease;
+  }
+}
+
+.list-loader-parent {
+  margin-top: 30px;
+}
+
+.empty-data {
+  margin: 30px;
+}
+
+@media (max-width: 900px){
+  .btn-sec-parent {
+    overflow-x: scroll;
+    background-color: $color-white;
+    &::-webkit-scrollbar{
+      height: 4px;
+    }
+    &::-webkit-scrollbar-thumb{
+      background-color: $color-white;
+      border-radius: 7px;
+    }
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .list-loader-parent {
+    margin-top: 15px;
+  }
+  .empty-data{
+    background-color: $color-white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 40px 0;
+  }
+  .container{
+    margin-top: 15px;
+  }
+
+  .list-order {
+    .btn-sec {
+      justify-content: space-between;
+      padding-inline: 19px;
+      max-width: 348px;
+    }
+
+    .button {
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid rgb(212, 207, 207);
+      transition: all 0.5s ease;
+      font-size: 15px;
+      text-wrap: nowrap;
+    }
+  }
+  .cards-section {
+    padding-inline: 15px;
+    margin-bottom: 80px;
+  }
+}

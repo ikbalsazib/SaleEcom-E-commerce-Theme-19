@@ -1,0 +1,27 @@
+.timeline-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+
+}
+
+.timeline-entry-skeleton {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  margin: 30px auto;
+}
+
+.left-timeline, .right-timeline {
+  display: flex;
+  gap: 20px;
+}
+
+.status-info-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

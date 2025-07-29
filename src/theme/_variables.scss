@@ -1,0 +1,59 @@
+// Fonts Family
+@import "store-shop-variables";
+$font-en-satoshi: 'Satoshi', sans-serif;
+$font-en-primary: $font-en-satoshi;
+$font-en-family: "Instrument Serif", serif;
+
+:root {
+  --shop-color-primary: #e8007c;
+  --shop-color-secondary: #00c153;
+  --shop-color-tertiary: #ff00ae;
+  --shop-color-test: #e8007c;
+  --shop-color-primary-light: color-mix(in srgb, var(--shop-color-primary) 20%, white 80%);
+}
+
+// Base COLORS
+$color-primary: var(--shop-color-primary);
+$color-primary-light: var(--shop-color-primary-light);
+$color-secondary: var(--shop-color-secondary);
+$color-tertiary: var(--shop-color-tertiary);
+$discount-color: #00c153;
+
+// Essential Colors
+$color-success: #018e55;
+$color-accent: #1aa4e0;
+$color-warn: #ff0e4a;
+
+// Names Color
+$color-white: #ffffff;
+$color-black: #000000;
+$color-green: #00c153;
+$color-gray: #948f8fa1;
+$color-gray-dark: #777877;
+$color-orange: #ff4500;
+$color-red: #b00a0a;
+
+//Body Color
+$body-color: #f0f1f6;
+
+//box shadow
+$box-shadow-black: 1px 5px 10px rgba(0, 0, 0, 0.1);
+
+// Container
+$header-height: 93px;
+$header-height-sm: 55px;
+$mobile-nav-header-height: 50px;
+$container-max-width: 1340px;
+
+// Fonts
+$font-title: 34px;
+$font-title-sm: 26px;
+
+$font-sub-title: 26px;
+$font-sub-title-sm: 20px;
+
+$font-title-desc: 16px;
+$font-title-desc-sm: 12px;
+
+$font-readable: 14px;
+$font-readable-sm: 12px;

@@ -1,0 +1,32 @@
+<div class="blog-card" [id]="data?._id" >
+  <div class="blog-image" [routerLink]="['/blog-details',data?.slug]">
+    <a>
+      <img checkImageDefault [src]="data?.images && data?.images.length ? data?.images[0] : ''"
+           alt="Slide"/>
+<!--      <img src="https://api.ecommerce.esquireelectronicsltd.com/api/upload/images/blog-ac-0df0.webp?resolution=881_526" alt="" />-->
+    </a>
+  </div>
+  <!--blog-body-->
+  <div class="blog-body">
+    <ul>
+      <li><mat-icon>person</mat-icon>{{data?.authorName}}</li>
+<!--      <li><mat-icon>person</mat-icon>Saleecom</li>-->
+      <li class="view-count"><span><mat-icon>date_range</mat-icon> {{data.createdAt | date}}</span>
+<!--      <li class="view-count"><span><mat-icon>date_range</mat-icon>Dec 24, 2024</span>-->
+        <span >Total View : {{data?.totalView}}</span>
+<!--        <span >Total View : 66</span>-->
+      </li>
+    </ul>
+    <div class="blog-title" [routerLink]="['/blog-details',data?.slug]">
+      <a>{{ data?.title }}</a>
+<!--      <a routerLink="{{ data?.routerLink }}">Factors to Consider When Buying an Air Conditioner</a>-->
+    </div>
+    <div class="blog-des">
+      <p>{{data?.shortDesc}}</p>
+<!--      <p >When selecting an air conditioner, it’s essential to evaluate certain factors to ensure you make the best choice for your home.</p>-->
+    </div>
+    <div class="read-more">
+      <a [routerLink]="['/blog-details',data?.slug]">Read More </a>
+    </div>
+  </div>
+</div>

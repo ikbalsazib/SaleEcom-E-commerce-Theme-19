@@ -1,0 +1,36 @@
+@import "variables";
+
+.list-container{
+  display: flex;
+  width: 100%;
+}
+
+.left-skeleton{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+.middle-skeleton{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.right-skeleton{
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+@media only screen and (max-width: 599px) {
+  .list-container{
+    display: flex;
+    width: 100%;
+    background-color: $color-white;
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  .right-skeleton {
+    display: none;
+  }
+
+}

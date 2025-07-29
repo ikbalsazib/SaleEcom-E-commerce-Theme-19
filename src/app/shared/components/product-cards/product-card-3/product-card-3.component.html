@@ -1,0 +1,193 @@
+<a class="card-container" [routerLink]="productDetailsRouterLink">
+  <div class="card-parent">
+
+    <div class="card-box">
+      <div class="card-image-box">
+        <div class="image-area1">
+          <div class="picture-wrapper">
+            <img
+              [ngSrc]="(product?.images | arrToSingleImage) | imgCtrl : 'filename'"
+              [width]="(product?.images | arrToSingleImage) | imgCtrl : 'width'"
+              [height]="(product?.images | arrToSingleImage) | imgCtrl : 'height'"
+              [alt]="product?.name"
+              [ngSrcset]="rawSrcset"
+              sizes="(max-width: 599px) 128px, (min-width: 600px) 500px"
+            />
+          </div>
+        </div>
+
+<!--        <div class="product-tag">-->
+<!--          @if (product?.discountAmount) {-->
+<!--            <span class="tag">-{{ product?.discountAmount }}</span>-->
+<!--          }-->
+<!--        </div>-->
+
+        @if ((product | productPrice : "discountAmount" : selectedVariationList?._id) > 0) {
+          <div class="product-tag">
+            <span class="tag">-{{ product | productPrice : "discountPercentage" : selectedVariationList?._id }}% OFF</span>
+          </div>
+        }
+
+        <!--        <button class="img-wishlist" (click)="onAddToWishlist($event)">-->
+        <!--        <span class="test">-->
+        <!--          <svg class="high-stock" [class.active-wish-list]="wishlist()" [class.inactive]="!wishlist()" width="24" height="20">-->
+        <!--            <path-->
+        <!--              d="M19.469 1.262c-5.284-1.53-7.47 4.142-7.47 4.142S9.815-.269 4.532 1.262C-1.937 3.138.44 13.832 12 19.333c11.559-5.501 13.938-16.195 7.469-18.07z"-->
+        <!--              stroke-width="1.5" fill-rule="evenodd" stroke-linejoin="round"></path>-->
+        <!--          </svg>-->
+        <!--        </span>-->
+        <!--          <span class="tooltiptext">Add to wishlist</span>-->
+        <!--        </button>-->
+
+      </div>
+      <div class="card-description-box">
+
+        <div class="card-description-top">
+          <div class="product-title">
+            <p>{{ product?.name }}</p>
+          </div>
+
+          <div class="product-card-bottom">
+            <div class="product-price">
+              <span>{{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}</span>
+              @if ((product | productPrice : "discountAmount" : selectedVariationList?._id) > 0) {
+                <span
+                  class="old-price">{{ (product | productPrice : "regularPrice" : selectedVariationList?._id) | currencyCtr }}</span>
+              }
+            </div>
+          </div>
+        </div>
+
+
+        <div class="product-card-bottom-2">
+          <button class="add-cart" (click)="onAddToCart($event, 'buyNow')">
+            {{'buyNow' | translate}}
+          </button>
+          <button class="buy-now" (click)="onAddToCart($event, 'addToCart')">
+            {{'addToCart' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+
+
+@if (isModalVisible) {
+  <div class="modal-overlay">
+    <div class="product-modal">
+      <div class="modal-header">
+        <div class="image-area">
+          <img checkImageDefault [src]="image ? image : 'https://cdn.saleecom.com/upload/images/placeholder.png'"
+               alt="Product Image" class="product-image"/>
+          <div class="product-details">
+            <h2 class="product-name">{{ product?.name }}</h2>
+            <div class="price-section">
+              <span
+                class="current-price">{{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}</span>
+              @if ((product | productPrice : "discountAmount" : selectedVariationList?._id) > 0) {
+                <div>
+                  <span
+                    class="original-price"> {{ (product | productPrice : "regularPrice" : selectedVariationList?._id) | currencyCtr }}</span>
+                  <span
+                    class="discount-badge">- {{ (product | productPrice : "discountAmount" : selectedVariationList?._id) | currencyCtr }}
+                    Off</span>
+                </div>
+              }
+            </div>
+            <button class="close-btn" (click)="closeModal()">&times;</button>
+          </div>
+        </div>
+
+        @if (product?.variation) {
+          <div class="variation">
+            <p class="variation-text">{{ product?.variation }}:</p>
+            <div class="variation-list-area">
+              @for (data of product?.variationOptions; track data) {
+                <div class="color-variant">
+                  <button [class.active]="selectedVariation === data"
+                          (click)="onSelectVariation(data)">
+                    @if(convertToLowercase(product?.variation) === "color" || convertToLowercase(product?.variation) === "colour"){
+                      @if (getVariationImage(data)) {
+                        <picture>
+                          <source [srcset]="getVariationImage(data)" type="image/webp">
+                          <img [src]="getVariationImage(data)" alt="Black">
+                        </picture>
+                      }
+                    }
+                    {{ data }}
+                    <span>&#10003;</span>
+                  </button>
+                </div>
+              }
+            </div>
+          </div> <!-- END! 1st Variation View -->
+        }
+
+
+        @if (product?.variation2) {
+          <div class="variation">
+            <p class="variation-text">{{ product?.variation2 }}:</p>
+            <div class="variation-list-area">
+              @for (data of product?.variation2Options; track data) {
+                <div class="color-variant">
+                  <button [class.active]="selectedVariation2 === data"
+                          (click)="onSelectVariation2(data)">
+                    @if(convertToLowercase(product?.variation2) === "color" || convertToLowercase(product?.variation2) === "colour"){
+                      @if (getVariationImage(data)) {
+                        <picture>
+                          <source [srcset]="getVariationImage(data)" type="image/webp">
+                          <img [src]="getVariationImage(data)" alt="Black">
+                        </picture>
+                      }
+                    }
+                    {{ data }}
+                    <span>&#10003;</span>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- END! 2nd Variation View -->
+
+        <button class="add-to-cart-btn" (click)="onAddToCart($event, actionType)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14.283"
+            viewBox="0 0 14 14.283"
+          >
+            <g id="cart" transform="translate(-2 -2)">
+              <path
+                id="Path_1717"
+                data-name="Path 1717"
+                d="M2.6,2a.6.6,0,1,0,0,1.19h.292a.6.6,0,0,1,.572.432l1.887,6.605a1.785,1.785,0,0,0,1.717,1.295H12.5A1.785,1.785,0,0,0,14.159,10.4l1.755-4.387A1.19,1.19,0,0,0,14.809,4.38H4.914L4.6,3.295A1.785,1.785,0,0,0,2.888,2Z"
+                transform="translate(0 0)"
+                fill="#fff"
+              />
+              <path
+                id="Path_1718"
+                data-name="Path 1718"
+                d="M6.785,14.571A1.785,1.785,0,1,0,5,12.785,1.785,1.785,0,0,0,6.785,14.571Z"
+                transform="translate(0.571 1.712)"
+                fill="#fff"
+              />
+              <path
+                id="Path_1719"
+                data-name="Path 1719"
+                d="M10.785,14.571A1.785,1.785,0,1,0,9,12.785,1.785,1.785,0,0,0,10.785,14.571Z"
+                transform="translate(1.332 1.712)"
+                fill="#fff"
+              />
+            </g>
+          </svg>
+          {{ actionType === 'buyNow' ? ('buyNow' | translate) : ('addToCart' | translate) }}
+
+        </button>
+      </div>
+    </div>
+  </div>
+}
+

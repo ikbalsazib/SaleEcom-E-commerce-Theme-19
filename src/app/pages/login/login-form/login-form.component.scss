@@ -1,0 +1,101 @@
+@import "variables";
+@import "exports/form-input-phone-no";
+@import "exports/form-input-primary";
+@import "exports/btn";
+@import "exports/spinner";
+
+form {
+  margin-top: 20px;
+}
+
+.input-otp {
+  width: 100%;
+  max-width: 380px;
+  margin: 20px auto 0;
+}
+
+.form-group {
+  margin-top: 20px;
+
+  .input-icon {
+    &.password-eye {
+      right: 12px;
+    }
+  }
+}
+
+.action {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  color: lighten($color-black, 25%);
+
+  .line {
+    flex: 1;
+    height: 1px;
+    background-color: lighten($color-black, 25%);
+    margin: 0 10px;
+  }
+
+  .text {
+    font-size: $font-readable;
+    font-weight: 600;
+    color: $color-black;
+    font-family: $font-en-primary;
+  }
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid lighten(#4285F4, 10%);
+    border-radius: 5px;
+    font-size: calc($font-readable + 2px);
+    cursor: pointer;
+    background-color: $color-white;
+    transition: background-color 0.2s ease;
+    color: $color-black;
+    font-weight: 600;
+    font-family: $font-en-primary;
+
+    &:hover {
+      background-color: lighten(#4285F4, 36%);
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .facebook-btn {
+      margin-left: 18px !important;
+    }
+
+    &.google {
+      border-color: #ec4435;
+      color: #ec4435;
+
+      &:hover {
+        background-color: lighten(#ec4435, 39%);
+      }
+    }
+  }
+
+}
+

@@ -1,0 +1,213 @@
+@import "variables";
+
+.success-order-wrapper {
+  position: relative;
+}
+
+
+
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.confirmation-container {
+  z-index: 2;
+  background: $color-white;
+  margin: $header-height;
+  text-align: center;
+  box-shadow: 0 3px 6px rgba(161, 161, 161, 0.16),
+  0 3px 6px rgba(124, 124, 124, 0.16);
+  max-width: 600px;
+  width: 100%;
+  padding: 50px;
+  border-radius: 8px;
+  position: relative;
+
+  .checkmark-container {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+
+    .circle {
+      //margin-top: 30px;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #36c06b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+      &.failed {
+        background-color: #d83333;
+      }
+    }
+
+    .check {
+      top: 18px;
+      left: 30px;
+      position: absolute;
+      height: 5px;
+      border-right: 3px solid white;
+      border-bottom: 3px solid white;
+      transform: rotate(45deg);
+      animation: draw-check 0.5s ease-out forwards;
+    }
+
+    .cross {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30px;
+      height: 30px;
+    }
+
+    .cross::before,
+    .cross::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 2px;
+      background-color: #ffffff;
+      transform: translate(-50%, -50%);
+    }
+
+    .cross::before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    .cross::after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+  }
+
+  .button-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    color: $color-white;
+
+    .button {
+      font-family: $font-en-primary;
+      font-size: $font-readable;
+      display: flex;
+      border-radius: 5px;
+      align-items: center;
+      justify-content: center;
+      background: #36c06b;
+      width: 130px;
+      height: 45px;
+      cursor: pointer;
+      transition:all 0.5s ease;
+
+      .svg-icon {
+        padding-left: 6px;
+
+        margin-left: 4px;
+        transition: transform 0.3s ease-in-out;
+      }
+    }
+    .button:hover{
+      background: #299151;
+      transition:all 0.5s ease;
+
+      .svg-icon {
+        transform: translateX(5px);
+      }
+
+    }
+  }
+
+  .content {
+    margin-top: 70px;
+
+    h2 {
+      font-size: $font-readable;
+      margin: 0;
+      font-family: $font-en-primary;
+    }
+    h3 {
+      font-size: $font-sub-title-sm;
+      margin: 10px 0;
+      font-family: $font-en-primary;
+    }
+    p {
+      font-size: $font-title-desc;
+      margin: 10px 0;
+      font-family: $font-en-primary;
+
+      a {
+        color:  $color-black;
+        text-decoration: none;
+      }
+    }
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@keyframes draw-check {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  100% {
+    width: 12px;
+    height: 28px;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Styles for canvas to make it on top of everything */
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 1s ease, transform 1s ease;
+}
+#canvas.hidden {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+//for mobile
+@media only screen and (max-width: 599px) {
+  .confirmation-container {
+    padding: 50px 20px;
+    margin: 15px;
+    background-color: $color-white;
+  }
+}
+
+

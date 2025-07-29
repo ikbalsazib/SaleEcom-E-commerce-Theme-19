@@ -1,0 +1,33 @@
+<div class="card">
+  <div class="header">
+    <h4>My Wishlists</h4>
+    @if(orders.length) {
+      <a class="btn btn-outline" routerLink="/my-wishlist">View all</a>
+    }
+    @else {
+      <a class="btn btn-outline" routerLink="/products">Add Wishlist</a>
+    }
+  </div>
+
+  <div class="content">
+    @if(wishlists.length && !isLoading) {
+      <div class="content-area">
+        @for(data of wishlists.slice(0,4); track data){
+          <app-wishlist-card [wishlist]="data"></app-wishlist-card>
+        }
+      </div>
+    } @else if(!orders.length && !isLoading) {
+      <app-empty-data
+        [needBorder]="false"
+        [iconWidth]="'120px'"
+        [title]="'Your Wish List is Empty!'"
+        [titleSize]="'16px'"
+        [filePath]="'/lottie/no-data-1.json'"
+      >
+      </app-empty-data>
+    } @else {
+      <p>Loading</p>
+    }
+
+  </div>
+</div>

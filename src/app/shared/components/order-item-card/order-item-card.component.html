@@ -1,0 +1,32 @@
+<div class="product-card">
+<!--  <img [src]="data?.product?.images?.length ? data?.product?.images[0] : 'https://cdn.saleecom.com/upload/images/placeholder.png'" class="product-image" alt="">-->
+  <img [src]="getProductImage(data)"  class="product-image" alt="">
+  <div class="product-info">
+    <h3 class="product-title">{{ data?.product?.name }}</h3>
+    @if (data?.variation){
+    <p class="product-details">{{ data?.variation | variationInfoInline}}</p>
+    }
+    <div class="product-actions">
+      <div class="quantity-control">
+        <button class="decrement" (click)="onDecrementQty(data?._id)">-</button>
+        <input  class="quantity" type="number" numberOnly [maxValue]="cartMaxQuantity" [(ngModel)]="data.selectedQty" readonly  min="1" />
+        <button class="increment" (click)="onIncrementQty(data?._id)">+</button>
+      </div>
+      <div class="price-info">
+        <span class="current-price">{{ (data?.product | productPrice : "salePrice" : data?.variation?._id : data?.selectedQty  :data?.isWholesale) | currencyCtr}}</span>
+        @if((data?.product | productPrice : "discountAmount" : data?.variation?._id: data?.selectedQty  :data?.isWholesale) > 0){
+        <span class="original-price">{{ (data?.product | productPrice : "regularPrice" :  data?.variation?._id : data?.selectedQty) | currencyCtr}}</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="delete-icon" (click)="onDeleteSingleCartItem(data)">
+    <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
+      <path
+        d="M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z"/>
+    </svg>
+  </div>
+</div>
+
+

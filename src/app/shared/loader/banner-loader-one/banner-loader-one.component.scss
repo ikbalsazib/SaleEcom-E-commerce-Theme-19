@@ -1,0 +1,16 @@
+.skeleton-container {
+  width: 100%;
+  height: 130px;
+}
+
+@media (max-width: 599px){
+  .skeleton-container {
+    ::ng-deep.skeleton-loader{
+      background: #e3e4e7!important;
+    }
+  }
+}
+
+
+
+

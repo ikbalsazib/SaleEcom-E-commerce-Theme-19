@@ -1,0 +1,33 @@
+<div>
+  <div class="coupons"   (mousedown)="onMouseDown($event)"
+       (mousemove)="onMouseMove($event)"
+       (mouseup)="onMouseUp()"
+       (mouseleave)="onMouseLeave()">
+  @for(data of allCoupons; track data){
+      <app-coupon-card (onChangeCouponCode)="onChangeCouponCode($event)" [data]="data"></app-coupon-card>
+  }
+  </div>
+
+  @if(isCoupon){
+    <div class="coupon-area">
+      <div class="coupon-input">
+        <input [readOnly]="coupon" [(ngModel)]="couponCode" type="text"
+               placeholder="Have Coupon code ? Enter Here..">
+      </div>
+
+      @if(!coupon){
+        <div class="apply-btn" (click)="checkCouponAvailability()">
+          <button>Apply</button>
+        </div>
+      }
+
+      @if(coupon){
+        <div class="apply-btn" (click)="onRemoveCoupon()">
+          <button class="danger">Remove</button>
+        </div>
+      }
+
+    </div>
+  }
+
+</div>

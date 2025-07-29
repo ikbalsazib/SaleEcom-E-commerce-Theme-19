@@ -1,0 +1,290 @@
+<div class="manage-address-main">
+  <div class="manage-main" (click)="$event.stopPropagation()">
+    @if(!showAddressForm){
+      <div class="manage-address-child" >
+        <div class="manage-address-top">
+          <h2>Address</h2>
+          <a (click)="onHideShowPopup()" mat-dialog-close>
+            <svg
+              width="20"
+              height="20"
+              fill="currentColor"
+              class="bi bi-x"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+              />
+            </svg>
+          </a>
+        </div>
+        <div class="user-address-main">
+          @for(data of addresses; track $index){
+            <div
+              class="user-present-address"
+              [class]="data?.setDefaultAddress ? 'active' : ''"
+            >
+              <div class="user-address-child">
+                <p>Name: {{ data?.name | titlecase }}</p>
+                <div class="three-dot">
+                  <a
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Example icon-button with a menu"
+                  >
+                    <svg
+                      class="MuiSvgIcon-root"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                      ></path>
+                    </svg>
+                  </a>
+                  <mat-menu #menu="matMenu">
+                    <button
+                      mat-menu-item
+                      type="button"
+                      (click)="onSelectEdittedAddress(data)"
+                    >
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      mat-menu-item
+                      type="button"
+                      (click)="setDefualtAddress(data?._id)"
+                    >
+                      <span>Make Default</span>
+                    </button>
+                    <button
+                      mat-menu-item
+                      type="button"
+                      (click)="deleteAddressById(data?._id)"
+                    >
+                      <span>Delete</span>
+                    </button>
+                  </mat-menu>
+                </div>
+              </div>
+              <div class="user-address-child">
+                <p>Phone: {{ data?.phone }}</p>
+              </div>
+              <div class="user-address-child">
+                <p>Address:{{ data?.address }}</p>
+              </div>
+              <div class="user-address-child">
+                <h3>
+                  Address Type: <span>{{ data?.addressType | titlecase }}</span>
+                </h3>
+              </div>
+            </div>
+          }
+
+
+          <div class="user-address-update" (click)="onShowAddressForm()">
+            <svg
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-plus-lg"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+              />
+            </svg>
+
+            <p>{{ "Add new address" | titlecase }}</p>
+          </div>
+        </div>
+      </div>
+    }@else{
+      <div class="get-address">
+        <div class="manage-address-top">
+          <h2>Add Shipping Address</h2>
+          <a (click)="onHideShowPopup()">
+            <svg
+              width="20"
+              height="20"
+              fill="currentColor"
+              class="bi bi-x"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"
+              />
+            </svg>
+
+            <!--          <i class="fa-solid fa-xmark"></i>-->
+          </a>
+        </div>
+
+        <div class="address-select">
+          <p>Address Type</p>
+
+          <div class="address-bar">
+            <button
+              type="button"
+              [class.active]="storeAddress === 'home'"
+              (click)="onAddressSelect('home')"
+            >
+              <svg
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path>
+              </svg>
+              <span> Home </span>
+            </button>
+            <button
+              type="button"
+              [class.active]="storeAddress === 'office'"
+              (click)="onAddressSelect('office')"
+            >
+              <svg
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M10 16v-1H3.01L3 19c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2v-4h-7v1h-4zm10-9h-4.01V5l-2-2h-4l-2 2v2H4c-1.1 0-2 .9-2 2v3c0 1.11.89 2 2 2h6v-2h4v2h6c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-6 0h-4V5h4v2z"
+                ></path>
+              </svg>
+              <span>Office</span>
+            </button>
+            <button
+              type="button"
+              [class.active]="storeAddress === 'home town'"
+              (click)="onAddressSelect('home town')"
+            >
+              <svg
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M8.17 5.7L1 10.48V21h5v-8h4v8h5V10.25z"></path>
+                <path
+                  d="M10 3v1.51l2 1.33L13.73 7H15v.85l2 1.34V11h2v2h-2v2h2v2h-2v4h6V3H10zm9 6h-2V7h2v2z"
+                ></path>
+              </svg>
+              <span>Home Town</span>
+            </button>
+          </div>
+        </div>
+
+        <form (ngSubmit)="onFormSubmit()" [formGroup]="dataForm">
+          <div class="form-all-input">
+            <div class="form-input-select">
+              <mat-form-field class="mat-input-field" appearance="outline">
+                <mat-label>Full Name</mat-label>
+                <input
+                  matInput
+                  formControlName="name"
+                  placeholder="Enter your name"
+                />
+                <mat-error>This field is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="form-input-select">
+              <mat-form-field class="mat-input-field" appearance="outline">
+                <mat-label>Mobile Number</mat-label>
+                <input
+                  matInput
+                  formControlName="phone"
+                  placeholder="Enter mobile number"
+                />
+                <mat-error>This field is required</mat-error>
+                <mat-hint>Please enter your 11 digit mobile number..</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="form-input-select">
+              <mat-form-field class="mat-select-form" appearance="outline">
+                <mat-label>Select Division</mat-label>
+                <mat-select
+                  formControlName="division"
+                  (selectionChange)="onChangeRegion($event)"
+                >
+                  @for(d of divisions; track $index){
+                    <mat-option [value]="d?._id" >{{
+                        d?.name
+                      }}</mat-option>
+                  }
+                </mat-select>
+                <mat-error>This field is required</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-input-select">
+              <mat-form-field class="mat-select-form" appearance="outline">
+                <mat-label>Select Area</mat-label>
+                <mat-select
+                  formControlName="area"
+                  (selectionChange)="onChangeArea($event)"
+                >
+                  @for(a of area; track $index){
+                    <mat-option [value]="a?._id">{{
+                        a?.name
+                      }}</mat-option>
+                  }
+
+                </mat-select>
+                <mat-error>This field is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="form-input-select">
+              <mat-form-field class="mat-select-form" appearance="outline">
+                <mat-label>Select Zone</mat-label>
+                <mat-select formControlName="zone">
+                  @for(z of zone; track $index){
+                    <mat-option [value]="z?._id">{{
+                        z?.name
+                      }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-input-select">
+              <mat-form-field class="mat-input-field" appearance="outline">
+                <mat-label>Address</mat-label>
+                <input
+                  matInput
+                  formControlName="address"
+                  placeholder="Enter your name"
+                />
+                <mat-error>This field is required</mat-error>
+              </mat-form-field>
+            </div>
+
+          </div>
+
+          <div class="submit-and-slider">
+            <div style="visibility: hidden">
+              <mat-checkbox
+                formControlName="setDefaultAddress"
+                value=""
+                color="primary"
+              >Select Defualt</mat-checkbox
+              >
+            </div>
+            @if(isSelected == false){
+              <button class="submit-btn" type="submit">
+                {{ isLoading ? "Please wait.." : "Save Address" }}
+              </button>
+            }@else if(isSelected == true){
+              <button class="submit-btn" type="submit" >
+                {{ isLoading ? "Please wait.." : "Update Address" }}
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    }
+  </div>
+</div>

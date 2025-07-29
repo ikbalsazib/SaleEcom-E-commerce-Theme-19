@@ -1,0 +1,35 @@
+@import "variables";
+
+.title-area{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  button{
+    color: $color-red;
+    border: 1px solid $color-red;
+    height: 30px;
+    background: none;
+    padding: 4px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover{
+      background-color: $color-red;
+      color: $color-white;
+    }
+  }
+}
+
+
+@media (max-width: 599px) {
+  .filter-container h2 {
+    color: darken($color-white, 93%)!important;
+    font-size: 4.26667vw!important;
+    font-weight: 700!important;
+    line-height: 4.8vw!important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 11px 0!important;
+    margin-bottom: 15px!important;
+  }
+}

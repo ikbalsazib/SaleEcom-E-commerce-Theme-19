@@ -1,0 +1,59 @@
+@import "variables";
+@import "exports/btn";
+
+::ng-deep.mat-bottom-sheet-container {
+  padding: 0;
+  background: transparent;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.cost-summary {
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: $font-title-desc;
+    margin: 20px 0;
+
+    &.total {
+      font-weight: bold;
+      font-size: $font-title-desc;
+    }
+
+    &.discount {
+      color: $color-warn;
+    }
+  }
+  .checkout-btn-mobile-view{
+    width: 100%;
+    text-align: center;
+    button{
+      width: 100%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+    }
+  }
+}
+
+.modal-content {
+  background-color: $color-white;
+  width: 100%;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  position: relative;
+  padding: 15px;
+  h2 {
+    margin-bottom: 15px;
+    color: #333;
+  }
+}
+
+.modal-close {
+  span {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+  }
+}

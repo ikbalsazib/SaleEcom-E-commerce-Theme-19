@@ -1,0 +1,111 @@
+@import "variables";
+
+.description {
+  position: relative;
+  width: 100%;
+  word-break: break-all !important;
+
+  p {
+    word-break: break-all;
+    display: block;
+    font-family: $font-en-primary !important;
+  }
+}
+
+:host ::ng-deep .description p {
+  word-break: break-all;
+  font-family: $font-en-primary !important;
+}
+
+
+:host ::ng-deep .description .video-container {
+  iframe {
+    width: 100% !important;
+    min-height: 300px !important;
+    padding-block: 15px !important;
+  }
+}
+
+@media (max-width: 599px){
+  :host ::ng-deep .description .video-container {
+    iframe {
+      min-height: 20vw !important;
+
+    }
+  }
+}
+
+.see-more {
+  text-align: center;
+  margin-top: 10px;
+
+  button {
+    background: none;
+    border: none;
+    color: #119744;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 5px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(17, 151, 68, 0.1);
+    }
+  }
+}
+
+.read-more {
+  position: relative;
+  max-height: 600px;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+
+  &.expand {
+    max-height: 100%;
+  }
+
+  p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+
+  .fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, white);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &.hidden {
+      opacity: 0;
+    }
+  }
+}
+
+.read-more-link {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: block;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  color: blue;
+  font-weight: bold;
+  font-size: 16px;
+  padding-top: 40px;
+  background-image: linear-gradient(to bottom, transparent, white);
+  cursor: pointer;
+}
+
+.read-more-link.expand {
+  position: relative;
+  background-image: none;
+  padding-top: 10px;
+  height: 20px;
+}

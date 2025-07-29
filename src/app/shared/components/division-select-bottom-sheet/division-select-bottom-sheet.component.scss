@@ -1,0 +1,29 @@
+@import 'variables';
+
+.division-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.division-list-item {
+  cursor: pointer;
+  border: 1px solid #cccccc71;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  color: #222;
+  display: flex;
+  align-items: center;
+  transition: border 0.2s, background 0.2s;
+
+  &.active {
+    border: 1px solid $color-primary !important;
+    color: $color-primary;
+  }
+}
+
+::ng-deep .mat-bottom-sheet-container{
+  border-top-right-radius: 14px !important;
+  border-top-left-radius: 14px !important;
+}

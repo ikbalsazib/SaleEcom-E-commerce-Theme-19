@@ -1,0 +1,37 @@
+<div class="order-data">
+<!--  <img [src]="data?.product?.images?.length ? data?.product?.images[0] : 'https://cdn.saleecom.com/upload/images/placeholder.png'"-->
+<!--       alt="Product Image">-->
+  <img [src]="getProductImage(data)"  class="product-image" alt="">
+  <div class="data-details">
+    <div class="info-content">
+      <div class="title-container">
+        <p class="data-title">{{ data?.product?.name }}</p>
+        @if (data?.variation) {
+          <p class="data-size">{{ data?.variation?.name }}</p>
+        }
+      </div>
+
+
+      <div class="delete-icon" (click)="onDeleteSingleCartItem(data)">
+        <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
+          <path
+            d="M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z"/>
+        </svg>
+      </div>
+    </div>
+    <div class="price-area">
+      <span>
+        <span class="current-price">{{ (data?.product | productPrice : "salePrice" : data?.variation?._id : data?.selectedQty  :data?.isWholesale) | currencyCtr}}</span>
+      @if((data?.product | productPrice : "discountAmount" : data?.variation?._id: data?.selectedQty  :data?.isWholesale) > 0){
+      <span class="original-price">{{ (data?.product | productPrice : "regularPrice" :  data?.variation?._id : data?.selectedQty) | currencyCtr}}</span>
+      }
+      </span>
+      <!-- <div class="data-price">{{ (data?.isWholesale? data?.product?.wholesalePrice : data?.product?.salePrice) | currencyCtr }}</div> -->
+      <div class="data-quantity">
+        <button style="padding-bottom: 2px" (click)="onDecrementQty(data?._id)">-</button>
+        <input type="number" numberOnly [maxValue]="cartMaxQuantity" [(ngModel)]="data.selectedQty" min="1">
+        <button (click)="onIncrementQty(data?._id)">+</button>
+      </div>
+    </div>
+  </div>
+</div>

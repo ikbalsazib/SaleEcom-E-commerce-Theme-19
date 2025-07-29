@@ -1,0 +1,55 @@
+<app-top-section [shopInfo]="shopInfo" [singleLandingPage]="singleLandingPage" lazyLoadComponent
+                 (lazyLoad)="loadNextComponent('sec1')" [cartSaleSubTotal]="cartSaleSubTotal"></app-top-section>
+
+<ng-container *ngIf="checkComponentLoad('sec1')">
+<app-youtube-video [singleLandingPage]="singleLandingPage" lazyLoadComponent
+                   (lazyLoad)="loadNextComponent('sec2')" [cartSaleSubTotal]="cartSaleSubTotal"></app-youtube-video>
+</ng-container>
+
+<ng-container *ngIf="checkComponentLoad('sec2')">
+<app-helping [singleLandingPage]="singleLandingPage" lazyLoadComponent
+             (lazyLoad)="loadNextComponent('sec3')" [cartSaleSubTotal]="cartSaleSubTotal"></app-helping>
+</ng-container>
+
+<ng-container *ngIf="checkComponentLoad('sec3')">
+  <app-faq [singleLandingPage]="singleLandingPage" lazyLoadComponent
+           (lazyLoad)="loadNextComponent('sec4')" [cartSaleSubTotal]="cartSaleSubTotal"></app-faq>
+
+</ng-container>
+
+
+
+<ng-container *ngIf="checkComponentLoad('sec4')">
+  <app-customer-review [singleLandingPage]="singleLandingPage" lazyLoadComponent
+                       (lazyLoad)="loadNextComponent('sec5')" [cartSaleSubTotal]="cartSaleSubTotal"></app-customer-review>
+</ng-container>
+
+
+<ng-container *ngIf="checkComponentLoad('sec5')">
+  <app-why-buy-product [singleLandingPage]="singleLandingPage" lazyLoadComponent
+                (lazyLoad)="loadNextComponent('sec6')" [cartSaleSubTotal]="cartSaleSubTotal"></app-why-buy-product>
+</ng-container>
+
+<!--<ng-container *ngIf="checkComponentLoad('sec6')">-->
+<!--  <app-why-best [singleLandingPage]="singleLandingPage" lazyLoadComponent-->
+<!--                (lazyLoad)="loadNextComponent('sec7')"></app-why-best>-->
+<!--</ng-container>-->
+
+<ng-container *ngIf="checkComponentLoad('sec6')">
+  <app-our-product [singleLandingPage]="singleLandingPage" lazyLoadComponent
+                   (lazyLoad)="loadNextComponent('sec7')" [cartSaleSubTotal]="cartSaleSubTotal"></app-our-product>
+</ng-container>
+
+
+<ng-container *ngIf="checkComponentLoad('sec7')">
+  <div #payment class="payment">
+    <app-payment-area [singleLandingPage]="singleLandingPage" lazyLoadComponent (lazyLoad)="loadNextComponent('sec9')"
+                      ></app-payment-area>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="checkComponentLoad('sec7')">
+  <app-footer [singleLandingPage]="singleLandingPage" [websiteInfo]="websiteInfo" [shopInfo]="shopInfo"></app-footer>
+</ng-container>
+
+<app-social-chat [chatLink]="chatLink"></app-social-chat>

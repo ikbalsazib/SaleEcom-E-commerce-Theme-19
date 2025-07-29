@@ -1,0 +1,49 @@
+<div class="container">
+  @if (blogs?.length) {
+    <div class="products-header">
+      <div class="flash-title-counter">
+        <h2>Advices</h2>
+      </div>
+      <div class="more">
+        <a [routerLink]="'/blogs'">
+          View All
+          <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="black">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  }
+
+  @defer (when !isLoading) {
+    @if (blogs?.length) {
+      @switch (blogCardViews) {
+        @case ('Blog Card 1') {
+          <!-- Swiper Component for Blog Cards -->
+          <app-swiper
+            [visibleSlides]="3"
+            [gap]="20"
+            [navigation]="true"
+            [pagination]="true"
+            [loop]="false"
+            [autoplay]="false"
+            [breakpoints]="breakpoints">
+            @for (item of blogs.slice(0, visibleProducts); track item._id) {
+              <div #sliderItem class="slider__item">
+                <app-blog-card-one [data]="item"></app-blog-card-one>
+              </div>
+            }
+          </app-swiper>
+        }
+      }
+    }
+  } @placeholder (minimum 50ms) {
+    <div class="products-cards">
+      @for (data of [].constructor(10); track $index) {
+        <app-product-card-loader/>
+      }
+    </div>
+  }
+</div>
+

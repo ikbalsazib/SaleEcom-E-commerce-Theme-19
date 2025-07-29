@@ -1,0 +1,136 @@
+@import "variables";
+
+.border-container{
+  width: 100%;
+  border: 1px solid lighten($color-black, 25%)-light;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: $box-shadow-black;
+}
+.header{
+  border-bottom: 1px solid lighten($color-black, 25%)-light;
+  padding-bottom: 15px;
+  position: relative;
+
+  h4{
+    font-size: calc($font-readable + 2px);
+    font-weight: 600;
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background-color: $color-primary;
+    position: absolute;
+    top: 35px;
+    left: 0;
+  }
+}
+
+.content-lists{
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  border-bottom: 1px solid lighten($color-black, 25%)-light;
+  padding-bottom: 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  .content-img-left {
+    min-width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 20px;
+
+    img,
+    svg {
+      width: 70px;
+      height: 80px;
+      object-fit: cover;
+    }
+  }
+
+  .content-right{
+    display: grid;
+    gap: 5px;
+    width: 100%;
+
+    .types{
+      font-size: calc($font-readable - 2px) !important;
+      font-weight: 500;
+      color: lighten($color-black, 30%) !important;
+    }
+
+    .product-name{
+      font-size:calc($font-readable);
+      font-weight: bold;
+      text-decoration: none;
+      color: lighten($color-black, 10%);
+      transition: color 0.3s ease-in-out;
+
+      &:hover{
+        color: $color-primary;
+      }
+    }
+  }
+
+  .products-type{
+    display: flex;
+    justify-content: space-between;
+
+    span{
+      font-size: calc($font-readable + 2px);
+      color: lighten($color-black, 30%);
+      font-weight: 500;
+    }
+    .type{
+      font-size: calc($font-readable - 2px) !important;
+      font-weight: 500;
+    }
+
+    .products-price{
+      font-size: calc($font-readable + 2px) !important;
+      font-weight: bold;
+    }
+  }
+
+}
+p,a{
+  color: lighten($color-black, 25%);
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+
+  &:hover{
+    color: $color-primary;
+  }
+
+}
+
+
+@media (max-width: 599px) {
+  .border-container{
+    background-color: $color-white;
+  }
+
+  .header{
+    .title{
+      color: darken($color-white, 93%)!important;
+      font-size: 4.26667vw!important;
+      font-weight: 700!important;
+      line-height: 4.8vw!important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .content-lists .products-type{
+    line-height: 19px;
+  }
+}

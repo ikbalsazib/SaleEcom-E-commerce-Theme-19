@@ -1,0 +1,55 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form-container">
+    <h1>Complain Box</h1>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Customer Name</mat-label>
+      <input matInput placeholder="Enter" formControlName="name" required />
+      <mat-error>
+        This field is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Phone</mat-label>
+      <input matInput placeholder="Enter" formControlName="phone" required />
+      <mat-error>
+        This field is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Enter your email</mat-label>
+      <input matInput placeholder="Enter" formControlName="email" required />
+      <mat-error>
+        This field is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Complaint Subject</mat-label>
+      <input matInput placeholder="Enter" formControlName="subject" required />
+      <mat-error>
+        This field is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Order Id</mat-label>
+      <input matInput placeholder="Enter" formControlName="id" required />
+      <mat-error>
+        This field is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Textarea</mat-label>
+        <textarea matInput placeholder="Enter" formControlName="details" required></textarea>
+        <mat-error>
+            This field is required
+          </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+  
+</form>
+  

@@ -1,0 +1,136 @@
+@import "variables";
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+
+.man-area{
+  .input-area{
+    display: block;
+    margin: 0 0 1.1em;
+    padding: 3px 0;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+
+    label{
+      font-family: $font-en-primary;
+      font-size: 18px;
+      font-weight: 500;
+      color: $color-white;
+      line-height: 1em;
+      letter-spacing: 0.3px;
+      box-sizing: border-box;
+      display: inherit;
+      margin-bottom: 8px;
+      sup{
+        color: #e11e00;
+        font-weight: 700;
+        border: 0 !important;
+        text-decoration: none;
+      }
+    }
+
+    .input-wrapper{
+      font-family: $font-en-primary;
+      font-size: 18px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .required-error{
+      color: #e2401c;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+
+    input{
+      display: block;
+      width: 100%;
+      min-height: 34px;
+      padding: 11px 12px;
+      font-family: $font-en-primary;
+      font-weight: inherit;
+      font-size: 14px;
+      line-height: 1.42857143 !important;
+      color: #555;
+      background-color: $color-white;
+      background-image: none;
+      outline: none;
+      border: 2px solid $color-secondary;
+      border-radius: 4px;
+      box-shadow: none;
+      height: auto;
+    }
+
+  }
+}
+
+.custom-select-container {
+  margin: 0 0 1.1em;
+  width: 100%;
+  font-family: $font-en-primary;
+  position: relative;
+  label{
+    font-family: $font-en-primary;
+    font-size: 18px;
+    font-weight: 500;
+    color: $color-white;
+    line-height: 1em;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    display: inherit;
+    margin-bottom: 8px;
+    sup{
+      color: #e11e00;
+      font-weight: 700;
+      border: 0 !important;
+      text-decoration: none;
+    }
+  }
+}
+
+.custom-select {
+  position: relative;
+  background-color: $color-white;
+  border: 2px solid $color-secondary;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select__selected {
+  font-size: 14px;
+  color: #555;
+  background-color: $color-white;
+}
+
+.custom-select__options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.custom-select__option {
+  padding: 10px;
+  font-size: 1rem;
+  color: #444;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-select__option:hover {
+  background-color: #f0f0f0;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: 5px;
+}

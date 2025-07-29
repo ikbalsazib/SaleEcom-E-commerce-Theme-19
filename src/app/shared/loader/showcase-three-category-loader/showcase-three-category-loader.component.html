@@ -1,0 +1,31 @@
+<div class="top-category-loader">
+  <!-- Header Skeleton -->
+<!--  <div class="menu-header">-->
+<!--    <ngx-skeleton-loader-->
+<!--      class="loader-menu-icon"-->
+<!--      [theme]="{ 'width': '28px', 'height': '22px', 'border-radius': '4px', 'background': 'lightgrey', 'margin-left': '60px' }"-->
+<!--    ></ngx-skeleton-loader>-->
+<!--    <ngx-skeleton-loader-->
+<!--      class="loader-menu-title"-->
+<!--      [theme]="{ 'width': '40%', 'height': '16px', 'border-radius': '4px', 'background': 'lightgrey', 'margin-left': '20px'  }"-->
+<!--    ></ngx-skeleton-loader>-->
+<!--  </div>-->
+
+  <!-- Categories Skeleton -->
+  <ul class="categories-list">
+    @for (i of [1,2,3,4,5,6,7,8]; track i){
+      <li>
+        <div class="loader-category-item">
+          <ngx-skeleton-loader
+            class="loader-category-text"
+            [theme]="{ 'width': '75%', 'height': '16px', 'border-radius': '4px',  'margin-left': '30px' , 'margin-bottom': '20px'   }"
+          ></ngx-skeleton-loader>
+<!--          <ngx-skeleton-loader-->
+<!--            class="loader-category-arrow"-->
+<!--            [theme]="{ 'width': '15px', 'height': '15px', 'border-radius': '5px', 'background': 'lightgrey' , 'margin-left': '50px'  , 'margin-bottom': '20px' }"-->
+<!--          ></ngx-skeleton-loader>-->
+        </div>
+      </li>
+    }
+  </ul>
+</div>

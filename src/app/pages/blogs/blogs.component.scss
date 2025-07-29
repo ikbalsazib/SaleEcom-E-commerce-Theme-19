@@ -1,0 +1,233 @@
+@import'variables';
+.products-header {
+  margin: 24px 0 14px;
+
+  .flash-title-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+
+    b{
+      background-color: $color-black;
+      height: 2px !important;
+      opacity: .1;
+      flex: 1;
+      display: block;
+    }
+  }
+
+  h2 {
+    font-size: calc($font-title - 12px);
+    font-family: $font-en-primary;
+    font-weight: 700;
+    color: darken($color-white, 74%);
+  }
+
+  .more {
+    a {
+      font-size: $font-title-desc;
+      font-family: $font-en-primary;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      color: lighten($color-black, 20%);
+      cursor: pointer;
+      text-decoration: none;
+
+      svg {
+        transition: all 0.5s ease;
+      }
+    }
+
+    .arrow-icon {
+      margin-left: 8px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    &:hover {
+
+      a {
+        color: $color-primary;
+      }
+
+      .arrow-icon {
+        transform: translateX(5px);
+        fill: $color-primary;
+      }
+    }
+
+  }
+}
+
+/* --- all-blogs --- */
+main.all-blogs {
+  padding-inline: 15px;
+  padding-block: 30px 0;
+}
+
+@media (max-width:550px) {
+  main.all-blogs {
+    padding-inline: 10px;
+  }
+}
+
+.all-blogs{
+  margin-bottom: 87px;
+}
+
+/* --- show-product-header --- */
+.show-product-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---  table-search --- */
+.table-search {
+  display: block;
+  max-width: 400px;
+  min-width: 250px;
+  width: 100%;
+  position: relative;
+
+
+  input {
+    display: block;
+    width: 100%;
+    background-color: #eff3fb;
+    padding: 8px 15px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border: 1px solid $color-primary;
+    color: #9ea2b7;
+    font-family: $font-en-primary;
+    font-weight: 500;
+    font-size: 16px;
+    outline: none;
+  }
+
+  button {
+    background-color: $color-primary;
+    color: #f1f1f1;
+    padding: 2px 20px 8px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 17px;
+    position: absolute;
+    top: 0;
+    outline: none;
+    border: 1px solid transparent;
+    right: 0;
+    display: flex;
+    align-items: center;
+  }
+  mat-icon{
+    margin-top: 4px;
+  }
+}
+
+/* --- show-product-main --- */
+.show-product-main {
+  &.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding: 50px 0;
+    grid-gap: 38px 16px;
+  }
+}
+
+.title-area {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+  margin:40px 0;
+  .title-area-left{
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .title-area-left{
+    h3 {
+      display: block;
+      color: $color-white;
+      background: $color-primary;
+      font-family: $font-en-primary;
+      font-size: 18px;
+      line-height: 30px;
+      text-align: center;
+      padding: 13px 20px;
+      border-radius:4%/50%;
+    }
+  }
+
+}
+
+@media (max-width: 1500px) {
+  .show-product-main {
+    &.grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+@media (max-width: 1300px) {
+  .show-product-main {
+    &.grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 990px) {
+  .show-product-main {
+    &.grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 38px 16px;
+    }
+  }
+}
+
+
+@media (max-width: 615px) {
+  .show-product-main {
+    &.grid {
+      grid-template-columns: repeat(1, 1fr);
+      padding: 20px 10px;
+    }
+  }
+}
+
+@media (max-width: 374px) {
+  .show-product-main {
+    &.grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .products-header {
+    align-items: inherit;
+    .flash-title-counter {
+      gap: 7px;
+    }
+    .more {
+      a {
+        font-size: 3.46667vw;
+        line-height: 4vw;
+        color: $color-black;
+        .arrow-icon{
+          margin-left: 0;
+        }
+      }
+      p {
+        font-size: $font-title-desc-sm;
+      }
+    }
+  }
+}

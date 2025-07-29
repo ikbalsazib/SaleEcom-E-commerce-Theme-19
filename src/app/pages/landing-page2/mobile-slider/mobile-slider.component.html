@@ -1,0 +1,35 @@
+<div
+  class="slider"
+  (mousedown)="startDragging($event)"
+  (mouseup)="stopDragging($event)"
+  (mouseleave)="stopDragging($event)"
+  (mousemove)="onDrag($event)"
+  (touchstart)="startDragging($event)"
+  (touchend)="stopDragging($event)"
+  (touchmove)="onDrag($event)"
+>
+
+  <div #sliderWrapper class="slider-wrapper"  [style.transform]="'translate3d(' + translateX + '%, 0, 0)'"
+       [style.transitionDuration]="animationDuration" >
+    @for(data of product?.images; let i = $index; track data){
+      <div class="slide" >
+        <img (click)="openModal($event, product?.images, currentSlide + 1)" checkImageDefault [src]="data ? data : ''" [alt]="product?.name" />
+<!--        <img-->
+<!--          [ngSrc]="( data | arrToSingleImage) | imgCtrl : 'filename'"-->
+<!--          [width]="( data | arrToSingleImage) | imgCtrl : 'width'"-->
+<!--          [height]="( data | arrToSingleImage) | imgCtrl : 'height'"-->
+<!--          alt="image"-->
+<!--          [ngSrcset]="rawSrcset"-->
+<!--          sizes="(max-width: 599px) 128px, (min-width: 600px) 500px"-->
+<!--        />-->
+      </div>
+    }
+  </div>
+  <!-- Index Display -->
+  <div class="slider-index">
+    <span class="gallery-indicator-text">{{ currentSlide + 1 }} / {{ product?.images?.length }}</span>
+  </div>
+</div>
+
+<app-image-gallery [selectedIndex]="selectedImageIndex" [images]="product?.images" [isVisible]="showModal"
+                   (close)="closeModal1()"></app-image-gallery>

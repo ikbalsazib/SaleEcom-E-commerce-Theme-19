@@ -1,0 +1,61 @@
+<div class="man-area">
+  <form [formGroup]="dataForm" #formElement="ngForm">
+  <div class="input-area">
+    <label for="name" class="">আপনার নাম লিখুন&nbsp;<sup class="required" title="required">*</sup></label>
+    <span class="input-wrapper">
+          <input type="text" class="input-text field-required" name="name" id="name" formControlName="name" placeholder="নাম লিখুন" value=""
+                 aria-required="true" autocomplete="given-name">
+          @if (dataForm.get('name')?.invalid && dataForm.get('name')?.touched) {
+          <span class="required-error">আপনার নাম লিখুন is required</span>
+         }
+        </span>
+  </div>
+
+    <div class="custom-select-container">
+      <label for="division" class="">আপনার বিভাগ বাছাই করুন&nbsp;<sup class="required" title="required">*</sup></label>
+      <div id="division" class="custom-select" #selectContainer>
+        <div class="custom-select__selected" (click)="toggleDropdown()">
+          {{ selectedDivision || 'আপনার বিভাগ বাছাই করুন' }}
+        </div>
+        @if(dropdownVisible){
+          <div class="custom-select__options">
+            @for (item of divisions; track $index){
+              <div
+                (click)="selectDivision(item)"
+                class="custom-select__option"
+              >
+                {{ item?.name }}
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="input-area">
+    <label for="address" class="">আপনার সম্পূর্ণ ঠিকানা লিখুন&nbsp;<sup class="required"
+                                                                        title="required">*</sup></label>
+    <span class="input-wrapper">
+          <input type="text" class="input-text field-required" formControlName="shippingAddress"  name="address" id="address"
+                 placeholder="ঠিকানা লিখুন, থানা ও জেলা সহ" value="" aria-required="true" autocomplete="given-name">
+         @if (dataForm.get('shippingAddress')?.invalid && dataForm.get('shippingAddress')?.touched) {
+         <span class="required-error">আপনার সম্পূর্ণ ঠিকানা লিখুন is required</span>
+        }
+        </span>
+  </div>
+
+  <div class="input-area">
+    <label for="phone" class="">আপনার মোবাইল নাম্বার লিখুন&nbsp;<sup class="required"
+                                                                     title="required">*</sup></label>
+    <span class="input-wrapper">
+          <input type="number" [attr.maxlength]="11" class="input-text field-required" name="phone" formControlName="phoneNo" id="phone" placeholder="মোবাইল নাম্বার"
+                 value="" aria-required="true" (input)="restrictMaxLength($event)"
+                autocomplete="given-name">
+          @if (dataForm.get('phoneNo')?.invalid && dataForm.get('phoneNo')?.touched) {
+          <span class="required-error">আপনার মোবাইল নাম্বার লিখুন is required</span>
+        }
+        </span>
+  </div>
+
+  </form>
+</div>

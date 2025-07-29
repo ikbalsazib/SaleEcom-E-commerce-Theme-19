@@ -1,0 +1,33 @@
+<div class="popup-background">
+  <div class="popup-content">
+    <button class="close-button" type="button" (click)="closePopup()">×</button>
+
+    <h2>Enter information</h2>
+
+    <!-- Email Form -->
+    <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+      <div>
+        <input type="email" formControlName="email" placeholder="Enter your email" />
+        <!-- Validation Error Message -->
+        @if (dataForm.get('email')?.invalid && dataForm.get('email')?.touched) {
+          <div class="error-message">
+            Please enter a valid email address.
+          </div>
+        }
+      </div>
+
+      <div>
+        <textarea rows="4"  type="text" formControlName="comment" placeholder="Enter your comment"></textarea>
+      </div>
+      @if (isLoading) {
+        <button type="button">
+          <i class="fa fa-spinner fa-spin"></i>
+          <span>Please wait..</span>
+        </button>
+      }
+      @if (!isLoading) {
+        <button type="submit" [disabled]="dataForm.invalid">Submit</button>
+      }
+    </form>
+  </div>
+</div>

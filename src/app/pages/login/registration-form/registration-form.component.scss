@@ -1,0 +1,17 @@
+@import "variables";
+@import "exports/btn";
+@import "exports/form-input-primary";
+@import "exports/spinner";
+
+form {
+  margin-top: 20px;
+}
+
+.action {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+

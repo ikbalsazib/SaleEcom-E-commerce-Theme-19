@@ -1,0 +1,28 @@
+<div class="input-item"
+     [style.margin-bottom]="touched && invalid ? '-2px': '15px'">
+  <div class="input-label">
+    <label>
+      {{ label }}
+      @if (required) {
+        <span>*</span>
+      }
+    </label>
+  </div>
+
+  <div class="input-area">
+    <input
+      noWhiteSpace
+      [required]="required"
+      [enableNoWhitespace]="enableSlug"
+      [class.input-error-bg]="touched && invalid"
+      [formControl]="controlName"
+      [placeholder]="placeholder" [type]="type"/>
+  </div>
+
+  @if (touched && invalid) {
+    <div class="input-error">
+      <p>{{ inputErrorMsg }}</p>
+    </div>
+  }
+
+</div>  <!-- End Input Item -->

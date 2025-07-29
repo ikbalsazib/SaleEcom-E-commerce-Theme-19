@@ -1,0 +1,42 @@
+<div class="banner-text">
+    <div class="category-list">
+      <ul>
+        @for(category of categories; track category._id){
+        <li
+          (mouseenter)="setHoveredCategory(category._id)"
+          (mouseleave)="setHoveredCategory(null)"
+        >
+          <div class="list-left">
+            <div [innerHTML]="category.icon[0] | safeHtmlCustom"></div>
+            {{ category.name }}
+          </div>
+          <div class="list-right">
+            <div [innerHTML]="category.icon[1] | safeHtmlCustom"></div>
+          </div>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+  <div class="banner-text-2">
+    <div class="sub-category-list">
+      <ul>
+          @for(subCategory of [1,2,3,4,5]; track subCategory._id){
+          <li>
+            <div class="list-left">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill=""><path d="M420-340h120v-100h100v-120H540v-100H420v100H320v120h100v100Zm60 260q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Z"/></svg>
+              Sub Category List
+            </div>
+            <div class="list-right">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill=""><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"></path></svg>
+            </div>
+          </li>
+          }
+      </ul>
+    </div>
+  </div>
+  <div class="banner-text-3">
+    <div class="category-content">
+       <div>Category Content will display here!!</div>
+    </div>
+  </div>

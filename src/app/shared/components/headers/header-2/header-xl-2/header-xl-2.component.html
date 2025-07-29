@@ -1,0 +1,80 @@
+<header class="header-fixed">
+  <div>
+    <div class="container">
+      <div class="header-main">
+        <a href="/" (click)="navigateToHome()" class="logo" routerLink="/">
+          @if(shopInfo?.logoPrimary){
+            <img
+              [ngSrc]="(shopInfo?.logoPrimary) | imgCtrl : 'filename'"
+              [width]="(shopInfo?.logoPrimary) | imgCtrl : 'width'"
+              [height]="(shopInfo?.logoPrimary) | imgCtrl : 'height'"
+              [alt]="shopInfo?.websiteName"
+              [ngSrcset]="rawSrcset"
+              sizes="(max-width: 599px) 200px, (min-width: 600px) 400px"
+            />
+          }@else {
+            <p>{{shopInfo?.websiteName}}</p>
+          }
+        </a>
+        <app-search-2 class="search-area"></app-search-2>
+
+        <div class="action">
+          <app-header-cart-2 [carts]="carts" [cartAnimate]="cartAnimate"></app-header-cart-2>
+
+          <div class="user-auth" routerLink="login">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 877.24 979.56">
+              <g id="Daco_4213525" transform="translate(-0.266 979.696)">
+                <path id="Path_1822" data-name="Path 1822"
+                      d="M419.5-979.4c-37.3,3.8-64.2,11.5-94.8,27.1A250.285,250.285,0,0,0,213.5-839.5c-15.3,31.3-22.9,59.3-25.6,94.5-3.7,49,9,101.9,34.6,144.8A250.339,250.339,0,0,0,327-503.1c17.9,8.9,31.1,13.9,49.5,18.6,23.7,6.1,32,7,62.5,7s38.8-.9,62.5-7c18.1-4.7,28.6-8.5,46.1-16.9,28.1-13.6,46.7-26.9,68.9-49.1,29.8-29.9,49.4-61.6,62-100.5,8.5-26.4,11.8-48.5,11.8-78-.1-40.5-7.9-74-25.8-110.5C627.9-914,558.1-964.8,475-977.5,464.9-979,428.2-980.3,419.5-979.4Zm49,71.8c102.1,17.5,168.9,114.7,148.4,215.9-14.6,72-72.5,128.6-145.6,142.3-13.8,2.5-42.7,3-57.6.9A181.266,181.266,0,0,1,276-648.5a180.7,180.7,0,0,1-10-135C288-852,346.5-900,419-909,429.3-910.2,457.6-909.4,468.5-907.6Z"/>
+                <path id="Path_1823" data-name="Path 1823"
+                      d="M205.4-435.5c-16.5,3.5-31.8,8.9-49.3,17.5a268.845,268.845,0,0,0-103,90.2c-14.3,21.3-28.9,57-38.1,92.9C8-207.4,3.1-174.4.9-139.5c-1,16.8-.9,18.4.9,24.1,3.9,12.3,12.1,21.7,26.1,29.8,47.4,27.2,121.7,52,201.6,67.1C355.4,5.3,509.7,6,638-16.6,720-31,802.8-58,849.2-85.3c14.7-8.6,24.9-21.1,27.8-34,1.9-8.5-1.8-52.5-7-83.2-4.8-28.4-9.3-44.8-22.4-80.4-11.8-32.1-29.5-59.2-56-85.4-47.9-47.4-117.4-77-160.1-68.2-4.9,1-11.7,3.8-22.5,9.4-40.4,20.7-78.7,32.2-128,38.3-14.2,1.8-68.9,1.7-83,0-48.6-6.1-86-17.3-124-36.9-20.7-10.7-26.7-12.3-44.4-12.2A102.393,102.393,0,0,0,205.4-435.5Zm51.1,73.6c3.2.6,12.1,3.7,19.9,6.9,23.4,9.7,51.2,17.2,85.8,23,41.4,6.9,69.2,9,95.6,7.2,52-3.6,108.5-15.5,143-30.1,16.4-6.9,21.6-8.1,35.8-8.1,33.2,0,68.9,15.7,95.5,42a163.318,163.318,0,0,1,37.3,55.2c2.4,5.6,6,13.7,7.9,17.9,9.3,20.2,16,50.7,18.3,83.1.6,9.2.5,10-2,15.2-6.2,12.7-18.8,19.7-60.6,33.6C646.7-87.3,541.1-73.5,421.5-75.3c-51.9-.8-83.9-2.9-127-8.3-74.6-9.4-144.8-27.1-189.7-47.8-11.2-5.1-19.4-13.2-21.8-21.5-1.6-5.6,1.7-36.2,6.1-56.9,4.1-19.2,9.2-32.6,24.3-64.7,17.3-36.7,45.8-65,79.2-78.6,8.4-3.4,25.7-8.3,32.9-9.2C232.1-363.2,251-362.9,256.5-361.9Z"/>
+              </g>
+            </svg>
+
+
+            @if (isHydrated && !userService.isUser) {
+              <h3>Login / SignUp</h3>
+            }
+
+            @if (userService.isUser) {
+              <div class="user">
+                <b>{{ user?.name }}</b>
+                <p>{{ user?.username }}</p>
+              </div>
+            }
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="header-top-area" [class.hidden]="isHeaderTopHidden">
+      <div class="container">
+        <div class="header-top" [class.hidden]="isHeaderTopHidden">
+          <ul>
+            <li>
+              <a routerLink="/">Home</a>
+            </li>
+
+            <li>
+              <a routerLink="/products">Products</a>
+            </li>
+
+            <li>
+              <a routerLink="/order-tracking">Track Order</a>
+            </li>
+
+            <li>
+              <a routerLink="/my-wishlist">Wishlist</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+
+<div id="homePageOnlyHeight" class="homepage-only-height" [class.homepage-only]="isHeaderFixed"></div>
+

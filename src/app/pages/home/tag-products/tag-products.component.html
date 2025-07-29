@@ -1,0 +1,289 @@
+@if (!tag?.bannerType) {
+  <div class="container">
+    @if (products?.length) {
+      <div class="products-header">
+        <div class="flash-title-counter">
+          <h2>{{ tag?.name }}</h2>
+          @if (tag?.startDate) {
+            <app-time-counter [endDate]="tag?.startDate"></app-time-counter>
+          }
+        </div>
+        <div class="more">
+          <a [routerLink]="'/products'" [queryParams]="{ tag: tag?.name }">
+            View All
+            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                 fill="black">
+              <path d="M0 0h24v24H0z" fill="none"/>
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    }
+    <div class="products-cards" [class.recent-order]="isEnableHomeRecentOrder">
+
+      @defer (when !isLoading) {
+        @if (products?.length) {
+          @switch (productCardViews) {
+            @case ('Product Card 1') {
+              <app-swiper
+                [visibleSlides]="3"
+                [gap]="20"
+                [navigation]="true"
+                [pagination]="true"
+                [loop]="false"
+                [autoplay]="false"
+                [breakpoints]="breakpoints">
+                @for (item of products.slice(0, visibleProducts); track $index) {
+                  <div #sliderItem class="slider__item">
+                <app-product-card-1 [product]="item"></app-product-card-1>
+                  </div>
+                }
+              </app-swiper>
+            }
+            @case ('Product Card 2') {
+              <app-swiper
+                [visibleSlides]="3"
+                [gap]="20"
+                [navigation]="true"
+                [pagination]="true"
+                [loop]="false"
+                [autoplay]="false"
+                [breakpoints]="breakpoints">
+                @for (item of products.slice(0, visibleProducts); track $index) {
+                  <div #sliderItem class="slider__item">
+                <app-product-card-2 [product]="item"></app-product-card-2>
+                  </div>
+                }
+              </app-swiper>
+            }
+            @case ('Product Card 3') {
+              <app-swiper
+                [visibleSlides]="3"
+                [gap]="20"
+                [navigation]="true"
+                [pagination]="true"
+                [loop]="false"
+                [autoplay]="false"
+                [breakpoints]="breakpoints">
+                @for (item of products.slice(0, visibleProducts); track $index) {
+                  <div #sliderItem class="slider__item">
+                <app-product-card-3 [product]="item"></app-product-card-3>
+                  </div>
+                }
+              </app-swiper>
+            }
+            @case ('Product Card 4') {
+              <app-swiper
+                [visibleSlides]="3"
+                [gap]="20"
+                [navigation]="true"
+                [pagination]="true"
+                [loop]="false"
+                [autoplay]="false"
+                [breakpoints]="breakpoints">
+                @for (item of products.slice(0, visibleProducts); track $index) {
+                  <div #sliderItem class="slider__item">
+                <app-product-card-4 [product]="item"></app-product-card-4>
+                  </div>
+                }
+              </app-swiper>
+            }
+          }
+        }
+      } @placeholder (minimum 50ms) {
+        <app-swiper
+          [visibleSlides]="5"
+          [gap]="20"
+          [navigation]="false"
+          [pagination]="false"
+          [loop]="false"
+          [autoplay]="false"
+          [breakpoints]="breakpoints">
+        @for (data of [].constructor(10); track $index) {
+          <div #sliderItem class="slider__item">
+          <app-product-card-loader/>
+          </div>
+        }
+        </app-swiper>
+      }
+
+    </div>
+
+  </div>
+} @else {
+  @if (tag?.bannerType === 'vertical') {
+    <section class="main-area">
+      <section>
+        <div class="section-main">
+          <div class="image-section">
+            <img
+              [src]="tag?.images[0]"
+              alt="Group of Apple devices including MacBook, iPad, iPhone, Mac Mini, Apple Watch, and AirPods"
+              loading="lazy"
+              width="480"
+              height="320"
+            />
+          </div>
+          <div class="content-section">
+            <h1>{{ tag?.name }}</h1>
+            <p class="description">
+              {{tag?.shortDescription}}
+            </p>
+            @if (tag?.startDate) {
+              <app-time-counter-one [endDate]="tag?.startDate"></app-time-counter-one>
+            }
+            <button class="btn-shopping" type="button" [routerLink]="'/products'" [queryParams]="{ tag: tag?.name }">
+              Go Shopping
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="products" aria-label="Apple products">
+<!--        <app-swiper-->
+<!--          [visibleSlides]="3"-->
+<!--          [gap]="20"-->
+<!--          [navigation]="true"-->
+<!--          [pagination]="true"-->
+<!--          [loop]="false"-->
+<!--          [autoplay]="false"-->
+<!--          [breakpoints]="breakpoints1">-->
+          @for (item of products.slice(0, visibleProducts1); track $index) {
+<!--            <div #sliderItem class="slider__item">-->
+          <app-product-card-5 [product]="item"></app-product-card-5>
+<!--            </div>-->
+          }
+<!--        </app-swiper>-->
+      </section>
+    </section>
+  }
+  @if(tag?.bannerType === 'horizontal'){
+    <div class="container">
+      @if (products?.length) {
+        <div class="offer-area" [class.timer-container]="!tag?.startDate">
+          @if (tag?.startDate) {
+            <app-swiper
+              [visibleSlides]="1"
+              [gap]="20"
+              [navigation]="false"
+              [pagination]="false"
+              [loop]="false"
+              [autoplay]="false"
+              [breakpoints]="breakpoints2">
+                @for (img of tag?.images; track $index) {
+                <div #sliderItem class="slider__item">
+            <div class="left-area" [routerLink]="'/products'" [queryParams]="{ tag: tag?.name }">
+<!--              <h1>আজকের ধামাকা </h1>-->
+              <img [src]="img && true ? img : ''" alt="">
+<!--              <div class="countdown">-->
+<!--                <app-time-counter [endDate]="tag?.startDate"></app-time-counter>-->
+<!--              </div>-->
+            </div>
+                </div>
+                }
+            </app-swiper>
+          }
+          <div>
+        <div class="products-header">
+          <div class="flash-title-counter">
+            <h2>{{ tag?.name }}</h2>
+<!--            @if (tag?.startDate) {-->
+<!--              <app-time-counter [endDate]="tag?.startDate"></app-time-counter>-->
+<!--            }-->
+          </div>
+          <div class="more">
+            <a [routerLink]="'/products'" [queryParams]="{ tag: tag?.name }">
+              View All
+              <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                   fill="black">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      <div class="products-cards1" [class.recent-order]="isEnableHomeRecentOrder">
+        @defer (when !isLoading) {
+          @if (products?.length) {
+            @switch (productCardViews) {
+              @case ('Product Card 1') {
+                <app-swiper
+                  [visibleSlides]="3"
+                  [gap]="20"
+                  [navigation]="true"
+                  [pagination]="true"
+                  [loop]="false"
+                  [autoplay]="false"
+                  [breakpoints]="breakpoints1">
+                  @for (item of products.slice(0, visibleProducts); track $index) {
+                    <div #sliderItem class="slider__item">
+                      <app-product-card-1 [product]="item"></app-product-card-1>
+                    </div>
+                  }
+                </app-swiper>
+              }
+              @case ('Product Card 2') {
+                <app-swiper
+                  [visibleSlides]="3"
+                  [gap]="20"
+                  [navigation]="true"
+                  [pagination]="true"
+                  [loop]="false"
+                  [autoplay]="false"
+                  [breakpoints]="breakpoints1">
+                  @for (item of products.slice(0, visibleProducts); track $index) {
+                    <div #sliderItem class="slider__item">
+                      <app-product-card-2 [product]="item"></app-product-card-2>
+                    </div>
+                  }
+                </app-swiper>
+              }
+              @case ('Product Card 3') {
+                <app-swiper
+                  [visibleSlides]="3"
+                  [gap]="20"
+                  [navigation]="true"
+                  [pagination]="true"
+                  [loop]="false"
+                  [autoplay]="false"
+                  [breakpoints]="breakpoints1">
+                  @for (item of products.slice(0, visibleProducts); track $index) {
+                    <div #sliderItem class="slider__item">
+                      <app-product-card-3 [product]="item"></app-product-card-3>
+                    </div>
+                  }
+                </app-swiper>
+              }
+              @case ('Product Card 4') {
+                <app-swiper
+                  [visibleSlides]="3"
+                  [gap]="20"
+                  [navigation]="true"
+                  [pagination]="true"
+                  [loop]="false"
+                  [autoplay]="false"
+                  [breakpoints]="breakpoints1">
+                  @for (item of products.slice(0, visibleProducts); track $index) {
+                    <div #sliderItem class="slider__item">
+                      <app-product-card-4 [product]="item"></app-product-card-4>
+                    </div>
+                  }
+                </app-swiper>
+              }
+            }
+          }
+        } @placeholder (minimum 50ms) {
+          @for (data of [].constructor(10); track $index) {
+            <app-product-card-loader/>
+          }
+        }
+
+      </div>
+
+        </div>
+        </div>
+      }
+    </div>
+  }
+}
+

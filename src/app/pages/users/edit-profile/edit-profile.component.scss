@@ -1,0 +1,125 @@
+@import "common/user-account-xl";
+@import "variables";
+
+.full-width {
+    width: 100%;
+  }
+
+.profile-image-container {
+    position: relative;
+
+    .profile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 100%;
+      overflow: hidden;
+      background-color: #d5d5d5;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .profile-placeholder {
+      svg {
+        width: 100px;
+        height: 100px;
+        .bg-user-placeholder {
+          fill: $color-primary;
+        }
+      }
+      img{
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    }
+
+    .edit-btn {
+      cursor: pointer;
+      position: absolute;
+      right: calc(100% - 100px);
+      top: calc(50% - -25px);
+      bottom: 0;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: 0;
+      background-color: $color-primary;
+      color: $color-white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.3s;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      &:hover {
+        background-color: $color-primary;
+        filter: brightness(110%);
+      }
+    }
+  }
+
+  mat-card {
+    padding: 16px;
+    background: none;
+  }
+
+  mat-form-field {
+    margin-bottom: 16px;
+  }
+
+.update-button{
+  width: 100%;
+  padding: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: $color-primary;
+  border-style: none;
+  color: $color-white;
+  font-weight: bolder;
+}
+
+.bg-line{
+    width: 100%;
+    border: 1px solid lighten($color-black, 25%)-light;
+    margin: 20px 0 20px 0;
+}
+
+.mat-mdc-card {
+    border-radius: 0;
+    background: none;
+    border-width: 0;
+    border-style: solid;
+    border-color: $color-white;
+    box-shadow: none;
+}
+
+@media only screen and (max-width: 599px){
+  .from-content{
+    margin-bottom: 100px;
+  }
+
+  .content{
+    background-color: $color-white;
+    padding-top: 15px;
+  }
+  .container{
+    margin-top: 0;
+  }
+
+  .profile-image-container{
+    display: flex;
+    justify-content: center;
+  }
+  .profile-image-container .edit-btn{
+    left: 50%;
+  }
+}

@@ -1,0 +1,82 @@
+@import "common/headers/header-xl";
+
+header {
+  border-bottom: none;
+}
+.main-header1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  //justify-content: space-between;
+  padding: 0 0;
+  background-color: white;
+
+  .category-menu {
+    .browse-btn {
+      background-color: $color-primary;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      width: 285px;
+      svg{
+        height: 28px;
+        width: 22px;
+        margin-right: 10px;
+        fill: $color-white;
+      }
+      .menu-icon {
+        font-size: 16px;
+      }
+
+      .dropdown-icon {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 20px;
+
+    a {
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+      position: relative;
+
+      &.active {
+        color: $color-primary;
+      }
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+  }
+
+  .right-actions {
+    display: flex;
+    gap: 20px;
+
+    .special-offer {
+      color: $color-primary;
+      font-weight: bold;
+    }
+
+    a {
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+
+      &:hover {
+        color: $color-primary;
+      }
+    }
+  }
+}
+

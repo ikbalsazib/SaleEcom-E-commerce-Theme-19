@@ -1,0 +1,171 @@
+<div class="shipping-area">
+  <div class="container">
+    <div class="shipping-main-area">
+      <div class="shipping-top-area">
+        <div class="title">
+          <h3>Delivery Address</h3>
+          @if((addresses.length > 1 || (isSmallScreen && addresses.length > 0))){
+            <button  [class.disabled]="addresses.length === addressMaxCapacity" (click)="openAddressDialog($event)">+ Add New Address</button>
+          }
+        </div>
+      </div>
+      <div class="shipping-address-main">
+
+        @for (data of addresses; track data._id; let i = $index) {
+          <div
+            class="shipping-info"
+            [ngClass]="data?.isDefaultAddress ? 'active-address' : 'inactive'"
+            (click)="onChangeDefaultAddress(data)"
+            title="Select Your Shipping Address">
+            <div class="shipping-place">
+              <div class="shipping-place-left">
+                <h3>
+                  <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 263.17 225.83">
+                    <g id="yIGI8G.tif">
+                      <path
+                        d="M158.38,117.79c-18.22-17.81-36.41-35.68-54.6-53.53-2.74-2.69-5.49-5.38-8.26-8.09h-8.42c-20.91,20.52-41.82,41.05-62.77,61.53-1.13,1.11-1.57,2.22-1.56,3.94,.04,21.61,.03,43.22,.03,64.82,0,6.83,3.06,10.52,8.74,10.53,14.16,.01,28.33,0,42.49,0,.61,0,1.22-.06,2.09-.11v-54.05h30.44v54.16c.83,0,1.38,0,1.93,0,14.23,0,28.45,.01,42.68,0,5.57,0,8.66-3.73,8.66-10.4,0-21.68-.01-43.36,.03-65.05,0-1.64-.4-2.71-1.48-3.76Z"/>
+                    </g>
+                    <path
+                      d="M227.24,31.47H121.25c-3.26,0-5.91,2.45-5.91,5.47v21.43l57.33,55.87-.12,82.77h60.59V36.94c0-3.02-2.64-5.47-5.91-5.47Zm-19.93,128.44h-27.35v-16.9h27.35v16.9Zm0-32.07h-27.35v-16.9h27.35v16.9Zm0-32.07h-27.35v-16.9h27.35v16.9Z"/>
+                  </svg>
+
+                  {{ data?.addressType | titlecase }}
+                </h3>
+              </div>
+            </div>
+            <div class="shipping-info-body">
+              <div class="name-area">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 263.17 225.83">
+                  <defs>
+                    <style>
+                      .cls-1 {
+                        fill: #fff;
+                      }
+                    </style>
+                  </defs>
+                  <g id="RWHXpU.tif">
+                    <g>
+                      <path
+                        d="M131.59,213.49c-54.76,0-99.21-44.43-99.26-99.2-.05-54.8,44.57-99.4,99.35-99.3,54.8,.09,99.21,44.57,99.16,99.3-.05,54.77-44.5,99.2-99.26,99.21Zm-.04-25.98c16.93,.01,32.44-5.58,46.58-16.79,4.04-3.2,5.93-7.37,5.74-12.49-.69-18.05-15.09-31.78-33.57-31.91-12.46-.09-24.93-.08-37.39,0-17.69,.12-31.27,12.21-33.5,29.75-.71,5.6,.62,10.55,5.12,14.27,13.64,11.28,29.33,16.98,47.02,17.18Zm-32.78-109.93c.16,18.21,15.04,32.95,33.06,32.74,18.1-.21,32.89-15.19,32.61-33.01-.29-18.25-14.95-32.74-32.97-32.59-18.18,.15-32.85,14.89-32.7,32.86Z"/>
+                      <path class="cls-1"
+                            d="M131.54,187.51c-17.69-.2-33.38-5.9-47.02-17.18-4.5-3.72-5.83-8.67-5.12-14.27,2.23-17.53,15.81-29.63,33.5-29.75,12.46-.08,24.93-.09,37.39,0,18.48,.13,32.88,13.87,33.57,31.91,.2,5.12-1.7,9.29-5.74,12.49-14.14,11.2-29.65,16.8-46.58,16.79Z"/>
+                      <path class="cls-1"
+                            d="M98.76,77.58c-.15-17.97,14.52-32.71,32.7-32.86,18.02-.15,32.68,14.34,32.97,32.59,.28,17.82-14.51,32.8-32.61,33.01-18.02,.21-32.91-14.54-33.06-32.74Z"/>
+                    </g>
+                  </g>
+                </svg>
+                <h3>{{ data?.name | titlecase }}</h3>
+
+              </div>
+
+              <div class="name-area">
+                <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 263.17 225.83">
+                  <path
+                    d="M70.7,26.73c5.37,0,10.74-.01,16.11,0,9.29,.02,15.52,5.89,15.8,15.2,.33,10.97,1.84,21.72,5.15,32.2,1.82,5.76,.62,10.78-3.2,15.51-5.14,6.39-9.94,13.05-14.83,19.63-.32,.44-.4,1.39-.14,1.87,10.64,20.34,25.68,36.47,45.8,47.72,1.78,1,3.65,2.79,5.37,2.68,1.73-.12,3.35-2.13,4.98-3.36,5.67-4.3,11.29-8.67,17-12.91,3.7-2.74,7.92-3.44,12.38-2.42,5.63,1.29,11.18,3.05,16.86,3.99,5.57,.92,11.26,1.19,16.92,1.49,7.41,.39,12.83,4.29,14.73,11.13,.41,1.49,.56,3.09,.57,4.64,.05,10.74,.04,21.48,.02,32.22-.02,9.51-6.5,15.87-15.99,15.76-34.2-.41-65.61-9.96-93.96-29.08-26.67-17.99-46.71-41.74-60.16-71.01-6.56-14.27-11.09-29.19-13.25-44.72-1.16-8.34-1.64-16.8-1.92-25.23-.3-8.71,6.32-15.17,15.1-15.3,5.55-.08,11.1-.01,16.65-.02Z"/>
+                </svg>
+                <h3>{{ data?.phoneNo }}</h3>
+              </div>
+              <div class="address">
+                <ul>
+                  <li>
+                    <svg class="address-svg" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 263.17 225.83">
+                      <g id="_7IXXgQ.tif" data-name="7IXXgQ.tif">
+                        <path
+                          d="M131.63,212.22c-1.04-1.26-2-2.38-2.92-3.53-15.68-19.62-30.36-39.95-42.86-61.78-8.02-14-15.15-28.4-19.56-44.02-4.93-17.44-3.26-34.25,5.16-50.22,7.81-14.79,19.64-25.42,35.25-31.55,16.89-6.62,33.92-6.51,50.69,.35,15.49,6.33,27.1,17.15,34.8,32.05,5.62,10.87,8.09,22.47,7.29,34.68-.6,9.18-3.36,17.86-6.75,26.35-8.69,21.78-20.71,41.74-33.98,60.94-8.23,11.91-17.1,23.37-25.68,35.03-.39,.53-.86,1.02-1.44,1.69Zm-.04-99.39c16.06,0,29.1-13.03,29.06-29.05-.04-16.02-13.11-29.03-29.14-28.99-15.96,.04-28.84,12.94-28.91,28.97-.07,16.06,12.91,29.07,28.99,29.07Z"/>
+                      </g>
+                    </svg>
+                    <h3>{{ data?.shippingAddress }}</h3>
+                  </li>
+                  <li class="location-arrow">
+                    <svg class="location-arrow-svg" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 263.17 225.83">
+                      <path
+                        d="M190.62,40.61c-4.56,1.8-18.14,6.98-34.35,4.12-12.48-2.2-12.58-6.71-27.48-12.37-7.41-2.81-27.58-10.47-49.47-4.12-5.98,1.73-17.95,6.21-29.72,18.78-1.34,51.81,1.58,99.38,.24,151.19,20.15-10.72,22.69-13.11,33.98-16.49,8.09-2.42,24.49-3.18,32.28-1.69,9.7,1.85,12.61,6.61,22.44,11.22,11.34,5.31,22.34,8.87,34.71,9.03,17.39,.23,30.7-6.99,40.61-10.63V25.39c-4.27,4.24-11.94,10.76-23.24,15.22Zm-24.88,136.01l-63.66-23.07V48.7l63.66,24.91v103.01Z"/>
+                    </svg>
+
+
+                    <h3> {{ data?.division }}
+                      <span><svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"  width="12px" height="12px" viewBox="0 0 103.536 103.536" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                        id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g
+                        id="SVGRepo_iconCarrier"> <g> <g> <path
+                        d="M0.65,91.928c1.221,2.701,3.881,4.3,6.665,4.3c1.006,0,2.029-0.209,3.006-0.65l88.917-40.195 c2.688-1.216,4.381-3.925,4.295-6.873c-0.085-2.948-1.934-5.554-4.687-6.609L9.929,7.794C6.17,6.352,1.933,8.23,0.489,12.001 c-1.447,3.769,0.438,7.995,4.207,9.44l72.569,27.834L4.299,82.255C0.62,83.92-1.012,88.249,0.65,91.928z"></path> </g> </g> </g></svg></span>
+
+                      {{ data?.area }}
+                      <span><svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"  width="12px" height="12px" viewBox="0 0 103.536 103.536" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
+                        id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g
+                        id="SVGRepo_iconCarrier"> <g> <g> <path
+                        d="M0.65,91.928c1.221,2.701,3.881,4.3,6.665,4.3c1.006,0,2.029-0.209,3.006-0.65l88.917-40.195 c2.688-1.216,4.381-3.925,4.295-6.873c-0.085-2.948-1.934-5.554-4.687-6.609L9.929,7.794C6.17,6.352,1.933,8.23,0.489,12.001 c-1.447,3.769,0.438,7.995,4.207,9.44l72.569,27.834L4.299,82.255C0.62,83.92-1.012,88.249,0.65,91.928z"></path> </g> </g> </g></svg></span>
+                      {{ data?.zone }}
+                    </h3>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="button-area">
+              <ul>
+                <li >
+                  <button class="svg1" type="button" (click)="openCancelPopup($event)">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      x="0px"
+                      y="0px"
+                      width="100"
+                      height="100"
+                      viewBox="0 0 32 32"
+                    >
+                      <path
+                        d="M 15 4 C 14.476563 4 13.941406 4.183594 13.5625 4.5625 C 13.183594 4.941406 13 5.476563 13 6 L 13 7 L 7 7 L 7 9 L 8 9 L 8 25 C 8 26.644531 9.355469 28 11 28 L 23 28 C 24.644531 28 26 26.644531 26 25 L 26 9 L 27 9 L 27 7 L 21 7 L 21 6 C 21 5.476563 20.816406 4.941406 20.4375 4.5625 C 20.058594 4.183594 19.523438 4 19 4 Z M 15 6 L 19 6 L 19 7 L 15 7 Z M 10 9 L 24 9 L 24 25 C 24 25.554688 23.554688 26 23 26 L 11 26 C 10.445313 26 10 25.554688 10 25 Z M 12 12 L 12 23 L 14 23 L 14 12 Z M 16 12 L 16 23 L 18 23 L 18 12 Z M 20 12 L 20 23 L 22 23 L 22 12 Z"
+                      ></path>
+                    </svg>
+                  </button>
+                </li>
+                <li>
+                  <button class="svg2" type="button" (click)="openAddressDialog($event, data)">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                      <path
+                        d="M20.548 3.452a1.542 1.542 0 0 1 0 2.182l-7.636 7.636-3.273 1.091 1.091-3.273 7.636-7.636a1.542 1.542 0 0 1 2.182 0zM4 21h15a1 1 0 0 0 1-1v-8a1 1 0 0 0-2 0v7H5V6h7a1 1 0 0 0 0-2H4a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1z"
+                      />
+                    </svg>
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            @if(showCancelPopup){
+              <div class="modal" (click)="closeCancelPopup()">
+                <div class="modal-content" >
+                  <span class="close" (click)="closeCancelPopup()"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6.99486 7.00636C6.60433 7.39689 6.60433 8.03005 6.99486 8.42058L10.58 12.0057L6.99486 15.5909C6.60433 15.9814 6.60433 16.6146 6.99486 17.0051C7.38538 17.3956 8.01855 17.3956 8.40907 17.0051L11.9942 13.4199L15.5794 17.0051C15.9699 17.3956 16.6031 17.3956 16.9936 17.0051C17.3841 16.6146 17.3841 15.9814 16.9936 15.5909L13.4084 12.0057L16.9936 8.42059C17.3841 8.03007 17.3841 7.3969 16.9936 7.00638C16.603 6.61585 15.9699 6.61585 15.5794 7.00638L11.9942 10.5915L8.40907 7.00636C8.01855 6.61584 7.38538 6.61584 6.99486 7.00636Z" fill="#0F0F0F"></path> </g></svg></span>
+                  <h2>Confirm to delete Address</h2>
+                  <div class="delete-address-container">
+                    <button class="delete-address yes" (click)="deleteAddressById($event, data?._id)">Yes</button>
+                    <button class="delete-address no" (click)="closeCancelPopup()">No</button>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+
+        <div  [class.hide-add-btn]="addresses?.length > 1 || (isSmallScreen && addresses.length > 0)" class="user-address-update" (click)="openAddressDialog($event)">
+          <svg fill="#5c5c5c" width="20px" height="20px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+            <g id="SVGRepo_iconCarrier">
+              <path d="M866.332 213v653.332H213v186.666h653.332v653.332h186.666v-653.332h653.332V866.332h-653.332V213z"
+                    fill-rule="evenodd"></path>
+            </g>
+          </svg>
+
+          <h2>{{ "Add new address" | titlecase }}</h2>
+          <p>Your address has been securely saved to your account for future use whenever you need it.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

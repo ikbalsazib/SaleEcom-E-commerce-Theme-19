@@ -1,0 +1,58 @@
+@if (isVisible) {
+
+  <div class="footer-xl-container">
+
+    @switch (footerViews) {
+      @case ('Footer 1') {
+        <app-footer-xl-1 [shopInfo]="shopInfo"></app-footer-xl-1>
+      }
+      @case ('Footer 2') {
+        <app-footer-xl-2 [shopInfo]="shopInfo"></app-footer-xl-2>
+      }
+      @case ('Footer 3') {
+        <app-footer-xl-3 [shopInfo]="shopInfo"></app-footer-xl-3>
+      }
+      @case ('Footer 4') {
+        <app-footer-xl-4 [shopInfo]="shopInfo"></app-footer-xl-4>
+      }
+      @case ('Footer 5') {
+        <app-footer-xl-5 [shopInfo]="shopInfo"></app-footer-xl-5>
+      }
+      @default {
+        <app-footer-xl-1 [shopInfo]="shopInfo"></app-footer-xl-1>
+      }
+    }
+
+
+  </div>
+
+  <div class="bottom-nav-component">
+
+    @if (showFooter) {
+      @switch (bottomNavViews) {
+        @case ('Bottom Nav 1') {
+          <app-bottom-navbar [currentUrl]="currentUrl" [shopInfo]="shopInfo" [chatLink]="chatLink"></app-bottom-navbar>
+        }
+        @case ('Bottom Nav 2') {
+          <!-- Pass tags for dynamic tag menu -->
+          <app-bottom-navbar-2 [currentUrl]="currentUrl" [shopInfo]="shopInfo" [chatLink]="chatLink" [tags]="tags"></app-bottom-navbar-2>
+        }
+        @case ('Bottom Nav 3') {
+          <!-- Pass tags for dynamic tag menu -->
+          <app-bottom-navbar-3 [currentUrl]="currentUrl" [shopInfo]="shopInfo" [chatLink]="chatLink" [tags]="tags"></app-bottom-navbar-3>
+        }
+        @case ('Bottom Nav 4') {
+          <!-- Pass tags for dynamic tag menu -->
+          <app-bottom-navbar4 [currentUrl]="currentUrl" [shopInfo]="shopInfo" [chatLink]="chatLink"></app-bottom-navbar4>
+        }
+        @default {
+          <app-bottom-navbar [currentUrl]="currentUrl" [shopInfo]="shopInfo" [chatLink]="chatLink"></app-bottom-navbar>
+        }
+      }
+    }
+
+  </div>
+
+  <app-social-chat [shopInfo]="shopInfo" [chatLink]="chatLink"></app-social-chat>
+}
+

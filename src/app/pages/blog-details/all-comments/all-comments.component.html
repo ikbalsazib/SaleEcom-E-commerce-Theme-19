@@ -1,0 +1,56 @@
+<!---review-area-->
+<div class="review-area">
+  <div class="container">
+    <div class="review-main-area">
+      <ng-container *ngIf="allReviews && allReviews.length">
+        <div class="user-review" *ngFor="let data of allReviews.slice(0, 5)">
+          <div class="main-review">
+            <div class="user-data">
+              <div class="user-img user-img-rev">
+                <img checkImageDefault [src]="data?.user?.profileImg ? data?.user?.profileImg : '/assets/images/avatar/user-young.jpg'" alt="" />
+              </div>
+              <div class="user-name">
+                <a style="gap: 10px;">
+                  {{ data?.name }}
+                </a>
+                <span>{{ data?.reviewDate | date }}</span>
+              </div>
+            </div><!---END USER DATA-->
+
+            <div class="user-review-data">
+              <p>{{data?.review}}</p>
+<!--              <div class="review-product-image-area">-->
+<!--                <div class="review-product-img-main">-->
+<!--                  <lightgallery [settings]="settings" *ngFor="let item of data?.images">-->
+<!--                    <img class="" [src]="item" alt="">-->
+<!--                  </lightgallery>-->
+<!--                </div>-->
+<!--              </div>-->
+            </div><!--END USER REVIEW-->
+
+          </div>
+
+          <div class="replay-review-area" *ngIf="data?.reply">
+            <div class="replay-review">
+              <div class="user-data">
+                <div class="user-img">
+                  <img checkImageDefault [src]="shopInfo?.logoPrimary" alt="" />
+                </div>
+                <div class="user-name">
+                  <a href="/">{{shopInfo?.websiteName}}</a>
+                  <span>{{ data?.replyDate | date }}</span>
+                </div>
+              </div>
+              <div class="user-review-data">
+                <p>{{ data?.reply }}</p>
+              </div>
+            </div>
+          </div><!--END ADMIN REPLAY-->
+
+
+        </div>
+      </ng-container>
+
+    </div>
+  </div>
+</div>

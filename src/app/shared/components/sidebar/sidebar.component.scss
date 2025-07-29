@@ -1,0 +1,45 @@
+@import 'variables';
+.side-bar {
+  width: 300px;
+  background: #fff;
+  box-shadow: 0 0 5px #555;
+}
+.information{
+display: flex;
+align-items: center;
+gap: 20px;
+padding: 10px 20px;
+}
+.contact-info{
+  p{
+    font-size: $font-readable;
+    font-family: $font-en-primary;
+    font-weight: 500;
+    }
+}
+ul li{
+  display: flex;
+  padding: 16px;
+  gap: 25px;
+  transition: all 0.5s ease;
+  &:hover{
+    background-color: rgba(51, 51, 160, 0.815);
+    transition: all 0.5s ease;
+    svg{
+      fill: $color-white;
+      transition: all 0.5s ease;
+    }
+    a{
+      color: $color-white;
+      transition: all 0.5s ease;
+    }
+  }
+}
+  @media screen and (max-width: 599px) {
+    .side-bar {
+      width: 100%;
+    }
+  }
+      
+        
+      

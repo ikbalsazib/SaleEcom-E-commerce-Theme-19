@@ -1,0 +1,139 @@
+@import '../../../../../../theme/variables';
+
+
+
+.link-ripple-container{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: 0;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+
+.navbar-outside {
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    background-color: $color-white;
+    transition: all 0.3s ease;
+    display: flex;
+    left: 0;
+    padding: 0.5vw 4vw;
+    right: 0;
+    z-index: 1000;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.07); 
+    border-top: 1px solid $color-gray; 
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap; // prevent wrapping
+    min-width: 0;
+}
+
+.navbar-outside .container {
+    min-width: 0;
+}
+
+// Navigation items
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    transition: color 0.3s, background 0.3s;
+    padding: 5px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 1; // allow shrinking
+    min-width: 0;
+    flex: 1 1 0;
+
+    // Icon styles
+    .nav-icon {
+        fill: $color-gray-dark;
+        display: block;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 4px;
+        transition: fill 0.3s;
+    }
+
+    // Text styles
+    span {
+        color: $color-gray-dark;
+        font-size: 13px;
+        font-family: $font-en-primary;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: font-size 0.2s;
+    }
+
+    // Hover state
+    &:hover {
+        background: rgba($color-primary, 0.07);
+        span{
+            color: $color-primary;
+        }
+        .nav-icon {
+            fill: $color-primary;
+        }
+    }
+
+    // Active state
+    &.active {
+        color: $color-primary;
+        background: rgba($color-primary, 0.13);
+        box-shadow: 0 2px 8px rgba($color-primary, 0.08);
+        span {
+            color: $color-primary;
+        }
+        .nav-icon {
+            fill: $color-primary;
+        }
+    }
+
+    // External links - prevent hover effects that make them look active
+    &.external-link {
+        &:hover {
+            background: transparent;
+            span {
+                color: $color-gray-dark;
+            }
+            .nav-icon {
+                fill: $color-gray-dark;
+            }
+        }
+    }
+}
+
+// @media (max-width: 500px) {
+//   .nav-item {
+//     padding-left: 4px;
+//     padding-right: 4px;
+//     span {
+//       font-size: 11px;
+//     }
+//   }
+//   .nav-icon {
+//     width: 22px;
+//     height: 22px;
+//   }
+// }

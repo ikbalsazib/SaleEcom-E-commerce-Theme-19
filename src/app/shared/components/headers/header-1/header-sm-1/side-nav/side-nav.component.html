@@ -1,0 +1,59 @@
+<div class="overlay" *ngIf="categorySlide" (click)="onHideCategory()"></div>
+
+<div class="category-slide" [class.category-slide-active]="categorySlide">
+  <div class="slide-top">
+    <h3> Categories</h3>
+    <span (click)="onHideCategory()"><mat-icon>close</mat-icon></span>
+  </div>
+
+  <div class="category-menu">
+    <ul>
+      <!-- CATEGORY LIST -->
+      <li *ngFor="let data of categoryMenus">
+        <a (click)="data.subCategories?.length > 0 ? showSub(data._id) : onHideCategory()"
+           [style.border-color]="toggleSub === data._id ? 'transparent' : ''" [routerLink]="['/products']"
+           [queryParams]="{categories: data.slug}">
+          {{ data.name }}
+          <mat-icon *ngIf="data.subCategories?.length > 0">
+            {{ toggleSub === data._id ? 'remove' : 'add' }}
+          </mat-icon>
+        </a>
+
+        <div class="sub-category" *ngIf="toggleSub === data._id">
+          <ul>
+            <li *ngFor="let subData of data.subCategories">
+              <a (click)="subData.childCategories?.length > 0 ? showChild(data._id + '_' + subData._id) : onHideCategory()"
+                 [routerLink]="['/products']"
+                 [queryParams]="{categories: data.slug, subCategories: subData.slug}">
+                {{ subData.name }}
+                <mat-icon *ngIf="subData.childCategories?.length > 0">
+                  {{ toggleChild === data._id + '_' + subData._id ? 'remove' : 'add' }}
+                </mat-icon>
+              </a>
+
+              <div class="sub-category" *ngIf="toggleChild === data._id + '_' + subData._id">
+                <ul>
+                  <li *ngFor="let child of subData.childCategories" (click)="onHideCategory()">
+                    <a [routerLink]="['/products']"
+                       [queryParams]="{categories: data.slug, subCategories: subData.slug, childCategories: child.slug}">
+                      {{ child.name }}
+                      <mat-icon>arrow_forward</mat-icon>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide-bottom">
+    <p>All Rights Reserved by
+      <a *ngIf="shopInfo?.showBranding === false && shopInfo?.brandingText" [routerLink]="'/'" target="_blank">{{ shopInfo?.brandingText }}</a>
+      <a *ngIf="shopInfo?.showBranding" href="https://www.saleecom.com/" target="_blank">Saleecom</a>
+    </p>
+  </div>
+</div>

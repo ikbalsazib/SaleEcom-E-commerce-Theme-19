@@ -1,0 +1,14 @@
+
+/**
+** Added This Option in angular.json
+"stylePreprocessorOptions": {
+  "includePaths": [
+    "src/theme"
+    ]
+  }
+ */
+
+@import "base";
+@import "material/theme";
+@import "print";
+

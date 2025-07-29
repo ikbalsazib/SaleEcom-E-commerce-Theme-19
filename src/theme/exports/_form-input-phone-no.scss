@@ -1,0 +1,87 @@
+@import "variables";
+
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #3e3e3e;
+  font-size: calc($font-readable + 1px);
+}
+
+.input-area {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 0 12px;
+
+
+  .flag {
+    line-height: 0;
+
+    svg {
+      width: 30px;
+    }
+  }
+
+  .edit {
+    line-height: 0;
+    cursor: pointer;
+    svg {
+      width: 20px;
+      fill: #b0b0b0;
+    }
+  }
+
+  .country-code {
+    margin: 0 8px;
+    color: #555;
+    font-size: calc($font-readable + 1px);
+    font-weight: 500;
+    font-family: var(--font-primary);
+  }
+
+  input {
+    height: 54px;
+    border: none;
+    outline: none;
+    padding: 0 8px;
+    flex: 1;
+    font-size: calc($font-readable + 1px);
+    color: #3e3e3e;
+    font-family: var(--font-primary);
+  }
+
+  &.is-invalid {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    input {
+      background-color: #f8d7da;
+    }
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  label {
+    font-size: calc($font-readable-sm + 1px);
+  }
+  .input-area {
+    .flag {
+      svg {
+        width: 24px;
+      }
+    }
+
+    .country-code {
+      font-size: calc($font-readable-sm + 1px);
+    }
+
+    input {
+      font-size: calc($font-readable-sm + 1px);
+    }
+
+  }
+
+}

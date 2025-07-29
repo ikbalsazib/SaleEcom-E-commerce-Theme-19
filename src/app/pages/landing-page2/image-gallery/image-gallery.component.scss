@@ -1,0 +1,89 @@
+@import "variables";
+
+.gallery {
+  gap: 20px;
+  padding: 24px 0 40px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0, 0, 0);
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
+.index-display {
+  color: white;
+  font-size: 2.5vw;
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.main-image-container {
+  width: 100%;
+  height: 100vw;
+  overflow: hidden;
+  position: relative;
+  border-radius: 0;
+  touch-action: none;
+  cursor: grab;
+  z-index: 0;
+}
+
+.main-image-container:active {
+  cursor: grabbing;
+}
+
+.slider {
+  display: flex;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  min-width: 100%;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 2vw;
+  position: relative;
+  z-index: 1;
+}
+
+.thumbnail {
+  width: 12vw;
+  height: 12vw;
+  border-radius: 4px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.thumbnail.active {
+  border-color: #ff6600;
+}
+
+.close-btn {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+button {
+  background: none;
+  border: none;
+}

@@ -1,0 +1,36 @@
+<div  class="container">
+  <h2>Recent Orders</h2>
+ <div class="table-area" (scroll)="onScroll($event)">
+   <table>
+     <thead>
+     <tr>
+       <th>Customer</th>
+       <th>Products</th>
+       <th>Date</th>
+       <th>Price</th>
+       <th>Status</th>
+     </tr>
+     </thead>
+     <tbody>
+       @for(data of orders; track $index){
+         <tr>
+           <td>{{ data?.name }}</td>
+           <td>{{ data?.orderedItems[0]?.name }}</td>
+           <td>{{ data?.checkoutDate }}</td>
+           <td>{{ data?.grandTotal }}</td>
+           <td><span class="status" [ngClass]="{
+                          'pending': data.orderStatus === 'pending',
+                          'delivered': data.orderStatus === 'delivered',
+                          'capsule-orange': data.orderStatus === 'confirmed',
+                          'onHoldDesign': data.orderStatus === 'on_hold',
+                          'processingDesign': data.orderStatus === 'processing',
+                          'shippingDesign': data.orderStatus === 'shipped',
+                          'courierDesign': data.orderStatus === 'sent to courier',
+                          'cancelled': data.orderStatus === 'cancelled',
+                        }">{{ data?.orderStatus | titlecase}}</span></td>
+         </tr>
+       }
+     </tbody>
+   </table>
+ </div>
+</div>

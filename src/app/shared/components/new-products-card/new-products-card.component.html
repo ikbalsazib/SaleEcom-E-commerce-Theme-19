@@ -1,0 +1,39 @@
+<div class="new-products-card-container">
+  <a  [routerLink]="['/product-details',data?.slug]">
+    <div class="new-products-card-parent">
+      <div class="img-box">
+        <!--        <img-->
+        <!--          src="https://nest-frontend-v6.vercel.app/assets/imgs/shop/thumbnail-3.jpg"-->
+        <!--          alt="image" loading="lazy"-->
+        <!--        />-->
+        <img [src]="data?.images && data?.images?.length ? data?.images[0] :''" alt="Slide"/>
+      </div>
+      <div class="description-box">
+<!--        <h2 class="title"> <a>{{ data?.name }}</a> </h2>-->
+        <h2 class="title">{{ data?.name }}</h2>
+        <!--        <p class="price">$99.50</p>-->
+        @if (!data?.isVariation && data?.salePrice) {
+          <div class="price">
+            <div class="newPrice">{{ (data | price : "salePrice") | currencyCtr }}</div>
+            @if (data?.discountAmount > 0) {
+              <div class="oldPrice">{{ (data?.salePrice) | currencyCtr }}</div>
+            }
+          </div>
+        }
+
+        @if (data?.isVariation && data?.variationList && data?.variationList[0]) {
+          <div class="price">
+            <div class="newPrice">{{ (data?.variationList[0] | price : "salePrice") | currencyCtr }}</div>
+            @if (data?.variationList[0]?.discountAmount > 0) {
+              <div class="oldPrice">{{ (data?.variationList[0]?.salePrice) | currencyCtr }}</div>
+            }
+          </div>
+        }
+        <p class="rating">
+          <app-star-rating-view [rating]="ratingCount" starSize="13px" color="#f5c518"></app-star-rating-view>
+
+        </p>
+      </div>
+    </div>
+  </a>
+</div>

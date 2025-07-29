@@ -1,0 +1,16 @@
+@for (item of [1, 2, 3, 4, 5, 6, 7]; track $index){
+  <div class="list-container">
+    <div class="list-item-skeleton">
+      <!-- Icon Skeleton -->
+      <ngx-skeleton-loader
+        [theme]="{ width: '24px', height: '24px', marginRight: '10px' }">
+      </ngx-skeleton-loader>
+
+      <!-- Text Skeleton -->
+      <ngx-skeleton-loader
+        [theme]="{ width: '170px', height: '20px' }">
+      </ngx-skeleton-loader>
+    </div>
+  </div>
+}
+

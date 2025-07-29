@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+.grid-container{
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  align-items: center;
+  justify-content: center;
+  background: url(../../../../../public/images/product-img/stay-home.png);
+  gap: 50px;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 230px;
+  border-radius: 20px;
+  position: relative;
+}
+.right{
+    width: 120%;
+    min-height: 230px;
+    // width:200px;
+    // height:100px;
+  
+img {
+        margin-top: 80px;
+        width:550px;
+        object-fit: contain;
+        float: right;
+      }
+}
+.left h2{
+    font-family: "Quicksand", sans-serif;
+    font-weight: 700;
+    color: #253D4E;
+    line-height: 1.2;
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+.left p{
+    font-family: "Quicksand", sans-serif;
+    font-weight: 500;
+    color: #253D4E;
+    line-height: 1.2;
+    font-size: 18px;
+    margin-bottom: 45px;
+}
+.input-wrapper { 
+    position: relative; 
+    display: inline-block;
+    border: none;
+    // height: 20px; 
+    
+} 
+
+.input-wrapper input { 
+    padding-right: 150px;
+    padding-left: 50px; 
+    height: 60px;
+    border-radius: 30px;
+    border: none;
+} 
+
+.input-wrapper button { 
+    position: absolute; 
+    right: 0; 
+    height: 100%;
+    color: aliceblue;
+    border-radius: 30px;
+    padding: 0px 30px;
+    border: none;
+    background-color: #29A56C;
+    cursor: pointer; 
+    transition-duration: 0.4s;
+} 
+.input-wrapper button:hover {
+    background-color: #086b3d;
+  }
+.input-wrapper img { 
+    position: absolute; 
+    left: 15px; 
+    top: 22px;
+    // border: 1px solid blue;
+    background-color: transparent; 
+    cursor: pointer; 
+} 
+
+@media only screen and (max-width: 599px){
+    .grid-container{
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        width: 100%;
+        
+    }
+    .left{
+        margin-top: -120px;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+    }
+    .left h2{
+        font-size: 25px;
+        margin: 70px 30px 40px;
+    }
+    .left p{
+        font-size: 13px;
+        margin: 30px 30px;
+    }
+    .input-wrapper{
+        margin: 20px 20px;
+    }
+    .right {
+        width: 100%;
+        object-fit: cover;
+        
+    }
+    .right img{
+        margin-top: 150px;
+        width: 350px;
+    }
+}

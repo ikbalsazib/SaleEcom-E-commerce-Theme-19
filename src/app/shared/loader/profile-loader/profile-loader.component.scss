@@ -1,0 +1,15 @@
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-left: 20px;
+}
+
+.list-item-skeleton {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  //width: 200px;
+}

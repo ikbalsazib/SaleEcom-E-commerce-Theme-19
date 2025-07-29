@@ -1,0 +1,20 @@
+<div id="custom-snack-bar-container">
+  <div class="sandbar" id="sandbar">
+    <div class="message">
+      <mat-icon class="{{data?.type}}">check</mat-icon>
+      <span class="{{data?.type}}">
+        {{ data.message }}
+        @if (data.clickBtnText) {
+          <a (click)="viewCart()">{{data.clickBtnText}}</a>
+        }
+      </span>
+    </div>
+   <div class="action">
+     <a  class="view-cart" (click)="buyNow()">
+       <mat-icon class="{{data?.type}}">{{ data?.icon }}</mat-icon>
+       {{data?.clickBtnText1}}
+     </a>
+     <button class="close-btn" (click)="dismissWithAction()">Close</button>
+   </div>
+  </div>
+</div>

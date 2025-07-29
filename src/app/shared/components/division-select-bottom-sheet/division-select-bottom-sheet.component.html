@@ -1,0 +1,12 @@
+<div class="division-list">
+  @for (option of data.options; track option) {
+    <div
+      class="division-list-item"
+      [class.active]="option?.name === selectedDivision"
+      (click)="select(option)"
+    >
+      {{ option?.name }}
+     
+    </div>
+  }
+</div> 

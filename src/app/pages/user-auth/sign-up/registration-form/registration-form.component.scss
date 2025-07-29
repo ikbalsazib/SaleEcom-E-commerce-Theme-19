@@ -1,0 +1,56 @@
+@import "../../../../../theme/variables";
+@import "../../../../../theme/exports/btn";
+@import "../../../../../theme/exports/form-input-primary";
+@import "../../../../../theme/exports/spinner";
+@import "../../../../../theme/exports/form-input-phone-no";
+
+form {
+  margin-top: 20px;
+}
+
+.action {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.password-mt {
+  margin-top: 10px;
+}
+
+.flag {
+  line-height: 0;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: $color-primary;
+  }
+
+}
+
+.signup-here {
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+
+  a {
+    text-decoration: none;
+
+    .an-account {
+      color: #0866ff;
+    }
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .flag {
+    svg {
+      width: 24px;
+    }
+  }
+}
+

@@ -1,0 +1,124 @@
+@import "variables";
+
+.form-group {
+  margin-bottom: 12px;
+
+  label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #3e3e3e;
+    font-size: calc($font-readable + 1px);
+  }
+}
+
+.input-wrapper {
+  position: relative;
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0 16px;
+    height: 54px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: calc($font-readable + 1px);
+    transition: border-color 0.3s;
+    color: #3e3e3e;
+    font-family: var(--font-primary);
+
+    &:focus {
+      border-color: $color-primary;
+      outline: none;
+    }
+
+    &.is-invalid {
+      background-color: #f8d7da;
+      border-color: #dc3545;
+    }
+  }
+
+  select {
+    cursor: pointer;
+    appearance: none;
+    background-color: #fff;
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%233e3e3e" d="M2 0L0 2h4zM2 5L0 3h4z"/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 10px;
+  }
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: $color-success;
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+
+  &.password-eye {
+    right: 40px;
+    cursor: pointer;
+  }
+  svg{
+    fill: #b0b0b0;
+  }
+}
+
+.input-hint {
+  margin-top: 8px;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+
+  p {
+    font-size: calc($font-readable);
+    margin: 2px 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .hint-icon {
+    margin-right: 8px;
+  }
+
+  &.weak {
+    color: #626262;
+  }
+
+  &.strong {
+    color: $color-success;
+  }
+
+ a {
+   font-size: 14px;
+   color: #3e3e3e;
+   text-decoration: none;
+   cursor: pointer;
+ }
+}
+
+@media only screen and (max-width: 599px) {
+  .form-group {
+    label {
+      font-size: calc($font-readable-sm + 1px);
+    }
+  }
+
+  .input-wrapper {
+    input {
+      padding: 0 12px;
+      font-size: calc($font-readable-sm + 1px);
+    }
+  }
+
+  .input-hint {
+    p {
+      font-size: calc($font-readable-sm);
+    }
+  }
+}

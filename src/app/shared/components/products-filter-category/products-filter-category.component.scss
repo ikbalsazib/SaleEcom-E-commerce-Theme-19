@@ -1,0 +1,132 @@
+@import "variables";
+
+.category-container {
+  display: flex;
+  flex: 1;
+}
+.category-container-left {
+  width: 100%;
+  height: 440px;
+  background-color: $color-white;
+  padding: 0 20px;
+  border: 1px solid darken($color-white, 10%);
+  border-radius: 15px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    font-size: calc($font-sub-title - 2px);
+    font-family: "Quicksand", sans-serif;
+    color: #333;
+    padding: 20px 0;
+    //border-bottom: 1px solid lighten($color-black, 25%);
+    margin-bottom: 25px;
+    position: relative;
+
+    &:after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 3px;
+      background-color: $color-primary;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  }
+  ul::-webkit-scrollbar {
+    display: none;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 324px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      //border-radius: 5px;
+      border-bottom: 1px solid darken($color-white, 10%);
+      transition: all 0.3s ease 0s;
+      a{
+        padding: 10px;
+        width: 100%;
+        margin-right: 0;
+        text-decoration: none;
+      }
+
+      &:hover {
+        cursor: pointer;
+        .category-tag {
+          color: $color-primary;
+          transition: all 0.3s ease 0s;
+        }
+      }
+
+      .icon {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+        cursor: pointer;
+        gap: 15px;
+
+        .image {
+          border: 1px solid darken($color-white, 10%);
+          padding: 4px;
+          border-radius: 5px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          img{
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+          }
+        }
+      }
+
+      span {
+        font-size: $font-readable;
+        font-weight: 500;
+        font-family: "Lato", system-ui;
+        color: #253d4e;
+        cursor: pointer;
+
+        &.count {
+          background-color: #e9f5ee;
+          padding: 5px 10px;
+          border-radius: 20px;
+          font-weight: bold;
+          font-family: "Lato", system-ui;
+          color: $color-primary;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 599px){
+
+  .category-container-left {
+    height: auto;
+    padding: 0 15px;
+    h2{
+      font-size: 20px;
+      padding: 15px 0;
+    }
+  }
+
+  .category-container-left  ul {
+    max-height: inherit;
+    overflow-y: inherit;
+    margin-bottom: 15px;
+  }
+
+}

@@ -1,0 +1,170 @@
+@import "exports/payment-method";
+.payment-area{
+  position: relative;
+  padding: 30px;
+}
+.close {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 25px;
+
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #b0b0b0;
+    transition: all .2s ease;
+    &:hover{
+      fill: $color-warn;
+    }
+  }
+}
+
+.advance-payment-area {
+  position: relative;
+  padding: 15px;
+  //display: flex;
+  //align-items: center;
+  //justify-content: space-between;
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 0;
+  margin: 20px 0;
+
+  // Main content background (optional)
+  background: #fff;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 2px; // thickness of the border
+    border-radius: 6px;
+    background: linear-gradient(
+        270deg,
+        #ff4d4d,
+        #3399ff,
+        #cc33ff,
+        #ff4d4d
+    );
+    background-size: 1200% 1200%;
+    animation: waveColor 12s ease infinite;
+    z-index: -1;
+
+    // Mask inside to create border-only effect
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: destination-out;
+    pointer-events: none;
+  }
+
+  @keyframes waveColor {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  p{
+    span{
+      background-color: #fff4e5;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      color: $color-primary;
+      font-size: 1rem;
+    }
+  }
+
+  .advance-btn{
+    border: 1px solid lighten($color-gray, 25%);
+    border-radius: 4px;
+    padding: 5px 8px;
+    background: transparent;
+    color:  lighten($color-black, 10%);
+    font-family: $font-en-primary;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    &:hover{
+      background-color: $color-primary;
+      color: $color-white;
+      border: 1px solid $color-primary;
+    }
+  }
+
+}
+
+.button-area {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+
+  .back-button {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    color: lighten($color-black, 25%);
+    font-size: 16px;
+    font-family: $font-en-primary;
+    font-weight: 500;
+    padding: 5px 0;
+
+    svg {
+      height: 20px;
+      width: 20px;
+      display: inline;
+      fill: lighten($color-black, 25%);
+      transition: transform 0.3s ease;
+    }
+
+    &:hover svg {
+      transform: translateX(-5px);
+    }
+  }
+
+  .order-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 45px;
+    background: $color-primary;
+    padding: 5px 15px;
+    color: $color-white;
+    font-size: 16px;
+    font-family: $font-en-primary;
+    border: none;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+
+    svg {
+      height: 30px;
+      width: 30px;
+      display: inline;
+      fill: $color-white;
+    }
+
+    &:hover {
+      background-color: $color-primary;
+      filter: brightness(90%);
+    }
+  }
+}
+
+::ng-deep.mat-mdc-dialog-surface{
+  border-radius: 4px !important;
+}

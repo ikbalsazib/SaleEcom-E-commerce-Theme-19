@@ -1,0 +1,57 @@
+<div class="gallery" *ngIf="isVisible" @popupAnimation (click)="onClose()">
+  <div class="close-btn">
+    <button (click)="closeGallery()">
+      <svg fill="#ffffff" height="14px" width="14px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" stroke="#ffffff">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="SVGRepo_iconCarrier">
+          <g>
+            <g>
+              <polygon points="512,59.076 452.922,0 256,196.922 59.076,0 0,59.076 196.922,256 0,452.922 59.076,512 256,315.076 452.922,512 512,452.922 315.076,256 "/>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </button>
+  </div>
+  <!-- Close Button -->
+  <div>
+    <!-- Main Image Slider -->
+    <div
+      class="main-image-container"
+      (mousedown)="onStart($event)"
+      (mousemove)="onMove($event)"
+      (mouseup)="onEnd($event)"
+      (mouseleave)="onEnd($event)"
+      (touchstart)="onStart($event)"
+      (touchmove)="onMove($event)"
+      (touchend)="onEnd($event)"
+      [style.transform]="'scale(' + scale + ') translate(' + translateX + 'px, ' + translateY + 'px)'"
+    >
+      <div
+        class="slider"
+        [style.transform]="getSlideTransform()"
+        [style.transition]="slideTransition"
+      >
+        <img
+          *ngFor="let image of galleryImages"
+          [src]="image"
+          alt="Main Image"
+          class="main-image"
+        />
+      </div>
+    </div>
+    <div class="index-display">{{ getRealIndex() }} / {{ images.length }}</div>
+  </div>
+  <!-- Thumbnails -->
+  <div class="thumbnails" (click)="$event.stopPropagation()">
+    <img
+      *ngFor="let image of images; let i = index"
+      [src]="image"
+      [class.active]="i + 1 === selectedIndex"
+      (click)="selectImage(i)"
+      alt="Thumbnail {{ i + 1 }}"
+      class="thumbnail"
+    />
+  </div>
+</div>

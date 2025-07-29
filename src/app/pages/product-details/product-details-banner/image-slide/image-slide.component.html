@@ -1,0 +1,11 @@
+<div class="slider-container">
+  <div class="small-img-box slider-track" [style.transform]="transformStyle">
+    @for(d of inputImages; track d) {
+      <div class="img-small" [ngClass]="{'active': d === hoveredImage}" (click)="selectImage(d)" (mouseenter)="hoverImage(d)">
+        <img [src]="d" alt="image" loading="lazy">
+      </div>
+    }
+  </div>
+  <div class="swipe swipe-left" (click)="scrollLeft()">&#10094;</div>
+  <div class="swipe swipe-right" (click)="scrollRight()">&#10095;</div>
+</div>

@@ -1,0 +1,128 @@
+<div class="modal-area">
+  <div class="modal-area-main">
+    <div class="product">
+      <div class="product-img">
+        <img checkImageDefault [src]="image +
+           '?&auto=format&w=384'"  src="" alt="image" loading="lazy">
+      </div>
+      <div class="product-info">
+        <p>{{product?.name}}</p>
+        <h3>
+          {{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}
+        </h3>
+        @if ((product | productPrice : "discountAmount" : selectedVariationList?._id) > 0) {
+        <h3 >
+          <del >{{ (product | productPrice : "regularPrice" : selectedVariationList?._id) | currencyCtr }}</del>
+          <span>-{{ product | productPrice : "discountPercentage" : selectedVariationList?._id }}% OFF</span>
+        </h3>
+        }
+      </div>
+    </div>
+
+    @if(product?.variation){
+      <div class="color-variant">
+        <div class="color-variant-top">
+          <span>{{ product?.variation }}</span>
+        </div>
+        <div class="color-variant-main">
+          <ul>
+            @for(data of product?.variationOptions; track $index){
+              <li>
+                  <button [class.active]="selectedVariation === data"
+                          (click)="onSelectVariation(data)" >
+                          @if(convertToLowercase(product?.variation) === "color" || convertToLowercase(product?.variation) === "colour"){
+                    @if (getVariationImage(data)) {
+                      <picture>
+                        <source [srcset]="getVariationImage(data)" type="image/webp">
+                        <img [src]="getVariationImage(data)" alt="Black">
+                      </picture>
+                    }
+                  }
+                    {{ data }}
+                    <span>&#10003;</span>
+                  </button>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+
+    @if(product?.variation2){
+      <div class="color-variant">
+        <div class="color-variant-top">
+          <span>{{ product?.variation2 }}</span>
+        </div>
+        <div class="color-variant-main">
+          <ul>
+            @for(data of product?.variation2Options; track $index){
+              <li>
+                  <button [class.active]="selectedVariation2 === data"
+                          (click)="onSelectVariation2(data)" >
+                          @if(convertToLowercase(product?.variation2) === "color" || convertToLowercase(product?.variation2) === "colour"){
+                    @if (getVariationImage(data)) {
+                      <picture>
+                        <source [srcset]="getVariationImage(data)" type="image/webp">
+                        <img [src]="getVariationImage(data)" alt="Black">
+                      </picture>
+                    }
+                  }
+                    {{ data }}
+                    <span>&#10003;</span>
+                  </button>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    }
+
+    <!-- @if(product?.variation2){
+      <div class="size-variant">
+        <div class="size-variant-top">
+          <span>{{ product?.variation2 }}</span>
+        </div>
+        <div class="size-variant-main" >
+          <ul  >
+            @for(data of product?.variation2Options; track $index){
+              <li><button (click)="onSelectVariation2(data)" [class.active]="selectedVariation2 === data">
+                {{ data }}
+                <span><i class="fa fa-check"></i></span>
+              </button>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    } -->
+
+    <div class="quantity">
+      <div class="quantity-left">
+        <span>Quantity</span>
+      </div>
+      <div class="quantity-right">
+        <ul>
+          <li><button (click)="onDecrementQtySimple($event)">-</button></li>
+          <li><input type="text" [(ngModel)]="selectedQty" readonly></li>
+          <li><button (click)="onIncrementQtySimple($event)">+</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="buy-btn" >
+    <button type="button" [ngClass]="(product?.variation && product?.variation2 &&  selectedVariation && selectedVariation2) ? 'buy-btn1' : !(product?.variation && product?.variation2) && ((product?.variation || product?.variation2) && ( selectedVariation || selectedVariation2)) ? 'buy-btn1' : ((!product?.variation && !product?.variation2 && !selectedVariation && !selectedVariation2)) ? 'buy-btn1' : ''" (click)="onAddToCart($event)">
+      <svg id="Group_510" data-name="Group 510" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+        <path id="Path_1715" data-name="Path 1715" d="M0,0H16V16H0Z" fill="none"/>
+        <path id="Path_1716" data-name="Path 1716" d="M16.667,5.333H15.333a3.333,3.333,0,1,0-6.667,0H7.333A1.327,1.327,0,0,0,6.007,6.667l-.007,8A1.333,1.333,0,0,0,7.333,16h9.333A1.333,1.333,0,0,0,18,14.667v-8A1.333,1.333,0,0,0,16.667,5.333ZM12,3.333a2,2,0,0,1,2,2H10A2,2,0,0,1,12,3.333ZM12,10A3.335,3.335,0,0,1,8.667,6.667H10a2,2,0,0,0,4,0h1.333A3.335,3.335,0,0,1,12,10Z" transform="translate(-4 -1.333)" fill="#fff"/>
+      </svg>
+      {{'addToCart' | translate}}
+    </button>
+  </div>
+
+  <div class="modal-close">
+    <span (click)="dismiss()"><mat-icon>close</mat-icon></span>
+  </div>
+
+</div>

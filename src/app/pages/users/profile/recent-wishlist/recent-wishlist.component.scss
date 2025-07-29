@@ -1,0 +1,39 @@
+@import "variables";
+@import "exports/btn";
+
+.card {
+  width: 100%;
+  max-height: 440px;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid darken($color-white, 10%);
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid lighten($color-black, 25%)-light;
+    padding-bottom: 10px;
+
+    h4 {
+      font-size: calc($font-readable + 3px);
+      font-weight: bold;
+      color: lighten($color-black, 10%);
+    }
+
+  }
+
+  .content {
+    width: 100%;
+  }
+}
+
+@media (max-width: 599px) {
+  .card {
+    overflow: auto;
+    ::-webkit-scrollbar{
+      display: none;
+    }
+  }
+}

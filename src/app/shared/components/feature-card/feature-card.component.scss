@@ -1,0 +1,32 @@
+@import "variables";
+
+.card {
+  border-radius: 12px;
+  border: 1px solid rgb(187 187 187);
+  width: 100%;
+  padding: 20px;
+  height: 100%;
+
+
+  p {
+    color: $color-black;
+    font-size: 12px;
+    text-align: left;
+  }
+
+  b {
+    margin: 10px 0;
+    font-size: 1.2em;
+    color: $color-black;
+    text-align: left;
+  }
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+
+  svg {
+    fill: $color-black;
+  }
+}

@@ -1,0 +1,27 @@
+<div class="product-container">
+    <ngx-skeleton-loader
+        [theme]="{ width: '200px', height: '40px' }"
+      ></ngx-skeleton-loader>
+  @for(item of [1, 2, 3, 4, 5]; track $index){
+    <div class="list-container">
+      <div class="left-skeleton">
+        <!-- Product Image -->
+        <ngx-skeleton-loader
+          [theme]="{ width: '50px', height: '50px' }"
+        ></ngx-skeleton-loader>
+      </div>
+      <!-- Product Details -->
+      <div class="middle-skeleton">
+        <ngx-skeleton-loader
+          [theme]="{ width: '150px', height: '20px' }"
+        ></ngx-skeleton-loader>
+      </div>
+      <div class="right-skeleton">
+        <ngx-skeleton-loader
+          [theme]="{ width: '20px', height: '20px'}"
+        ></ngx-skeleton-loader>
+      </div>
+    </div>
+  }
+
+</div>

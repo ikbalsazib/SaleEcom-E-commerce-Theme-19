@@ -1,0 +1,84 @@
+@import "variables";
+
+.loading1 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 40px;
+  }
+}
+
+.loader {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  background: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.loader:after{
+  content: '';
+  position: absolute;
+  inset: 8px;
+  margin: auto;
+  border-radius: 50%;
+}
+.loader:before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: #de3500;
+  animation: crlMugLoader 2s linear infinite alternate;
+}
+
+@keyframes crlMugLoader {
+  0%  ,10% { transform: translateY(64px) }
+  90% , 100% { transform: translateY(0px) }
+}
+
+@keyframes loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.abgne-loading-20140104-2 {
+  position: relative;
+  height: 45px;
+  width: 45px;
+}
+
+.abgne-loading-20140104-2 .loading {
+  border: 3px solid $color-primary;
+  border-right: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  -webkit-animation: loading 1s infinite linear;
+  -moz-animation: loading 1s infinite linear;
+  -ms-animation: loading 1s infinite linear;
+  -o-animation: loading 1s infinite linear;
+  animation: loading 1s infinite linear;
+}
+
+.abgne-loading-20140104-2 .word {
+  svg{
+    fill:$color-primary;
+  }
+  color: #168;
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  display: inline-block;
+  text-align: center;
+  padding: 0;
+}

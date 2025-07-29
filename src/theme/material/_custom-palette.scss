@@ -1,0 +1,115 @@
+$dark-primary-text: rgba(black, 0.87);
+$dark-secondary-text: rgba(black, 0.54);
+$dark-disabled-text: rgba(black, 0.38);
+$dark-dividers: rgba(black, 0.12);
+$dark-focused: rgba(black, 0.12);
+$light-primary-text: white;
+$light-secondary-text: rgba(white, 0.7);
+$light-disabled-text: rgba(white, 0.5);
+$light-dividers: rgba(white, 0.12);
+$light-focused: rgba(white, 0.12);
+
+// Primary
+$mat-soft-primary: (
+  50: #eee6fa,
+  100: #d2c1f2,
+  200: #b398ea,
+  300: #946de3,
+  400: #7a4cdd,
+  500: #5e29d6,
+  600: #5224d0,
+  700: #411cc7,
+  800: #2c15c1,
+  900: #0006b3,
+  A100: #d2c1f2,
+  A200: #b398ea,
+  A400: #7a4cdd,
+  A700: #5224d0,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $light-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+
+
+// Accent
+$mat-soft-accent: (
+  50 : #e1f5fc,
+  100 : #b4e6f8,
+  200 : #83d6f4,
+  300 : #54c5f0,
+  400 : #32b8ee,
+  500 : #12aceb,
+  600 : #0b9edd,
+  700 : #018bca,
+  800 : #017ab6,
+  900 : #005a94,
+  A100 : #e1f5fc,
+  A200 : #83d6f4,
+  A400 : #32b8ee,
+  A700 : #0b9edd,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $light-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+
+// Warn
+$mat-soft-warn: (
+  50 : #f9e0e0,
+  100 : #f0b3b3,
+  200 : #e68080,
+  300 : #db4d4d,
+  400 : #d42626,
+  500 : #cc0000,
+  600 : #c70000,
+  700 : #c00000,
+  800 : #b90000,
+  900 : #ad0000,
+  A100 : #ffd7d7,
+  A200 : #ffa4a4,
+  A400 : #ff7171,
+  A700 : #ff5858,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);

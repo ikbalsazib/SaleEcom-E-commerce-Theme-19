@@ -1,0 +1,19 @@
+<a class="card-container" [routerLink]="['/products']"
+   [queryParams]="{ categories: category?.slug}">
+  <div class="card-img">
+<!--    <img-->
+<!--      [ngSrc]="(category?.images | arrToSingleImage) | imgCtrl : 'filename'"-->
+<!--      [width]="(category?.images | arrToSingleImage) | imgCtrl : 'width'"-->
+<!--      [height]="(category?.images | arrToSingleImage) | imgCtrl : 'height'"-->
+<!--      [alt]="category?.name"-->
+<!--      [ngSrcset]="rawSrcset"-->
+<!--      sizes="(max-width: 599px) 48px, (min-width: 600px) 200px"-->
+<!--    />-->
+    <img class="img-fluid mb-3" [src]="category?.images | arrToSingleImage" [alt]="category?.name">
+  </div>
+
+  <div class="card-footer">
+    <div class="product-name">{{ category?.name }}</div>
+  </div>
+</a>
+

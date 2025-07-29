@@ -1,0 +1,25 @@
+<section>
+
+  <a class="category-container">
+    <div class="category-container-left style-title">
+      <h2 class="title">Category</h2>
+      <ul>
+        @for (d of data;track d?.name){
+          <li >
+              <a class="icon" [routerLink]="['/products']"
+                 [queryParams]="{ categories: d?.slug, categoryId: d?._id }">
+                <div class="image">
+                  <img [src]="d?.images && d?.images.length ? d?.images[0]: ''" alt="image" loading="lazy">
+                </div>
+                <span class="category-tag">{{ d?.name }}</span>
+              </a>
+            </li>
+        }
+
+      </ul>
+    </div>
+  </a>
+
+</section>
+
+

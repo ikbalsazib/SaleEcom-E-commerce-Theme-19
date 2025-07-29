@@ -1,0 +1,533 @@
+@if (true) {
+  <div class="product-scroll-area"
+       [ngClass]="{ 'product-scroll-area-active': productFixed }">
+    <div class="container">
+      <div class="product-scroll-main">
+        <div class="scroll-product">
+          <div class="scroll-price-and-card">
+            <div class="scroll-product-info">
+              <div class="scroll-product-img">
+                <img checkImageDefault
+                     [src]="image ?? image"
+                     alt="{{ product?.name }}"
+                />
+              </div>
+              <div class="scroll-title-price-wrapper">
+                <h3>{{ product?.name }}</h3>
+                <p class="scroll-sale-price">
+                  {{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}</p>
+              </div>
+            </div>
+            <!-- END! scroll-product-info -->
+
+            <div class="scroll-product-right">
+              <ul>
+                <li>
+                  <a class="add-to-cart" (click)="onAddToCart($event, 'addToCart')">
+                    <p>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14.283" viewBox="0 0 14 14.283"><g id="cart" transform="translate(-2 -2)"><path id="Path_1717" data-name="Path 1717" d="M2.6,2a.6.6,0,1,0,0,1.19h.292a.6.6,0,0,1,.572.432l1.887,6.605a1.785,1.785,0,0,0,1.717,1.295H12.5A1.785,1.785,0,0,0,14.159,10.4l1.755-4.387A1.19,1.19,0,0,0,14.809,4.38H4.914L4.6,3.295A1.785,1.785,0,0,0,2.888,2Z" transform="translate(0 0)" fill="#fff"/><path id="Path_1718" data-name="Path 1718" d="M6.785,14.571A1.785,1.785,0,1,0,5,12.785,1.785,1.785,0,0,0,6.785,14.571Z" transform="translate(0.571 1.712)" fill="#fff"/><path id="Path_1719" data-name="Path 1719" d="M10.785,14.571A1.785,1.785,0,1,0,9,12.785,1.785,1.785,0,0,0,10.785,14.571Z" transform="translate(1.332 1.712)" fill="#fff"/></g></svg>
+                    </p>
+                    {{ 'addToCart' | translate }}
+                  </a>
+                </li>
+
+                <li>
+                  <a class="buy-now" (click)="onAddToCart($event, 'buyNow')">
+                    <p>
+                      <svg id="Group_510" data-name="Group 510" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path id="Path_1715" data-name="Path 1715" d="M0,0H16V16H0Z" fill="none"/><path id="Path_1716" data-name="Path 1716" d="M16.667,5.333H15.333a3.333,3.333,0,1,0-6.667,0H7.333A1.327,1.327,0,0,0,6.007,6.667l-.007,8A1.333,1.333,0,0,0,7.333,16h9.333A1.333,1.333,0,0,0,18,14.667v-8A1.333,1.333,0,0,0,16.667,5.333ZM12,3.333a2,2,0,0,1,2,2H10A2,2,0,0,1,12,3.333ZM12,10A3.335,3.335,0,0,1,8.667,6.667H10a2,2,0,0,0,4,0h1.333A3.335,3.335,0,0,1,12,10Z" transform="translate(-4 -1.333)" fill="#fff"/></svg>
+                    </p>
+                    {{ 'buyNow' | translate }}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- END! scroll-product-right -->
+
+
+          </div>
+          <!--   -->
+        </div>
+        <!-- END! scroll-product -->
+      </div>
+      <!-- END! product-scroll-main -->
+    </div>
+  </div> <!--END bottom action view on scroll -->
+}
+<div class="product-details-container">
+  <div class="product-details-left">
+    <div class="product-details-left-parent">
+      @if (isMobile > this.customWidth) {
+        <div class="large-img-box" id="img-container" [ngClass]="{ 'custom-style-for-image-box': customWidth == 0 }">
+          @if (image) {
+            <img
+              id="featured"
+              checkImageDefault
+              [src]="image"
+              alt="book" loading="lazy"
+              #zoomViewer
+              style="transition: all 0.1s linear; object-fit: contain;"
+              (click)="openGallery($event, product.images)"
+              (mousemove)="onMouseMove($event)"
+              (mouseleave)="onMouseLeave($event)"
+            />
+          }
+        </div>
+      } @else {
+        <app-mobile-slider [product]="product" [newSelectedimage]="image" [isAllowedShop]="isAllowedShop"></app-mobile-slider>
+      }
+
+
+      @if ((product | productPrice : "discountAmount" : selectedVariationList?._id) > 0) {
+        <div class="img-tag">
+          <span>-{{ product | productPrice : "discountPercentage" : selectedVariationList?._id }}% OFF</span>
+        </div>
+      }
+
+      <button class="img-wishlist" (click)="onAddToWishlist($event)">
+        <span class="test">
+         <svg [class.active-wish-list]="wishlist" [class.inactive]="!wishlist" width="24" height="20"><path d="M19.469 1.262c-5.284-1.53-7.47 4.142-7.47 4.142S9.815-.269 4.532 1.262C-1.937 3.138.44 13.832 12 19.333c11.559-5.501 13.938-16.195 7.469-18.07z" stroke-width="1.5" fill-rule="evenodd" stroke-linejoin="round"></path></svg>
+        </span>
+        <span class="tooltiptext">Add to wishlist</span>
+      </button>
+    </div>
+    @if (product?.images?.length > 1 && isMobile > this.customWidth) {
+      <div class="slider-container">
+        <div
+          class="small-img-box slider-track"
+          [style.transform]="transformStyle"
+        >
+          @for (d of product?.images; track d) {
+            <div
+              class="img-small"
+              (click)="selectImage(d)"
+              [ngClass]="{ active: d === selectedImage }"
+              (mouseenter)="hoverImage(d)"
+            >
+              <img [src]="d" alt="image" loading="lazy"/>
+            </div>
+          }
+        </div>
+        @if(product?.images?.length > 0){
+          <div
+            class="swipe swipe-left"
+            (click)="scrollLeft()"
+          >
+            &#10094;
+          </div>
+        }
+
+        @if(product?.images?.length > 0){
+          <div
+            class="swipe swipe-right"
+            (click)="scrollRight()"
+          >
+            &#10095;
+          </div>
+        }
+      </div>
+    }
+  </div>
+  <div class="product-details-right">
+    <div #variationScroll class="product-details-description-parent">
+      <div class="product-details-description-child">
+        <h2 class="title">{{ product?.name }}</h2>
+
+        <div class="rating">
+          <div class="star-rating">
+            <app-star-rating-view [rating]="ratingCount" starSize="16px" color="#f5c518"></app-star-rating-view>
+          </div>
+          <div class="parent">
+            <span class="icon-text">
+              ({{ product?.reviewTotal }} reviews)
+            </span>
+          </div>
+        </div> <!-- END! Rating & Review -->
+
+
+        <div class="price">
+          <div class="price-amount">
+            @if (!showWholesale){
+              <p >{{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}</p>
+            } @else {
+              <p>{{ (product?.wholesalePrice) | currencyCtr }}</p>
+            }
+
+
+          </div>
+          @if (product | productPrice : "discountAmount" : selectedVariationList?._id) {
+            <div class="discount-amount">
+              <p class="discount-off">
+                 {{ (product | productPrice : "discountAmount" : selectedVariationList?._id) | currencyCtr }} Off
+              </p>
+              <p class="discount-value">
+                <del>{{ (product | productPrice : "regularPrice" : selectedVariationList?._id) | currencyCtr }}</del>
+              </p>
+            </div>
+          }
+
+
+
+        </div> <!-- END! Price View -->
+
+
+
+
+        @if (product?.minimumWholesaleQuantity) {
+          <div class="wholesale-unit">
+            <button
+              (click)="showWholesale ? retailQuantity(1) : wholesaleQuantity(product?.minimumWholesaleQuantity)"
+              [class.active]="showWholesale">
+              Wholesale
+            </button>
+          </div>
+        }
+
+
+          @if (product?.variation) {
+            <div class="variation">
+              <p class="variation-text">{{ product?.variation }}:</p>
+              @for (data of product?.variationOptions; track data) {
+                <div class="color-variant">
+                  <button [class.active]="selectedVariation === data"
+                          (click)="onSelectVariation(data)" >
+                    @if(convertToLowercase(product?.variation) === "color" || convertToLowercase(product?.variation) === "colour" || convertToLowercase(product?.variation) === "version"){
+                      @if (getVariationImage(data)) {
+                        <picture>
+                          <source [srcset]="getVariationImage(data)" type="image/webp">
+                          <img [src]="getVariationImage(data)" alt="Black">
+                        </picture>
+                      }
+                    }
+
+                    {{ data }}
+                    <span>&#10003;</span>
+                  </button>
+                </div>
+              }
+            </div> <!-- END! 1st Variation View -->
+          }
+
+
+          @if (product?.variation2) {
+            <div class="variation">
+              <p class="variation-text">{{ product?.variation2 }}:</p>
+              @for (data of product?.variation2Options; track data) {
+                <div class="color-variant">
+                  <button [class.active]="selectedVariation2 === data"
+                          (click)="onSelectVariation2(data)" >
+                    @if(convertToLowercase(product?.variation2) === "color" || convertToLowercase(product?.variation2) === "colour" || convertToLowercase(product?.variation2) === "version"){
+                      @if (getVariationImage(data)) {
+                        <picture>
+                          <source [srcset]="getVariationImage(data)" type="image/webp">
+                          <img [src]="getVariationImage(data)" alt="Black">
+                        </picture>
+                      }
+                    }
+                    {{ data }}
+                    <span>&#10003;</span>
+                  </button>
+                </div>
+              }
+            </div> <!-- END! 1st Variation View -->
+          }
+
+
+        <div [ngClass]="{'variation-box': variationBorder}" class="variation-box-default">
+          <div class="variation-icon">!</div>
+
+          <span class="message">Select
+            @if (product?.variation && selectedVariation == null) {
+              {{ product.variation }}
+              @if (product?.variation2 && selectedVariation2 == null) {
+                , {{ product.variation2 }}
+              }
+            } @else if (product?.variation2 && selectedVariation2 == null) {
+              {{ product.variation2 }}
+            }
+            of this product.</span>
+
+
+        </div>
+
+        <!-- @if (product?.variation2) {
+          <div class="variation">
+            <p class="variation-text">{{ product?.variation2 }}:</p>
+            @for (data of product?.variation2Options; track data) {
+              <button class="variation-list" (click)="onSelectVariation2(data)">
+                @if (getVariationImage(data)) {
+                  <picture>
+                    <source [srcset]="getVariationImage(data)" type="image/webp">
+                    <img [src]="getVariationImage(data)" alt="Black">
+                  </picture>
+                }
+                <span class="single-variation" [class.active]="selectedVariation2 === data">
+                  {{ data }}
+                </span>
+              </button>
+            }
+          </div>
+        } -->
+
+        <!-- END! 2nd Variation View -->
+
+        @if (isStockAvailable) {
+          <div class="button-box">
+            <div class="quantity-btn">
+              <button class="minus" (click)="onDecrementQtySimple($event)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg>
+              </button>
+              <div class="q-input-box">
+                <input [ngModel]="selectedQty" readonly type="text" value="1"/>
+              </div>
+              <button class="plus" (click)="onIncrementQtySimple($event)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill=""><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+              </button>
+            </div>
+            <button class="add-to-cart" (click)="onAddToCart($event, 'addToCart')">
+              <p>
+                @if (!cartLoader) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14.283" viewBox="0 0 14 14.283"><g id="cart" transform="translate(-2 -2)"><path id="Path_1717" data-name="Path 1717" d="M2.6,2a.6.6,0,1,0,0,1.19h.292a.6.6,0,0,1,.572.432l1.887,6.605a1.785,1.785,0,0,0,1.717,1.295H12.5A1.785,1.785,0,0,0,14.159,10.4l1.755-4.387A1.19,1.19,0,0,0,14.809,4.38H4.914L4.6,3.295A1.785,1.785,0,0,0,2.888,2Z" transform="translate(0 0)" fill="#fff"/><path id="Path_1718" data-name="Path 1718" d="M6.785,14.571A1.785,1.785,0,1,0,5,12.785,1.785,1.785,0,0,0,6.785,14.571Z" transform="translate(0.571 1.712)" fill="#fff"/><path id="Path_1719" data-name="Path 1719" d="M10.785,14.571A1.785,1.785,0,1,0,9,12.785,1.785,1.785,0,0,0,10.785,14.571Z" transform="translate(1.332 1.712)" fill="#fff"/></g></svg>
+                }
+
+                @if (cartLoader) {
+                  <span class="loader"></span>
+                }
+              </p>
+              {{ 'addToCart' | translate }}
+            </button>
+            <button class="buy-now" (click)="onAddToCart($event, 'buyNow')">
+              <p>
+                @if (!buyNowLoader) {
+                  <svg id="Group_510" data-name="Group 510" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path id="Path_1715" data-name="Path 1715" d="M0,0H16V16H0Z" fill="none"/><path id="Path_1716" data-name="Path 1716" d="M16.667,5.333H15.333a3.333,3.333,0,1,0-6.667,0H7.333A1.327,1.327,0,0,0,6.007,6.667l-.007,8A1.333,1.333,0,0,0,7.333,16h9.333A1.333,1.333,0,0,0,18,14.667v-8A1.333,1.333,0,0,0,16.667,5.333ZM12,3.333a2,2,0,0,1,2,2H10A2,2,0,0,1,12,3.333ZM12,10A3.335,3.335,0,0,1,8.667,6.667H10a2,2,0,0,0,4,0h1.333A3.335,3.335,0,0,1,12,10Z" transform="translate(-4 -1.333)" fill="#fff"/></svg>
+                }
+                @if (buyNowLoader) {
+                  <span class="loader"></span>
+                }
+              </p>
+              {{ 'buyNow' | translate }}
+            </button>
+          </div> <!-- END! In Stock View -->
+        }
+
+
+        @if (!isStockAvailable) {
+          <div class="data-item">
+            <div class="quantity-btn">
+              <div class="minus">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill=""><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/></svg>
+              </div>
+              <div class="value">0</div>
+              <div class="plus">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill=""><path d="M0 0h24v24H0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+              </div>
+            </div>
+
+            <div class="compare" (click)="openReStockPopup()">
+              <p>
+                <svg id="Group_510" data-name="Group 510" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path id="Path_1715" data-name="Path 1715" d="M0,0H16V16H0Z" fill="none"/><path id="Path_1716" data-name="Path 1716" d="M16.667,5.333H15.333a3.333,3.333,0,1,0-6.667,0H7.333A1.327,1.327,0,0,0,6.007,6.667l-.007,8A1.333,1.333,0,0,0,7.333,16h9.333A1.333,1.333,0,0,0,18,14.667v-8A1.333,1.333,0,0,0,16.667,5.333ZM12,3.333a2,2,0,0,1,2,2H10A2,2,0,0,1,12,3.333ZM12,10A3.335,3.335,0,0,1,8.667,6.667H10a2,2,0,0,0,4,0h1.333A3.335,3.335,0,0,1,12,10Z" transform="translate(-4 -1.333)" fill="#00000"/></svg>
+
+                <span class="out-stock">
+              <span class="com-hed"> Out of Stock </span>
+              <span class="com-sub-head">
+                Click here notify seller for restock
+              </span>
+            </span>
+              </p>
+            </div>
+          </div> <!-- END! Out of Stock View -->
+        }
+        <div class="social-custom-design">
+          <div class="social-buttons">
+            <a
+              href="https://wa.me/{{getSocialLink('whatsapp')?.url}}?text=Hello!%20I%20need%20help%20with%20your%20services"
+              target="_new"
+              class="social-btn whatsapp">
+              <svg height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 58 58" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path style="fill:#2CB742;" d="M0,58l4.988-14.963C2.457,38.78,1,33.812,1,28.5C1,12.76,13.76,0,29.5,0S58,12.76,58,28.5 S45.24,57,29.5,57c-4.789,0-9.299-1.187-13.26-3.273L0,58z"></path> <path style="fill:#FFFFFF;" d="M47.683,37.985c-1.316-2.487-6.169-5.331-6.169-5.331c-1.098-0.626-2.423-0.696-3.049,0.42 c0,0-1.577,1.891-1.978,2.163c-1.832,1.241-3.529,1.193-5.242-0.52l-3.981-3.981l-3.981-3.981c-1.713-1.713-1.761-3.41-0.52-5.242 c0.272-0.401,2.163-1.978,2.163-1.978c1.116-0.627,1.046-1.951,0.42-3.049c0,0-2.844-4.853-5.331-6.169 c-1.058-0.56-2.357-0.364-3.203,0.482l-1.758,1.758c-5.577,5.577-2.831,11.873,2.746,17.45l5.097,5.097l5.097,5.097 c5.577,5.577,11.873,8.323,17.45,2.746l1.758-1.758C48.048,40.341,48.243,39.042,47.683,37.985z"></path> </g> </g></svg>
+              <span>WhatsApp</span>
+            </a>
+            <a
+              href="tel:{{getSocialLink('phone')?.url}}"
+              class="social-btn messenger">
+              <svg class="call-icon" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="#ffffff">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.05-.24c1.12.37 2.33.57 3.54.57a1 1 0 011 1v3.5a1 1 0 01-1 1C10.3 22 2 13.7 2 3.5A1 1 0 013 2.5H6.5a1 1 0 011 1c0 1.21.2 2.42.57 3.54a1 1 0 01-.24 1.05l-2.2 2.2z"/>
+              </svg>
+              <span>Phone Call</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="extra-info">
+          <div class="extra-info-parent">
+            <div class="extra-info-right">
+              @if (product?.category) {
+                <p class="marginRight">
+                  Category:
+                  <span class="text-primary-color">
+                  <a
+                    [routerLink]="['/products']"
+                    [queryParams]="{ categories: product?.category?.slug}">
+
+              {{ product?.category?.name }}
+              </a>
+            </span>
+                </p>
+              }
+              @if (product?.brand) {
+                <p class="marginRight">
+                  Brand:
+                  <a [routerLink]="['/products']"
+                     [queryParams]="{ brand: product?.brand?.slug}" class="text-primary-color">{{
+                      product?.brand?.name
+                    }}</a>
+                </p>
+              }
+              @if (product?.tags?.length) {
+                <p class="marginRight">
+                  Tags:
+                  @for (item of product?.tags; track item; let index = $index) {
+                    <a [routerLink]="['/products']"
+                       [queryParams]="{ tags: item?.slug}" class="text-primary-color">{{ item?.name }}</a>
+                    @if (index < product?.tags?.length - 1) {
+                      <span>, </span>
+                    }
+                  }
+                </p>
+              }
+            </div>
+          </div>
+        </div> <!-- END! Extra info -->
+
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (isGalleryOpen) {
+  <app-gallery-image-viewer
+    [images]="galleryImages"
+    [startIndex]="selectedImageIndex"
+    (closeEvent)="closeGallery()"
+  >
+  </app-gallery-image-viewer>
+}
+@if (isReStockPopupOpen) {
+  <app-request-product
+    [product]="product"
+    (dataToParent)="onReStockPopupUpdated($event)"
+  >
+  </app-request-product>
+}
+
+
+@if (isModalVisible) {
+  <div class="modal-overlay">
+    <div class="product-modal">
+      <div class="modal-header">
+        <div class="image-area">
+          <img [src]="product?.images && product?.images?.length ? product?.images[0] : 'https://cdn.saleecom.com/upload/images/placeholder.png'"
+               alt="Product Image" class="product-image"/>
+          <div class="product-details">
+            <h2 class="product-name">{{ product?.name }}</h2>
+            <div class="price-section">
+              <span
+                class="current-price">{{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}</span>
+              @if ((product | productPrice : "discountAmount" : selectedVariationList?._id) > 0) {
+                <div>
+                  <span
+                    class="original-price">{{ (product | productPrice : "regularPrice" : selectedVariationList?._id) | currencyCtr }}</span>
+                  <span
+                    class="discount-badge">- {{ (product | productPrice : "discountAmount" : selectedVariationList?._id) | currencyCtr }}
+                    Off</span>
+                </div>
+              }
+            </div>
+            <button class="close-btn" (click)="closeModal()">&times;</button>
+          </div>
+        </div>
+        @if (product?.variation) {
+          <div class="variation">
+            <p class="variation-text">{{ product?.variation }}:</p>
+            <div class="variation-list-area">
+              @for (data of product?.variationOptions; track data) {
+                <p class="variation-list" (click)="onSelectVariation(data)">
+    <span class="single-variation" [class.active]="selectedVariation === data">
+    {{ data }}
+    </span>
+                </p>
+              }
+            </div>
+          </div> <!-- END! 1st Variation View -->
+        }
+
+        @if (product?.variation2) {
+          <div class="variation">
+            <p class="variation-text">{{ product?.variation2 }}:</p>
+            <div class="variation-list-area">
+              @for (data of product?.variation2Options; track data) {
+                <p class="variation-list" (click)="onSelectVariation2(data)">
+    <span class="single-variation" [class.active]="selectedVariation2 === data">
+    {{ data }}
+    </span>
+                </p>
+              }
+            </div>
+          </div> <!-- END! 2nd Variation View -->
+        }
+        <button class="add-to-cart-btn" (click)="onAddToCart($event, 'addToCart')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14.283" viewBox="0 0 14 14.283"><g id="cart" transform="translate(-2 -2)"><path id="Path_1717" data-name="Path 1717" d="M2.6,2a.6.6,0,1,0,0,1.19h.292a.6.6,0,0,1,.572.432l1.887,6.605a1.785,1.785,0,0,0,1.717,1.295H12.5A1.785,1.785,0,0,0,14.159,10.4l1.755-4.387A1.19,1.19,0,0,0,14.809,4.38H4.914L4.6,3.295A1.785,1.785,0,0,0,2.888,2Z" transform="translate(0 0)" fill="#fff"/><path id="Path_1718" data-name="Path 1718" d="M6.785,14.571A1.785,1.785,0,1,0,5,12.785,1.785,1.785,0,0,0,6.785,14.571Z" transform="translate(0.571 1.712)" fill="#fff"/><path id="Path_1719" data-name="Path 1719" d="M10.785,14.571A1.785,1.785,0,1,0,9,12.785,1.785,1.785,0,0,0,10.785,14.571Z" transform="translate(1.332 1.712)" fill="#fff"/></g></svg>
+
+          {{ 'addToCart' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!--Navbar Outside means product details bottom footer START -->
+
+<div class="navbar-outside">
+  <div class="container">
+    <div class="product-details-navbar">
+      <div class="store" routerLink="/">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          enable-background="new 0 0 24 24"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+          fill=""
+        >
+          <g>
+            <rect fill="none" height="20" width="20" />
+            <path
+              d="M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6-2c1.1 0 2 .9 2 2h-4c0-1.1.9-2 2-2zm6 16H6V8h2v2c0 .55.45 1 1 1s1-.45 1-1V8h4v2c0 .55.45 1 1 1s1-.45 1-1V8h2v12z"
+            />
+          </g>
+        </svg>
+        <p>Store</p>
+      </div>
+
+      <div class="add-to-cart" (click)="onAddToCart($event, 'addToCart')">
+        <svg id="Group_510" data-name="Group 510" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+          <path id="Path_1715" data-name="Path 1715" d="M0,0H16V16H0Z" fill="none"/>
+          <path id="Path_1716" data-name="Path 1716" d="M16.667,5.333H15.333a3.333,3.333,0,1,0-6.667,0H7.333A1.327,1.327,0,0,0,6.007,6.667l-.007,8A1.333,1.333,0,0,0,7.333,16h9.333A1.333,1.333,0,0,0,18,14.667v-8A1.333,1.333,0,0,0,16.667,5.333ZM12,3.333a2,2,0,0,1,2,2H10A2,2,0,0,1,12,3.333ZM12,10A3.335,3.335,0,0,1,8.667,6.667H10a2,2,0,0,0,4,0h1.333A3.335,3.335,0,0,1,12,10Z" transform="translate(-4 -1.333)" fill="#fff"/>
+        </svg>
+        <p>{{ 'addToCart'  | translate }}</p>
+      </div>
+
+      <div class="buy-now" (click)="onAddToCart($event, 'buyNow')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14.283" viewBox="0 0 14 14.283">
+          <g id="cart" transform="translate(-2 -2)">
+            <path id="Path_1717" data-name="Path 1717" d="M2.6,2a.6.6,0,1,0,0,1.19h.292a.6.6,0,0,1,.572.432l1.887,6.605a1.785,1.785,0,0,0,1.717,1.295H12.5A1.785,1.785,0,0,0,14.159,10.4l1.755-4.387A1.19,1.19,0,0,0,14.809,4.38H4.914L4.6,3.295A1.785,1.785,0,0,0,2.888,2Z" transform="translate(0 0)" fill="#fff"/>
+            <path id="Path_1718" data-name="Path 1718" d="M6.785,14.571A1.785,1.785,0,1,0,5,12.785,1.785,1.785,0,0,0,6.785,14.571Z" transform="translate(0.571 1.712)" fill="#fff"/>
+            <path id="Path_1719" data-name="Path 1719" d="M10.785,14.571A1.785,1.785,0,1,0,9,12.785,1.785,1.785,0,0,0,10.785,14.571Z" transform="translate(1.332 1.712)" fill="#fff"/>
+          </g>
+        </svg>
+        <p>{{ 'buyNow'  | translate }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Navbar Outside means product details bottom footer END -->

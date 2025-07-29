@@ -1,0 +1,71 @@
+<div class="home-container" [class.recent-order]="isEnableHomeRecentOrder">
+
+  @switch (showcaseViews) {
+    @case ('Showcase 1') {
+<!--      <app-showcase-1></app-showcase-1>-->
+      <app-showcase-2></app-showcase-2>
+    }
+    @case ('Showcase 2') {
+      <app-showcase-2></app-showcase-2>
+    }
+    @case ('Showcase 3') {
+      <app-showcase-3></app-showcase-3>
+    }
+    @case ('Showcase 4') {
+      <app-showcase-4></app-showcase-4>
+    }
+  }
+  <!-- END! Showcase Multiple Views -->
+
+  <app-banner-1></app-banner-1>
+  <!-- END! Banner -->
+
+  <app-categories></app-categories>
+  <!-- END! Category View -->
+
+
+  @for (tag of tags; let i = $index; track i) {
+    <app-tag-products [tag]="tag" [index]="i" [isEnableHomeRecentOrder]="isEnableHomeRecentOrder"></app-tag-products>
+  }
+
+  <div class="app-brands-section">
+    <app-brands></app-brands>
+  </div>
+
+  <!-- END Tag View -->
+  @if(isEnableBlog === true){
+  <app-blog></app-blog>
+  }
+
+  @if(isEnableHomeRecentOrder === true){
+    <app-recent-order></app-recent-order>
+  }
+
+</div>
+
+<div class="footer-wrapper">
+  @switch (footerViews) {
+    @case ('Footer 1') {
+      <app-footer-xl-1 [shopInfo]="shopInfo"></app-footer-xl-1>
+    }
+    @case ('Footer 2') {
+      <app-footer-xl-2 [shopInfo]="shopInfo"></app-footer-xl-2>
+    }
+    @case ('Footer 3') {
+      <app-footer-xl-3 [shopInfo]="shopInfo"></app-footer-xl-3>
+    }
+    @case ('Footer 4') {
+      <app-footer-xl-4 [shopInfo]="shopInfo"></app-footer-xl-4>
+    }
+    @case ('Footer 5') {
+      <app-footer-xl-5 [shopInfo]="shopInfo"></app-footer-xl-5>
+    }
+    @default {
+      <app-footer-xl-1 [shopInfo]="shopInfo"></app-footer-xl-1>
+    }
+  }
+</div>
+
+
+
+

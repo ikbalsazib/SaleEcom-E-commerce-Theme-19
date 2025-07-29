@@ -1,0 +1,160 @@
+@if (categorySlide) {
+  <div
+    class="overlay"
+    (click)="onHideCategory()"
+    (mouseover)="onHideCategoryMouseMove()"
+    (touchmove)="onHideCategoryMouseMove()"
+  ></div>
+}
+
+<div class="container">
+
+  <div class="left-area">
+    <div class="sidebar" [class.slide-active]="categorySlide" [class.padding-remove]="isHeaderTopHidden">
+      <div class="slide-top">
+        <span (click)="onHideCategory()">X</span>
+      </div>
+      <!--      <app-products-filter-price (dataEmitter)="onPriceRangeChange($event)"></app-products-filter-price>-->
+      @defer (when !isLoading) {
+        <app-products-category-filter [activeFilters]="selectedCategories" [data]="categories"
+                                      (resetFilters)="resetCategoryFilter()"></app-products-category-filter>
+
+        @if (selectedCategories.length) {
+          <app-filter-sub-category [activeFilters]="selectedSubCategories"
+                                   [data]="subCategories"
+                                   (resetFilters)="resetSubCategoryFilter()"></app-filter-sub-category>
+        }
+
+        @if (brands.length) {
+          <app-filter-brand [activeFilters]="selectedBrands" [data]="brands"
+                            (resetFilters)="resetBrandFilter()"></app-filter-brand>
+        }
+      } @placeholder (minimum 50ms) {
+        <app-product-details-category-loader></app-product-details-category-loader>
+      }
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="top-header">
+      <div class="results-info">
+      </div>
+      <div class="category-controls">
+
+<!--        <div class="control-item" (click)="toggleDropdownSort()"> &lt;!&ndash; Second Control Item: Sort Dropdown &ndash;&gt;-->
+<!--          <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24" width="300"-->
+<!--               height="300" version="1.1">-->
+<!--            <g transform="matrix(1,0,0,1,0,0)">-->
+<!--              <path-->
+<!--                d="M10.5,17.5l1.41,1.41-4.5,4.5c-.39,.39-.9,.58-1.41,.58s-1.02-.19-1.41-.58L.09,18.91l1.41-1.41,3.5,3.5V0h2V21l3.5-3.5ZM24,1V11H14V1h10Zm-2,2h-6v6h6V3Zm-6,12h8v8h-8V15Zm2,6h4v-4h-4v4Z"-->
+<!--                stroke="none"/>-->
+<!--            </g>-->
+<!--          </svg>-->
+<!--          <label style="cursor: pointer">Sort by:</label>-->
+<!--          <div class="custom-select sort-select" [class.active]="dropdownSortOpen">-->
+<!--            <span>{{ selectedSortValue }}</span>-->
+<!--            <svg xmlns="http://www.w3.org/2000/svg" id="Bold" viewBox="0 0 24 24" width="300" height="300" version="1.1"-->
+<!--            >-->
+<!--              <g transform="matrix(1,0,0,1,0,0)">-->
+<!--                <path-->
+<!--                  d="M19.061,7.854a1.5,1.5,0,0,0-2.122,0l-4.586,4.585a.5.5,0,0,1-.707,0L7.061,7.854A1.5,1.5,0,0,0,4.939,9.975l4.586,4.586a3.5,3.5,0,0,0,4.95,0l4.586-4.586A1.5,1.5,0,0,0,19.061,7.854Z"-->
+<!--                  data-original-color="#000000ff" stroke="none"/>-->
+<!--              </g>-->
+<!--            </svg>-->
+
+<!--            @if (dropdownSortOpen) {-->
+<!--              <ul class="custom-select-items">-->
+<!--                @for (option of sortOptions; track $index) {-->
+<!--                  <li (click)="selectSortOption(option, $event)">{{ option }}</li>-->
+<!--                }-->
+<!--              </ul>-->
+<!--            }-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <div class="filter-mobile web-d-none" (click)="openFilterBottomSheet()" appOutSideClick>
+          <svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 24 24">
+            <path
+              d="m14.221,13h9.779v1h-10.636l.857-1Zm2.572-3l-.857,1h8.065v-1h-7.207Zm.207-3.315l-6,7v8.315l-5-3.75v-4.565L0,6.685v-2.185c0-1.378,1.122-2.5,2.5-2.5h12c1.378,0,2.5,1.122,2.5,2.5v2.185Zm-1-2.185c0-.827-.673-1.5-1.5-1.5H2.5c-.827,0-1.5.673-1.5,1.5v1.815l6,7v4.435l3,2.25v-6.685l6-7v-1.815Zm-3,15.5h11v-1h-11v1Zm0-3h11v-1h-11v1Z"/>
+          </svg>
+        </div>
+      </div>
+
+    </div> <!-- END Top Header -->
+
+    <div class="products-cards">
+
+      @defer (when !isLoading) {
+        @switch (productCardViews) {
+          @case ('Product Card 1') {
+            @for (item of products; track $index) {
+              <app-product-card-1 [product]="item"></app-product-card-1>
+            }
+          }
+          @case ('Product Card 2') {
+            @for (item of products; track $index) {
+              <app-product-card-2 [product]="item"></app-product-card-2>
+            }
+          }
+          @case ('Product Card 3') {
+            @for (item of products; track $index) {
+              <app-product-card-3 [product]="item"></app-product-card-3>
+            }
+          }
+          @case ('Product Card 4') {
+            @for (item of products; track $index) {
+              <app-product-card-4 [product]="item"></app-product-card-4>
+            }
+          }
+        }
+
+      } @placeholder (minimum 50ms) {
+        @for (data of [].constructor(8); track $index) {
+          <app-product-card-loader/>
+        }
+      }
+
+    </div>
+    @if (!products?.length && !isLoading) {
+      <div class="no-data">
+        <app-empty-data
+          [needBorder]="false"
+          [iconWidth]="'150px'"
+          [title]="'No Product Found!'"
+          [titleSize]="'20px'"
+          [desc]="'Try to search another category.'"
+          [filePath]="'/lottie/no-data-1.json'"
+          [btnTitle]="'Continue Shopping'"
+          [btnUrl]="'/products'"
+          (btnClick)="onContinueShopping()"
+        >
+        </app-empty-data>
+      </div>
+    }
+    <!-- END Product View -->
+
+
+    @if (totalProducts > products?.length) {
+      @if (!isLoadMore) {
+        <div class="see-more-btn" (click)="onLoadMore()">
+          <a>{{ 'LOAD MORE' }}</a>
+        </div>
+      }
+    } @else {
+      <!--      @if (!isLoadMore) {-->
+        <!--        <p class="no-product">You have reached the end. Do a search to keep exploring!</p>-->
+        <!--      }-->
+
+    }
+
+    @if (isLoadMore) {
+      <div class="loading1">
+        <div class="abgne-loading-20140104-2">
+          <div class="loading"></div>
+          <div class="word">
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

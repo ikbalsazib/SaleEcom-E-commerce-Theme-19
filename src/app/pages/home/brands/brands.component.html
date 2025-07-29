@@ -1,0 +1,33 @@
+@if(brands?.length){
+  <div class="container">
+    <div class="brands-area">
+      <!--    <h1>Shop By Brand</h1>-->
+      <div class="categories-header">
+        <!--      <div class="mobile"></div>-->
+        <h2>Top Brands</h2>
+        <a routerLink="/brands">
+          View All
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368"
+               class="arrow-icon">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="brand-container">
+        @defer (when !isLoading){
+          @for(data of brands; track data?._id){
+            <app-brand-card [data]="data"></app-brand-card>
+          }
+        } @placeholder (minimum 50ms) {
+          @for (data of [].constructor(8); track $index) {
+            <app-brand-loader />
+          }
+        }
+
+      </div>
+
+    </div>
+  </div>
+}

@@ -1,0 +1,30 @@
+/* Hide everything not needed in the print view */
+@media print {
+  .header-fixed{
+    display: none;
+  }
+  .side-nav {
+    display: none;
+  }
+  app-header {
+    display: none;
+  }
+  app-route-progress {
+    display: none;
+  }
+  #homePageOnlyHeight{
+    display: none;
+  }
+  .footer-area{
+    display: none!important;
+  }
+  .navbar-outside{
+    display: none!important;
+  }
+  .icon-bar{
+    display: none;
+  }
+  #footerSection{
+    display: none!important;
+  }
+}

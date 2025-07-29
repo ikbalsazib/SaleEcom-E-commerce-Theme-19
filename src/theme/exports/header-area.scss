@@ -1,0 +1,14 @@
+.card-header-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: 0 0;
+  height: 38px;
+  line-height: 38px;
+  p{
+    font-size: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

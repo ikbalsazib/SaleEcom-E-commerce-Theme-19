@@ -1,0 +1,29 @@
+@import "variables";
+
+.fixed-view-input {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+  .fixed-value {
+    width: 70px;
+    height: 42px;
+    border: 1px solid #d0d0d0;
+    color: #333;
+    border-radius: 4px;
+    background-color: transparent;
+    font-family: $font-en-primary;
+    font-size: 14px;
+    font-weight: 400;
+    outline: 0;
+    padding: 0 8px;
+    margin-top: 29px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    p {
+      margin: 0;
+      padding: 0;
+    }
+  }
+}

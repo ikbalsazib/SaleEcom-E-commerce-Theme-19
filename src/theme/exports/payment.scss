@@ -1,0 +1,86 @@
+@import "variables";
+
+.payment-card-area {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: center;
+  gap: 10px;
+  padding-top: 15px;
+}
+
+.payment-method-card {
+  cursor: pointer;
+  border: 1.6px solid #eee !important;
+  background-color: $color-white;
+  padding: 8px;
+  border-radius: 5px;
+  transition: all 0.3s linear;
+  position: relative;
+
+  .payment-img {
+    display: block;
+    margin: auto;
+    max-height: 48px;
+    max-width: 80px;
+    object-fit: cover;
+  }
+
+  .checked-icon {
+    display: none;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    transform-origin: center;
+    transform: scale(1);
+    transition: transform 0.25s linear;
+
+    img {
+      width: 20px !important;
+      height: 20px !important;
+      border-radius: 50px;
+    }
+  }
+
+  .visible {
+    display: block;
+  }
+
+  &:hover {
+    border-color: $color-primary !important;
+    background-color: $color-primary;
+    filter: brightness(160%);
+  }
+
+  &.active {
+    border-color: $color-primary !important;
+    background-color: $color-primary;
+    filter: brightness(160%);
+  }
+
+  h3 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    color: #000;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+  }
+
+  p {
+    font-style: normal;
+    font-size: 13px;
+    font-weight: 400;
+    display: block;
+    margin-top: 10px !important;
+  }
+}
+
+.action {
+  margin-top: 10px;
+  text-align: center;
+}

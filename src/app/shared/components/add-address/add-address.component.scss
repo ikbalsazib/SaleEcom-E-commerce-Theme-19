@@ -1,0 +1,322 @@
+@import "variables";
+@import "exports/isloading";
+
+
+.manage-main {
+  max-height: 90vh;
+  width: 100%;
+  margin: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: relative;
+  z-index: 34;
+  cursor: auto;
+  transition: backdrop-filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+@media (max-width: 556px) {
+  .manage-main {
+    margin: 0 auto;
+  }
+}
+
+.manage-address-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid $color-gray;
+  width: 95%;
+  margin: auto;
+  h2 {
+    font-family: $font-en-primary;
+    font-size: 18px;
+    font-weight: 600;
+    color: $color-black;
+  }
+
+  a {
+    cursor: pointer;
+    i {
+      font-size: 20px;
+      color: lighten($color-black, 25%)-two;
+    }
+  }
+}
+.number{
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  .flag{
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    svg{
+      text-align: center;
+    }
+  }
+}
+
+
+
+.get-address {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: $color-white;
+  overflow: hidden;
+  border-radius: 6px;
+
+  form {
+    width: 100%;
+
+    .form-all-input {
+      border-radius: none;
+      padding: 15px;
+      overflow: hidden;
+
+      .name-phone {
+        display: flex;
+        gap: 10px;
+
+        .w-50 {
+          width: 50%;
+        }
+      }
+
+      .division-area-zone {
+        display: flex;
+        gap: 5px;
+
+        .w-33 {
+          width: 33.33%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 460px){
+  .form-all-input {
+
+    .name-phone {
+      display: flex;
+      flex-direction: column;
+
+      .w-100 {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+
+@media (max-width: 612px){
+  .form-all-input {
+
+    .division-area-zone {
+      display: flex;
+      flex-direction: column;
+
+      .w-100 {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+
+
+.address-select {
+  margin: 15px;
+  p {
+    font-family: $font-en-primary;
+    font-size: 16px;
+    font-weight: 400;
+    color: lighten($color-black, 25%)-two;
+  }
+}
+
+.address-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+
+  button {
+    cursor: pointer;
+    border: 1px solid rgba($color-black, 0.23);
+    padding: 5px 15px;
+    font-family: $font-en-primary;
+    background: transparent;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    outline: none;
+
+    svg {
+      width: 20px;
+      fill: $color-black;
+    }
+
+    &.active {
+      background-color: $color-secondary;
+      border-color: $color-secondary;
+      color: $color-white;
+
+      svg {
+        fill: $color-white;
+      }
+    }
+  }
+}
+
+.submit-and-slider {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  button.submit-btn {
+    cursor: pointer;
+    padding: 10px 16px;
+    min-width: 64px;
+    transition: all 0.12s linear;
+    font-family: $font-en-primary;
+    font-weight: 400;
+    font-size: 15px;
+    border-radius: 4px;
+    letter-spacing: 0.02857em;
+    text-transform: uppercase;
+    box-shadow: 0 3px 1px -2px rgba($color-black, 0.2),
+    0px 2px 2px 0px rgba($color-black, 0.14), 0px 1px 5px 0px rgba($color-black, 0.12);
+    border: 0;
+    outline: 0;
+    background-color: $color-secondary;
+    color: $color-white;
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &:hover {
+      box-shadow: 0 2px 4px -1px rgba($color-black, 0.2),
+      0px 4px 5px 0px rgba($color-black, 0.14),
+      0px 1px 10px 0px rgba($color-black, 0.12);
+    }
+  }
+}
+
+@media (max-width: 556px) {
+  .address-bar {
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .submit-and-slider {
+    flex-direction: column;
+    gap: 16px;
+    justify-content: flex-start;
+    align-items: flex-end;
+  }
+}
+
+::ng-deep.mat-input-field {
+  width: 100%;
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: $color-secondary !important;
+  }
+
+  .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: $color-secondary !important;
+  }
+
+  .mat-label-field{
+    margin-left: 65px;
+  }
+}
+
+::ng-deep.mat-select-form {
+  width: 100%;
+  background-color: transparent;
+
+  .mdc-line-ripple {
+    display: none;
+  }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused .mdc-notched-outline__trailing {
+    border-color: $color-secondary !important;
+  }
+
+  .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+    color: $color-secondary !important;
+  }
+
+  &.mat-focused {
+    &.mat-primary .mat-mdc-select-arrow {
+      color: $color-secondary !important;
+    }
+  }
+}
+
+::ng-deep.mat-slider-toggle {
+  .mdc-switch__handle-track {
+    .mdc-switch__handle {
+      .mdc-switch__icons {
+        display: none;
+      }
+    }
+  }
+
+  .mat-mdc-slide-toggle {
+    .mdc-switch:enabled {
+      .mdc-switch__track::after {
+        background: rgba(#7ec5f7, 0.674) !important;
+      }
+    }
+  }
+
+  .mat-mdc-slide-toggle {
+    .mdc-switch.mdc-switch--selected:enabled {
+      .mdc-switch__handle::after {
+        background: transparent !important;
+      }
+    }
+  }
+
+  .mat-mdc-slide-toggle {
+    .mdc-switch.mdc-switch--selected:enabled {
+      .mdc-switch__handle::after {
+        background: $color-secondary !important;
+      }
+    }
+  }
+}
+
+::ng-deep.cdk-overlay-container {
+  position: fixed;
+  z-index: 1000111;
+}
+
+::ng-deep.mat-mdc-dialog-surface {
+  border-radius: 6px !important;
+}
+
+.full-address {
+  ::ng-deep.mat-mdc-form-field-infix {
+    height: 70px !important;
+  }
+}
+

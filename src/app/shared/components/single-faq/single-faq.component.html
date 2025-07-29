@@ -1,0 +1,56 @@
+<div class="item" (click)="onToggle()">
+
+  <div class="toggle-header">
+    <div>
+      <b>
+        {{ data?.title }}
+      </b>
+    </div>
+
+    <div class="toggle-icons">
+      @if (isOpen) {
+        <svg
+          fill="#000000"
+          version="1.1"
+          id="Capa_1"
+          xmlns="http://www.w3.org/2000/svg"
+          width="15px"
+          height="15px"
+          viewBox="0 0 83 83"
+          xml:space="preserve">
+            <g>
+              <path
+                d="M81,36.166H2c-1.104,0-2,0.896-2,2v6.668c0,1.104,0.896,2,2,2h79c1.104,0,2-0.896,2-2v-6.668
+                            C83,37.062,82.104,36.166,81,36.166z"
+              />
+            </g>
+          </svg>
+      } @else {
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="15px"
+          height="15px"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M 11 2 L 11 11 L 2 11 L 2 13 L 11 13 L 11 22 L 13 22 L 13 13 L 22 13 L 22 11 L 13 11 L 13 2 Z"
+          />
+        </svg>
+      }
+
+    </div>
+
+
+  </div> <!-- END Header -->
+
+  @if (isOpen) {
+    <div class="toggle-content">
+      <p>
+        {{ data?.description }}
+      </p>
+    </div> <!-- END Content -->
+  }
+
+
+</div>

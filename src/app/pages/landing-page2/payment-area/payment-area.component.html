@@ -1,0 +1,289 @@
+<div class="payment-area-main" id="payment1">
+  <div class="container">
+    <div class="order-container">
+      <h2 class="header">
+        <span class="red-text">{{ singleLandingPage?.paymentTitle }}</span>
+      </h2>
+
+      <div class="order-content">
+        <div class="product-section">
+          <div class="product-area">
+            @if ((isMobile > 600)) {
+              <img [src]="image" (click)="openGallery($event, [image])" alt="Watch" class="product-image"
+                   loading="lazy">
+            } @else {
+              <img [src]="image" (click)="openGalleryMobile($event, [image])" alt="Watch" class="product-image"
+                   loading="lazy">
+            }
+            <h3 class="product-title">{{ singleLandingPage?.product?.name }}</h3>
+          </div>
+
+          <ul>
+            <li class="increment-btn" *ngIf="singleLandingPage?.product?.variation">
+              <div class="variant-left">
+                <span>{{ singleLandingPage?.product?.variation }}</span>
+              </div>
+              <div class="varaint-right">
+                <div class="color-variant">
+
+                  <button *ngFor="let data of singleLandingPage?.product?.variationOptions"
+                          [class.active]="selectedVariation === data"
+                          [disabled]="isOutOfStock(data, selectedVariation2)" (click)="onSelectVariation(data)">
+                    {{ data }}
+                    <span *ngIf="isOutOfStock(data, selectedVariation2)" class="stock-out-label">Stock Out</span>
+                    <span *ngIf="selectedVariation === data && !isOutOfStock(data, selectedVariation2)">✓</span>
+                  </button>
+                </div>
+              </div>
+            </li>
+            <!---END COLOR VARIANT-->
+            <li class="increment-btn" *ngIf="singleLandingPage?.product?.variation2">
+              <div class="variant-left">
+                <span>{{ singleLandingPage?.product?.variation2 }}</span>
+              </div>
+              <div class="variant-right">
+                <div class="size-varaint">
+                  <button class="test" *ngFor="let data of singleLandingPage?.product?.variation2Options"
+                          [class.active]="selectedVariation2 === data"
+                          [disabled]="isOutOfStock(selectedVariation, data)" (click)="onSelectVariation2(data)">
+                    {{ data }}
+                    <span *ngIf="isOutOfStock(selectedVariation, data)" class="stock-out-label">Stock Out</span>
+                    <span *ngIf="selectedVariation2 === data && !isOutOfStock(selectedVariation, data)">✓</span>
+                  </button>
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <h3 class="price">
+            {{ 'totalAmount'  | translate }}: {{ grandTotal }}
+          </h3>
+
+        </div>
+
+        <div class="form-section">
+          <form [formGroup]="dataForm" (ngSubmit)="onConfirmOrder()" class="billing-section" #addressScrol>
+            <h3>{{ 'deliveryDetails'  | translate }}</h3>
+
+            <label class="">{{ 'writeYourName'  | translate }}&nbsp;<sup class="required" title="required">*</sup></label>
+            <input #nameInput formControlName="name" type="text" placeholder="{{ 'writeYourName'  | translate }}">
+            <small *ngIf="dataForm.get('name')?.invalid && dataForm.get('name')?.touched">{{ 'name'  | translate }} is required</small>
+
+            <label class="">{{ 'phoneNumber'  | translate }}&nbsp;<sup class="required" title="required">*</sup></label>
+            <input #phoneInput formControlName="phoneNo" (input)="onPhoneNumberInput($event)" type="tel"
+                   placeholder="{{ 'phoneNumber'  | translate }}">
+            <small *ngIf="dataForm.get('phoneNo')?.invalid && dataForm.get('phoneNo')?.touched">{{ 'validPhone'  | translate }} number is
+              required</small>
+
+            <label>{{ 'writeYourFullAddress'  | translate }}</label>
+            <textarea #addressInput formControlName="shippingAddress" placeholder="{{ 'writeYourFullAddress'  | translate }}"></textarea>
+            <small *ngIf="dataForm.get('shippingAddress')?.invalid && dataForm.get('shippingAddress')?.touched">{{ 'address'  | translate }} is
+              required</small>
+
+            @if (!deliveryOptionType?.isEnableInsideCityOutsideCity) {
+              <div class="custom-select-container">
+                <label for="division" class="">{{ 'selectDivision'  | translate }}&nbsp;<sup class="required" title="required">*</sup></label>
+                <div id="division" class="custom-select" #selectContainer>
+                  <div class="custom-select__selected" (click)="toggleDropdown()">
+                    {{ selectedDivision || ('selectDivision' | translate) }}
+                  </div>
+                  @if (dropdownVisible) {
+                    <div class="custom-select__options">
+                      @for (item of divisions; track $index) {
+                        <div
+                          (click)="selectDivision(item)"
+                          class="custom-select__option"
+                        >
+                          {{ item?.name }}
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+
+
+            <div class="payment-area1">
+              <app-delivery-charge (onChangeDeliveryCharge)="onChangeDeliveryCharge($event)"
+                                   [division]="dataForm?.value.division"></app-delivery-charge>
+            </div>
+
+            @if (deliveryOptionType?.isEnableInsideCityOutsideCity) {
+              <h3 class="payment-title">{{ 'deliveryOption'  | translate }}</h3>
+              <mat-radio-group class="delivery-option" formControlName="division" required>
+                <mat-radio-button [value]="deliveryCharge?.city">{{ 'inside'  | translate }} {{ deliveryCharge?.city }}
+                  ({{ deliveryCharge?.insideCity | currencyCtr }})
+                </mat-radio-button>
+                <mat-radio-button [value]="'outside-dhaka'">{{ 'outside'  | translate }} {{ deliveryCharge?.city }}
+                  ({{ deliveryCharge?.outsideCity | currencyCtr }})
+                </mat-radio-button>
+                <!---->
+                @if (dataForm.get('division')?.invalid && dataForm.get('division')?.touched) {
+                  <div class="error-message" style="padding-left: 5px;">
+                    {{ 'selectDeliveryOption'  | translate }}
+                  </div>
+                }
+              </mat-radio-group>
+            }
+            <h3 class="payment-title">{{ 'paymentOption'  | translate }}</h3>
+            <div class="delivery-options">
+              <p class="option">
+                <span class="radio"></span>
+                <span class="label-text">{{ 'cashOnDelivery'  | translate }}</span>
+              </p>
+            </div>
+
+            <div class="order-summary">
+              <h3>{{ 'yourOrder'  | translate }}</h3>
+
+              <div class="order-details">
+                <p>{{ singleLandingPage?.product?.name }}</p>
+                <p>{{ selectedVariation }} {{ (selectedVariation && selectedVariation2) ? "|" : "" }} {{ selectedVariation2 }}</p>
+
+                <div class="quantity">
+                  <span>{{ 'quantity'  | translate }}</span>
+                  <div>
+                    <button type="button" (click)="decreaseQuantity()">-</button>
+                    <input type="text" [value]="quantity" readonly>
+                    <button type="button" (click)="increaseQuantity()">+</button>
+                  </div>
+                </div>
+
+                <div class="pricing">
+                  <p>{{ 'subTotal'  | translate }} <span> {{ cartSaleSubTotal | currencyCtr }}</span></p>
+                  <p *ngIf="cartDiscountAmount">{{ 'discount'  | translate }} <span> {{ cartDiscountAmount | currencyCtr }}</span></p>
+                  @if (couponDiscount) {
+                    <p class="disc" >{{ 'couponDiscount'  | translate }}: <span>-{{ couponDiscount | currencyCtr }}</span></p>
+                  }
+                  <p>
+                    {{ 'shipping'  | translate }}
+                    <span>{{ getDeliveryLabel() }}  {{ deliveryChargeAmount | currencyCtr }}</span>
+                  </p>
+                  <p class="total">{{ 'total'  | translate }} <span> {{ grandTotal | currencyCtr }}</span></p>
+                </div>
+              </div>
+            </div>
+
+            @if (!isLoaded) {
+              <button type="submit" class="order-btn" [ngClass]="{ 'animate-total': animateGrandTotal }">{{ 'placeOrder'  | translate }}
+                {{ grandTotal | currencyCtr }}
+              </button>
+            } @else {
+              <button type="button" class="loader-btn" disabled><span class="loader"></span>Please wait...</button>
+            }
+
+          </form>
+
+          @if (!isCoupon){
+            <div class="coupon-div">
+              <button type="button" class="coupon-btn" (click)="onSelectCouponOpen()">{{ 'haveCoupon'  | translate }}</button>
+            </div>
+
+          } @else {
+
+            <div class="summary-item ">
+              <div class="close-btn-div">
+                <button type="button" class="close-btn" (click)="onSelectCouponClose()">x</button>
+              </div>
+
+              <div class="coupon-area">
+                <div class="coupon-input">
+                  <input
+                    [readOnly]="coupon"
+                    [(ngModel)]="couponCode"
+                    type="text"
+                    placeholder="{{ 'haveCouponAnyCodeEnter'  | translate }}"
+                  />
+                </div>
+
+                @if (!coupon){
+                  <div
+                    class="apply-btn"
+                    (click)="checkCouponAvailability()"
+                  >
+                    <button type="button" class="apply">{{ 'apply'  | translate }}</button>
+                  </div>
+                } @else {
+                  <div
+
+                    class="apply-btn"
+                    (click)="onRemoveCoupon()"
+                  >
+                    <button type="button" class="danger">{{ 'remove'  | translate }}</button>
+                  </div>
+                }
+
+
+
+              </div>
+            </div>
+
+          }
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="bottom-nav" *ngIf="productFixed">
+  <div class="mobile-checkout">
+    <div class="total-area">
+      <p class="total">{{ 'total'  | translate }}: <span>{{ grandTotal }}</span></p>
+      <p class="button-text">{{ 'vatIncluded'  | translate }}</p>
+    </div>
+    @if (!isLoading) {
+      <button class="place-order" (click)="onConfirmOrder()">{{ 'placeOrder'  | translate }}</button>
+    }
+    @if (isLoading) {
+      <button type="button" class="order-button wait-btn">
+        <div><span class="loader btn-loader"></span></div>
+        <div>{{ 'pleaseWait'  | translate }}</div>
+      </button>
+    }
+  </div>
+</div>
+
+@if (isGalleryOpen && (isMobile > 600)) {
+  <app-gallery-image-viewer
+    [images]="galleryImages"
+    [startIndex]="selectedImageIndex"
+    (closeEvent)="closeGallery()"
+  >
+  </app-gallery-image-viewer>
+}
+
+@if (showModal && (isMobile < 600)) {
+  <app-image-gallery [selectedIndex]="selectedImageIndex" [images]="galleryImages" [isVisible]="showModal"
+                     (close)="closeModal1()"
+  ></app-image-gallery>
+}
+
+
+@if (isSendOtp) {
+  <div class="otp-popup-backdrop">
+    <div class="otp-popup">
+      <h3>দয়া করে আপনার ফোন নাম্বারে একটি OTP Code গেছে সেটা দিয়ে অর্ডার কনফার্ম করুন।</h3>
+          <div class="input-otp">
+            <app-otp-input (onFinalInput)="onOtpEnter($event)" [isInvalid]="isInvalidOtp"></app-otp-input>
+          </div>
+      <div class="error-text" *ngIf="isInvalidOtp">ভুল ওটিপি! আবার চেষ্টা করুন।</div>
+
+      <div class="resend-section">
+        <button *ngIf="countdown <= 0"  (click)="onResendOtp()">
+          পুনরায় পাঠান
+        </button>
+        <span *ngIf="countdown > 0">{{ countdown }} সেকেন্ড</span>
+      </div>
+
+      <div class="button-row">
+        <button type="button" class="cancel-btn" (click)="closePopup()">বাতিল</button>
+        <button type="button" (click)="onConfirmOrder()">সাবমিট</button>
+      </div>
+    </div>
+  </div>
+}

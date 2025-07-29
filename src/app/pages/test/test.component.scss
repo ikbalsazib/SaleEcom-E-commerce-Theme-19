@@ -1,0 +1,28 @@
+@import 'variables';
+
+$color-test: #e8007c;
+$color-test2: var(--shop-color-test);
+
+.row {
+  margin: 100px auto;
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+  div {
+    width: 400px;
+    height: 400px;
+    p {
+      font-weight: 600;
+      text-align: center;
+      font-size: 20px;
+    }
+  }
+  .one {
+    background-color: darken($color-test, 10%);
+  }
+
+  .two {
+    background-color: $color-test2;
+    filter: brightness(80%);
+  }
+}

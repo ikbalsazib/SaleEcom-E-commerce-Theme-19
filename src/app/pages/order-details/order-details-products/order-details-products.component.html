@@ -1,0 +1,29 @@
+<div class="border-container">
+  <div class="header">
+    <h4 class="title">Products</h4>
+  </div>
+
+  @for(item of order?.orderedItems; track $index){
+    <div class="content-lists">
+      <div class="content-img-left">
+        <img [src]="item?.image" alt="{{ item?.name }}">
+      </div>
+
+      <div class="content-right">
+        <a class="product-name" [routerLink]="'/product-details/'+ item?.slug">{{ item?.name }}</a>
+        <div class="products-type">
+          <p class="types"><a [routerLink]="['/products']"
+                              [queryParams]="{ categories: item?.slug, categoryId: item?._id }">{{ item?.category?.name }}</a></p>
+          <p class="products-price">{{ item?.salePrice | currencyCtr}}</p>
+        </div>
+        <div class="products-type">
+          <p class="types">QTY: {{ item?.quantity }}</p>
+          <span><del>{{ item?.regularPrice | currencyCtr}}</del></span>
+        </div>
+        <p class="types">
+          <a [routerLink]="['/products']" [queryParams]="{ brand: item?.slug }">{{ item?.slug || 'brand'}}</a></p>
+      </div>
+    </div>
+  }
+
+</div>

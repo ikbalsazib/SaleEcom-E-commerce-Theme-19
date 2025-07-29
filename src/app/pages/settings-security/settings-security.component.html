@@ -1,0 +1,103 @@
+<div class="container">
+    <div class="alert-box">
+      <span class="alert-icon"><svg width="24px" height="24px" viewBox="0 0 24 24" fill="#f0140c" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.20164 18.4695L10.1643 4.00506C10.9021 2.66498 13.0979 2.66498 13.8357 4.00506L21.7984 18.4695C22.4443 19.6428 21.4598 21 19.9627 21H4.0373C2.54022 21 1.55571 19.6428 2.20164 18.4695Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 9V13" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 17.0195V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></span>
+      <p class="alert-text">
+        Your account has a past due balance. Please submit a payment of
+        <strong>$39.24</strong> before <strong>Saturday, Sep 21</strong> to
+        prevent account suspension.
+      </p>
+      <button class="pay-now-btn">Pay Now</button>
+    </div>
+
+    <h3>Settings</h3>
+
+    <div class="tabs">
+      @for(tab of tabs; let i = $index; track i){
+        <div
+          class="tab"
+          [class.active]="selectedTab === i"
+          (click)="selectTab(i)"
+        >
+          {{ tab }}
+        </div>
+      }
+    </div>
+
+      <div class="tab-content">
+        <div class="section1">
+          <h2>SSH Keys</h2>
+          <div class="textarea">
+            <p>
+              SSH keys provide a more secure way of logging into a virtual private
+              server with SSH than using a password alone.
+              <a href="#">Learn more <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"  width="24px" height="24px" viewBox="0 0 52 45">
+                <defs>
+                  <style>
+                    .cls-1 {
+                      fill: #007bff;
+                    }
+                  </style>
+                </defs>
+                <polygon class="cls-1" points="20.25 14.17 20.25 17.51 29.5 17.51 16.4 30.35 18.97 33.43 32.07 20.34 32.07 29.63 35.92 29.75 35.92 14.17 20.25 14.17"/>
+              </svg></a>
+            </p>
+            <button class="add-btn">Add SSH Key</button>
+          </div>
+          <table class="ssh-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Fingerprint</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Softlab IT</td>
+                <td>12:70:5b:64: fc:b5:95:ed: 3a:ec:f7:27: 37:5e:4c:96 <svg width="24px" height="24px" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17.5 14H19C20.1046 14 21 13.1046 21 12V5C21 3.89543 20.1046 3 19 3H12C10.8954 3 10 3.89543 10 5V6.5M5 10H12C13.1046 10 14 10.8954 14 12V19C14 20.1046 13.1046 21 12 21H5C3.89543 21 3 20.1046 3 19V12C3 10.8954 3.89543 10 5 10Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr />
+        <div class="section2">
+          <h2>Certificates for Load Balancers and Spaces</h2>
+          <div class="text-section">
+            <p>
+              You can add your own certificates or create them for free with Let's
+              Encrypt. Certificates can be used for secure traffic forwarding with
+              load balancers and spaces CDN.
+              <a href="#">Using certificates with DigitalOcean resources.<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"  width="24px" height="24px" viewBox="0 0 52 45">
+                <defs>
+                  <style>
+                    .cls-1 {
+                      fill: #007bff;
+                    }
+                  </style>
+                </defs>
+                <polygon class="cls-1" points="20.25 14.17 20.25 17.51 29.5 17.51 16.4 30.35 18.97 33.43 32.07 20.34 32.07 29.63 35.92 29.75 35.92 14.17 20.25 14.17"/>
+              </svg></a>
+            </p>
+            <button class="add-btn">Add Certificate</button>
+          </div>
+          <div class="alert">
+            <span class="alert-icon"><svg fill="#007bff" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="18px" height="18px" viewBox="0 0 416.979 416.979"
+              xml:space="preserve">
+           <g>
+             <path d="M356.004,61.156c-81.37-81.47-213.377-81.551-294.848-0.182c-81.47,81.371-81.552,213.379-0.181,294.85
+               c81.369,81.47,213.378,81.551,294.849,0.181C437.293,274.636,437.375,142.626,356.004,61.156z M237.6,340.786
+               c0,3.217-2.607,5.822-5.822,5.822h-46.576c-3.215,0-5.822-2.605-5.822-5.822V167.885c0-3.217,2.607-5.822,5.822-5.822h46.576
+               c3.215,0,5.822,2.604,5.822,5.822V340.786z M208.49,137.901c-18.618,0-33.766-15.146-33.766-33.765
+               c0-18.617,15.147-33.766,33.766-33.766c18.619,0,33.766,15.148,33.766,33.766C242.256,122.755,227.107,137.901,208.49,137.901z"/>
+           </g>
+           </svg></span> You have not created any certificates
+          </div>
+        </div>
+      </div>
+  </div>

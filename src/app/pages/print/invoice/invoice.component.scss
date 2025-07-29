@@ -1,0 +1,54 @@
+@import "exports/invoice-print";
+@import "exports/invoice-print2";
+
+.actions {
+  width: calc(2480px / 3);
+  margin: 0 auto 8px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.preview-container  {
+  width: calc(2480px / 3);
+  margin: 0 auto;
+  background: #FFFFFF;
+  padding: 30px;
+}
+
+body {
+  background: #c0c0c0 !important;
+}
+
+
+@media print {
+  .preview-container {
+    width: 100%;
+    padding: 0;
+    page-break-before: always;
+    min-height: 100vh;
+    box-sizing: border-box;
+    margin: 0;
+
+    &:last-child {
+      page-break-after: auto;
+    }
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #FFFFFF !important;
+  }
+
+  .actions {
+    display: none;
+  }
+
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+}
+

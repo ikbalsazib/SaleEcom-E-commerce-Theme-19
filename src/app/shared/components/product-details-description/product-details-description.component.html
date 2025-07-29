@@ -1,0 +1,16 @@
+<div class="description">
+  @if(data){
+  <div class="read-more" [ngClass]="{'expand': isExpanded}">
+    <div style="word-wrap: anywhere" [innerHTML]="data | safeHtmlCustom"></div>
+    <div class="fade-overlay" [class.hidden]="isExpanded"></div>
+  </div>
+  <div class="see-more">
+    <button type="button" (click)="toggleReadMore()">
+      {{isExpanded ? 'Read less' : 'See More'}}
+    </button>
+  </div>
+  }
+  @if(!data){
+  <p>No Description</p>
+  }
+</div>

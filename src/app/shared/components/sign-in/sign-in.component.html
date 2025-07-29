@@ -1,0 +1,51 @@
+<div class="sign-in">
+  <div class="login-section">
+    <div class="logo" routerLink="/">
+      <h2>SaleEcom</h2>
+    </div>
+    <div class="header">
+      <h3>Welcome Back!</h3>
+      <p>Please enter login details below</p>
+    </div>
+    <div class="fields">
+      <!-- Email fild start -->
+      <mat-form-field appearance="outline">
+        <mat-label>Enter your email</mat-label>
+        <input matInput placeholder="pat@example.com" required />
+      </mat-form-field>
+      <!-- Email fild end -->
+      <!-- Password fild start -->
+      <mat-form-field appearance="outline">
+        <mat-label>Enter your password?</mat-label>
+        <input matInput placeholder="**********" required />
+      </mat-form-field>
+      <!-- Password fild end -->
+      <!-- Phone Number fild start -->
+      <mat-form-field class="phn-otp" appearance="outline">
+        <mat-label>Enter Your Phone Number</mat-label>
+        <input
+          matInput
+          placeholder="+880"
+          pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+          required
+        />
+      </mat-form-field>
+      <!-- Phone Number fild end -->
+      <!-- OTP fild start -->
+      <mat-form-field class="phn-otp" appearance="outline">
+        <mat-label>Enter your OTP</mat-label>
+        <input matInput placeholder="OTP here" required />
+      </mat-form-field>
+      <!-- OTP fild end -->
+    </div>
+    <div class="sign-in-section">
+      <h5>Forgot password?</h5>
+      <button>Sign in</button>
+      <p>Don't have an account? <a href="">Sign Up</a></p>
+    </div>
+  </div>
+
+  <div class="img-section">
+    <img src="images/client-authentication-certificate-feature.jpg" alt="image" loading="lazy" />
+  </div>
+</div>

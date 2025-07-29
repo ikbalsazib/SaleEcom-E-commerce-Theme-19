@@ -1,0 +1,10 @@
+@if(!pageInfo?.description || !pageInfo?.description ==null || pageInfo?.description.trim() === '' || pageInfo?.description.trim() === '<br>') {
+  <div class="container">
+    <div class="coming-soon">Coming Soon...</div>
+  </div>
+} @else {
+  <div class="container">
+    <div class="description" [innerHTML]="pageInfo?.description | safeHtmlCustom"></div>
+    <!-- <div class="description" [innerHTML]="msg | safeHtmlCustom"></div> -->
+  </div>
+}

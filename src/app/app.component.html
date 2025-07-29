@@ -1,0 +1,28 @@
+<!-- Showcase Part Multiple Views -->
+
+  @switch (headerViews) {
+    @case ('Header 1') {
+      <app-header-1 [currentUrl]="currentUrl"></app-header-1>
+    }
+    @case ('Header 2') {
+      <div class="header-2">
+        <app-header-2 [currentUrl]="currentUrl"></app-header-2>
+      </div>
+    }
+    @case ('Header 3') {
+      <div class="header-2">
+        <app-header-3 [currentUrl]="currentUrl"></app-header-3>
+      </div>
+    }
+    @default {
+      <app-header-1 [currentUrl]="currentUrl"></app-header-1>
+    }
+  }
+
+<!-- END Showcase Part View -->
+
+<router-outlet/>
+
+<app-footer [showFooter]="showFooter" [currentUrl]="currentUrl" id="footerSection"></app-footer>
+
+

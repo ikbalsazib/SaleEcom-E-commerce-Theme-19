@@ -1,0 +1,87 @@
+@import "variables";
+
+.coupons{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+  cursor: grab;
+  user-select: none;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.coupons::-webkit-scrollbar {
+  display: none;
+}
+
+.coupons.grabbing {
+  cursor: grabbing;
+}
+
+.coupon-area {
+  padding: 16px 0 30px 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.coupon-input {
+  display: block;
+  width: 100%;
+
+  input {
+    width: 100%;
+    padding: 11px 15px;
+    outline: none;
+    display: block;
+    font-size: 16px;
+    color: #2d2d2d;
+    font-family: $font-en-primary;
+    font-weight: 400;
+    border: 1px solid #efefef;
+    border-radius: 5px 0 0 5px;
+  }
+}
+
+.apply-btn {
+  max-width: 120px;
+  width: 100%;
+
+  button {
+    background-color: $color-primary;
+    color: #fff;
+    font-family: $font-en-primary;
+    font-weight: 500;
+    font-size: 17px;
+    display: block;
+    width: 100%;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    outline: none;
+    border: 1px solid $color-primary;
+    border-radius: 0 5px 5px 0;
+
+    &.danger {
+      background-color: #d83333;
+      border: 1px solid #d83333;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .coupon-input input {
+    padding: 6px 8px;
+    font-size: 14px;
+  }
+  .apply-btn {
+    max-width: 100px;
+  }
+  .apply-btn button {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}

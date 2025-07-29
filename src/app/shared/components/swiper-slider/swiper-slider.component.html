@@ -1,0 +1,15 @@
+<div class="slider-container" id="my-slider">
+  <div class="slider-track">
+    <!-- This will hold the slides (cards) -->
+    <ng-content></ng-content>
+  </div>
+
+  <button *ngIf="showNavigation" class="prev" aria-label="Previous slide">&#10094;</button>
+  <button *ngIf="showNavigation" class="next" aria-label="Next slide">&#10095;</button>
+
+  <div *ngIf="showPagination" class="pagination">
+    <!-- Pagination dots (e.g., for active slide) -->
+    <div *ngFor="let slide of items; let i = index"
+         class="dot" [class.active]="currentIndex === i"></div>
+  </div>
+</div>

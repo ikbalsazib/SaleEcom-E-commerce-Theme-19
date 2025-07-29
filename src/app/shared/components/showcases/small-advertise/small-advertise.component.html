@@ -1,0 +1,20 @@
+<div
+  class="content"
+  [ngClass]="{
+    'two-columns': banners[0]?.images?.length === 2,
+    'one-column': banners[0]?.images?.length === 1
+  }"
+>
+  @defer (when !isLoading) {
+    @for (data of banners[0]?.images; track data) {
+      <a class="img-thumb" routerLink="/">
+        <img [src]="data" alt="image" loading="lazy">
+      </a>
+    }
+  } @placeholder(minimum 50ms)  {
+    @for (data of [1, 2]; track data) {
+      <app-banner-advertise-loader/>
+    }
+  }
+
+</div>

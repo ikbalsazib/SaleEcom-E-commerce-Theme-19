@@ -1,0 +1,73 @@
+<div class="tracking-container">
+  <div class="order-search">
+    <div class="search-bar">
+      <input type="text" placeholder="Search Order ID" />
+      <button class="search-btn">
+        <span class="material-icons">search</span>
+      </button>
+    </div>
+    <a routerLink="/my-order-list" class="view-orders">
+      View Your Orders
+      <svg fill="#000000" viewBox="-12 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+        <g id="SVGRepo_iconCarrier">
+          <title>angle-right</title>
+          <path d="M0.88 23.28c-0.2 0-0.44-0.080-0.6-0.24-0.32-0.32-0.32-0.84 0-1.2l5.76-5.84-5.8-5.84c-0.32-0.32-0.32-0.84 0-1.2 0.32-0.32 0.84-0.32 1.2 0l6.44 6.44c0.16 0.16 0.24 0.36 0.24 0.6s-0.080 0.44-0.24 0.6l-6.4 6.44c-0.2 0.16-0.4 0.24-0.6 0.24z"></path>
+        </g>
+      </svg>
+    </a>
+  </div>
+
+  <app-tracking-header [order]="order"></app-tracking-header>
+
+  @for(singleOrder of order; track $index){
+    <div>
+      @if(singleOrder?.orderTimeline) {
+        <div class="card">
+          <div class="tracking-item">
+            <div class="tracking-date">
+              @for(timeline of singleOrder?.orderTimeline | keyvalue; track $index) {
+                <div class="dates">
+                  <span>{{ timeline?.value?.date || 'Date not available' }}</span><br />
+                  <span class="time">{{ timeline?.value?.time || 'Time not available' }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="active-stick">
+              <div class="timeline">
+                @for(timeline of singleOrder?.orderTimeline | keyvalue; track $index) {
+                  <div class="timeline-item">
+                    <div class="timeline-circle"></div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="tracking-details">
+              @for(timeline of singleOrder?.orderTimeline | keyvalue; track $index) {
+                <div class="status-text">
+                  <h4>{{ getStatusMessage(timeline?.key) }}</h4>
+                  <p class="location">{{ timeline?.value?.location || 'Location not available' }}</p>
+                  <span>Order ID : {{singleOrder?.orderId}}</span>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      } @else {
+        <ng-template #noTimeline>
+          <div class="card">
+            <div class="tracking-item">
+              <div class="tracking-date">
+                <span>No tracking information available</span>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      }
+    </div>
+  }
+
+</div>

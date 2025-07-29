@@ -1,0 +1,245 @@
+@import "variables";
+
+.section1 {
+  display: block;
+  padding: 0px 10px 15px 10px;
+  margin-bottom: 80px;
+}
+
+.section1-main {
+  display: block;
+  background-color: #fff;
+  border-radius: 6px;
+  margin-block: 30px;
+}
+
+.table-area {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.table {
+  display: block;
+  width: 100%;
+  min-width: 1200px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(250px, 1fr));
+  width: 100%;
+  grid-template-rows: auto;
+  border-top: 1px solid #ebebeb;
+
+  &:first-child {
+    border: none;
+  }
+}
+
+.table-heading {
+  background-color: #f2f3f4;
+  height: 90px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h3 {
+    color: $color-primary;
+    font-family: $font-en-primary;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 19px;
+  }
+}
+
+.table-body {
+  .table-data {
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+
+.table-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90px;
+  width: 100%;
+  border-right: 1px solid #e4e5e6;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  text-align: center;
+
+  img {
+    width: 100%;
+    max-width: 90px;
+    max-height: 90px;
+    display: block;
+    object-fit: contain;
+  }
+
+  p {
+    color: #333434;
+    font-family: $font-en-primary;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  h3 {
+    color: #333434;
+    font-family: $font-en-primary;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-height: 20px;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    span {
+      font-weight: 400;
+    }
+  }
+
+  .stock-out {
+    color: $color-primary;
+  }
+
+  button {
+    background-color: $color-primary;
+    color: #fff;
+    border: none;
+    outline: none;
+    font-family: $font-en-primary;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    max-width: 140px;
+    width: 100%;
+    display: block;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: inline-block;
+      margin-right: 6px;
+
+      &:last-child {
+        margin: 0;
+      }
+
+      span {
+        background-color: $color-primary;
+        color: #fff;
+        border: 1px solid transparent;
+        width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.remove {
+  h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    span {
+      color: $color-primary;
+    }
+  }
+}
+
+//Specifications
+.table-heading1 {
+  background-color: #f2f3f4;
+  height: auto;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h3 {
+    color: $color-primary;
+    font-family: $font-en-primary;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 19px;
+  }
+}
+
+.table-data1 {
+  height: auto !important;
+  padding: 10px;
+  border-right: 1px solid #ebebeb;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.product-action-btn1 {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ebebeb;
+}
+
+.sp-ul {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr);
+  list-style: none;
+
+  li {
+    padding: 5px;
+    text-align: center;
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
+
+  .title {
+    border-right: 1px solid #ebebeb;
+    background-color: #f2f3f4;
+  }
+}
+
+@media (max-width: 599px) {
+  .section1 {
+    margin-bottom: 180px;
+  }
+}

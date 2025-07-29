@@ -1,0 +1,107 @@
+<form
+  class="form"
+  #formElement="ngForm"
+  [formGroup]="dataForm"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="container">
+    <div class="content">
+      <div class="side-nav">
+        <app-account-sidebar></app-account-sidebar>
+      </div>
+      <div class="left-side-top">
+        <div class="left-side">
+          <h2>Write Review</h2>
+          @if (order?.deliverDate) {
+          <p>Delivered on {{ order?.deliverDate | date }}</p>
+          }
+          <h3>Rate abd review purchased product:</h3>
+
+         @if(product){
+          <div class="details" >
+           <img
+             [src]="
+               product?.images && product?.images?.length
+                 ? product?.images[0]
+                 : 'https://cdn.saleecom.com/upload/images/placeholder.png'
+             "
+             alt="image" loading="lazy"
+           />
+           <div class="product-info">
+             <h3>{{ product?.name }}</h3>
+              @if (productData?.variation?.name) {
+          <p>{{ productData?.variation?.name }}</p>
+          }
+          </div>
+        </div>
+          }
+
+          <div class="left-down">
+            <div class="rating">
+              <div class="star-rating">
+                @for (star of stars; let i = $index; track i){
+                  <span
+                    (click)="rate(i + 1)"
+                    (mouseover)="hover(i + 1)"
+                    (mouseleave)="hover(0)"
+                    [class.filled]="i < currentHover || i < rating"
+                    class="star">★
+                  </span>
+                }
+
+              </div>
+              <span>{{ ratingText }}</span>
+            </div>
+
+
+            <div class="review-link">
+              <p>Review Detail</p>
+              <a>How to write a good review</a>
+            </div>
+
+            <textarea
+              formControlName="review"
+              placeholder="What do you think of this product?"
+            ></textarea>
+
+            <div class="upload-photo">
+
+              <mat-card class="content-main content-2">
+                <div class="drop-image-area">
+                  <div class="drop-zone-main">
+                    <app-drop-zone (newItemEvent)=" onSelect($event)"
+                                   (onDeleteOldImage)="onDeleteOldImage($event)"
+                                   [fileNotPicked]="fileNotPicked"
+                                   [images]="oldImages"></app-drop-zone>
+                  </div>
+                </div>
+              </mat-card>
+              <!-- END CONTENT PART 2 -->
+            </div>
+
+            <div class="important-info">
+              <p>Important:</p>
+              <ul>
+                <li>- Maximum {{this.maxImageUpload}} images can be uploaded</li>
+                <li>- Image size can be maximum 5MB</li>
+                <li>- It takes up to 24 hours for the image to be reviewed</li>
+                <li>
+                  - Please ensure you meet these
+                  <a >Community Guidelines</a> before uploading images
+                </li>
+              </ul>
+            </div>
+
+            <div class="footer sticky-footer">
+              <div class="footer-down">
+                <button type="submit" class="submit-button">
+                  {{ id ? "UPDATE" : "SUBMIT" }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

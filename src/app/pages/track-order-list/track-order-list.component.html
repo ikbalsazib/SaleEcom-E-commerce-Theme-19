@@ -1,0 +1,70 @@
+<div class="list-order container">
+  <div class="btn-sec-parent">
+    <div class="btn-sec">
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'All' }"
+        (click)="selectStatus('All')"
+      >
+        All
+      </div>
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'processing' }"
+        (click)="selectStatus('processing')"
+      >
+        In Process
+      </div>
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'pending' }"
+        (click)="selectStatus('pending')"
+      >
+        Pending
+      </div>
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'confirmed' }"
+        (click)="selectStatus('confirmed')"
+      >
+        Confirmed
+      </div>
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'delivered' }"
+        (click)="selectStatus('delivered')"
+      >
+        Delivered
+      </div>
+      <div
+        class="button"
+        [ngClass]="{ active: selectedStatus === 'cancelled' }"
+        (click)="selectStatus('cancelled')"
+      >
+        Cancelled
+      </div>
+    </div>
+  </div>
+
+  <div class="cards-section">
+    @defer (when !isLoading) { @for (item of order; track item) {
+      <app-track-single-order [inputData]="item"></app-track-single-order>
+    } } @placeholder (minimum 50ms) { @for (data of [].constructor(5); track
+      data) {
+      <div class="list-loader-parent">
+        <app-order-loader />
+      </div>
+    } } @if(!order.length && !isLoading) {
+    <div class="empty-data">
+      <app-empty-data
+        [needBorder]="false"
+        [iconWidth]="'120px'"
+        [title]="'Your Order List is Empty!'"
+        [titleSize]="'16px'"
+        [filePath]="'/lottie/no-data-1.json'"
+      >
+      </app-empty-data>
+    </div>
+  }
+  </div>
+</div>

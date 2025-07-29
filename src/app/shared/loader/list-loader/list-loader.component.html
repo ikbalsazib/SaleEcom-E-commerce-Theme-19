@@ -1,0 +1,26 @@
+@for(item of [1, 2, 3, 4]; track $index){
+  <div class="list-container">
+    <div class="left-skeleton">
+      <!-- Checkbox -->
+      <ngx-skeleton-loader
+        [theme]="{ width: '20px', height: '20px', marginRight: '10px' }"
+      ></ngx-skeleton-loader>
+      <!-- Product Image -->
+      <ngx-skeleton-loader
+        [theme]="{ width: '100px', height: '80px' }"
+      ></ngx-skeleton-loader>
+    </div>
+    <!-- Product Details -->
+    <div class="middle-skeleton">
+      <ngx-skeleton-loader [theme]="{ width: '250px', height: '20px', marginBottom: '10px' }"></ngx-skeleton-loader>
+      <ngx-skeleton-loader [theme]="{ width: '100px', height: '15px' }"></ngx-skeleton-loader>
+      <ngx-skeleton-loader [theme]="{ width: '80px', height: '15px' }"></ngx-skeleton-loader>
+
+    </div>
+    <div class="right-skeleton">
+      <ngx-skeleton-loader [theme]="{ width: '80px', height: '15px',marginTop: '10px' }"></ngx-skeleton-loader>
+      <ngx-skeleton-loader [theme]="{ width: '80px', height: '25px' }"></ngx-skeleton-loader>
+    </div>
+  </div>
+}
+

@@ -1,0 +1,59 @@
+@import "common/headers/header-xl";
+.homepage-only-height{
+  height: 80px!important;
+}
+//.header-fixed{
+//  background-color: $color-primary !important;
+//}
+//.header-main{
+//  a{
+//    p{
+//      color: darken($color-white , 10%) !important;
+//    }
+//  }
+//}
+//
+::ng-deep.cart-button {
+  svg {
+    fill: $color-black !important;
+  }
+}
+
+.header-top-area{
+  height: 60px !important;
+  border-bottom: none !important;
+}
+
+.header-top{
+  padding: 17px 0 !important;
+  border-top: 1px solid #e8e8e8;
+  ul{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+
+    a{
+      text-decoration: none;
+      color: $color-black;
+      font-weight: 500;
+      font-style: normal;
+      text-transform: capitalize;
+      font-family: $font-en-primary;
+      font-size: 16px;
+      line-height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 5px;
+      transition: all .3s linear;
+
+      &:hover{
+        color: $color-primary !important;
+      }
+    }
+    li{
+      list-style: none;
+    }
+  }
+}

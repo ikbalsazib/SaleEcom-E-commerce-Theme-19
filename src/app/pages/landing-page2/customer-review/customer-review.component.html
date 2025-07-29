@@ -1,0 +1,48 @@
+<div></div>
+<div class="faq-area" *ngIf="singleLandingPage?.reviews?.length" [ngStyle]="{ 'background-color': singleLandingPage?.backgroundColor,'color': singleLandingPage?.textColor ? singleLandingPage?.textColor : 'black' }">
+  <div class="container">
+    <h1  class="title">{{ singleLandingPage?.reviewTitle }}</h1>
+    <div class="review-grid">
+      <div class="review-card" *ngFor="let data of singleLandingPage?.reviews">
+        <img [src]="data.image" alt="Reviewer" class="avatar" />
+        <div>
+          <!-- Loop to create filled stars based on data.rating -->
+          <ng-container *ngFor="let star of [].constructor(data?.rating); let i = index">
+            <span class="star filled">&#9733;</span> <!-- Filled star -->
+          </ng-container>
+
+          <!-- Loop to create empty stars for the remaining rating -->
+          <ng-container *ngFor="let star of [].constructor(5 - data?.rating); let i = index">
+            <span class="star empty">&#9734;</span> <!-- Empty star -->
+          </ng-container>
+        </div>
+        <p class="message">{{ data.review }}</p>
+        <h4 class="name">{{ data.name }}</h4>
+      </div>
+    </div>
+
+    <div class="btn-area">
+      <button class="order-button" (click)="onScrollWithNavigate('payment')">
+        {{ 'placeOrder'  | translate }}
+        <svg
+          data-v-e8d572f6=""
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          aria-hidden="true"
+          role="img"
+          class="icon mr-2"
+          width=".8em"
+          height=".8em"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10M9.75 9a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-2.69l-4.72 4.72a.75.75 0 0 1-1.06-1.06l4.72-4.72H10.5A.75.75 0 0 1 9.75 9"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+@import "variables";
+
+.popup-area{
+  position: relative;
+  span{
+    cursor: pointer;
+    position: absolute;
+    right: 12px;
+    top: -8px;
+    z-index: 9;
+    width: 30px;
+    height:30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    svg{
+      fill: #000000;
+    }
+  }
+}
+
+.offer-dialog{
+  display: block;
+  padding: 18px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+
+  img{
+    border-radius: 5px;
+    height: 100%;
+    display: block;
+    width: 100%;
+  }
+}
+
+::ng-deep.offer-dialog .cdk-global-overlay-wrapper{
+  padding: 10px;
+}
+
+::ng-deep.mat-mdc-dialog-surface {
+  border-radius: 5px !important;
+  background: none!important;
+}

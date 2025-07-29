@@ -1,0 +1,9 @@
+<div class="title-area">
+  <h3>{{ title }}</h3>
+  @if (selectedNote) {
+    <p class="delivery-note">{{ selectedNote }}</p>
+  }
+  @if(url) {
+  <a routerLink="/my-address">Manage Saved Address</a>
+  }
+</div>

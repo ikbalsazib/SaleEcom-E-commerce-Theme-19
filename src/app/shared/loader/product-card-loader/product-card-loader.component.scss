@@ -1,0 +1,29 @@
+.category-card {
+  width: 100%;
+  border: 0.1px solid rgb(224, 224, 224);
+  border-radius: 5px;
+  padding: 10px 10px 0 10px;
+
+  .img-thumb {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
+.price-cart {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: space-between;
+  gap: 40px;
+
+  .right {
+    justify-self: end;
+  }
+}
+
+@media (max-width: 599px) {
+  .category-card{
+    background-color: rgb(255, 254, 254);
+  }
+}

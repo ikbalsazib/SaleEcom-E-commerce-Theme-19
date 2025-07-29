@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+.card-container {
+    margin-top: 50px;
+    background-color: #F4F6FA;
+    max-width: 300px;
+    gap:20px;
+    display: flex;
+    border-radius: 15px;
+    height: 90px;
+    align-items: center;
+    justify-content: center;
+}
+.left img {
+    max-width: 60px;
+    transition: all 0.3s ease 0s;
+}
+
+.left:hover img {
+    transform: scale(1.1);
+}
+.right h3{
+    font-family: "Quicksand", sans-serif;
+    font-weight: 600;
+    
+}
+.right p{
+    font-family: "Quicksand", sans-serif;
+    font-size: 15px;
+    
+}
+@media only screen and (max-width: 599px)
+{
+    .card-container{
+        margin-top: 30px;
+        max-width: 400px;
+        justify-content: left;
+    }
+   
+}
+
+

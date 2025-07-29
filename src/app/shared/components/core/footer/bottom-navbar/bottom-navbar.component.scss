@@ -1,0 +1,102 @@
+@import '../../../../../../theme/variables';
+@import "exports/chat-mobile";
+
+.svg-bg{
+  fill: $color-primary;
+}
+
+.navbar-outside{
+    box-sizing: border-box;
+    position: fixed;
+    bottom: 0;
+    background-color: $color-white;
+    transition: all 0.3s ease;
+    display: flex;
+    left: 0;
+    padding: 1.6vw 4vw 1.6vw;
+    right: 0;
+    z-index: 1000;
+}
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.link-ripple-root {
+  border-radius: inherit;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 0;
+}
+.link-ripple-container{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  outline: 0;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  &.active {
+    .svg{
+      fill: $color-primary;
+      transition: all 0.5s ease;
+    }
+    p{
+      color: $color-primary;
+      transition: all 0.5s ease;
+    }
+  }
+
+}
+.home-section,
+.categories-section,
+.cart-section,
+.account-section{
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-basis: 0.13333vw;
+  flex-direction: column;
+  justify-content: center;
+  .tabbar-item-icon {
+    height: 6.4vw;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 8vw;
+    img{
+      display: inline-block;
+      height: auto;
+      max-height: 100%;
+      max-width: 100%;
+      width: auto;
+    }
+  }
+    .svg{
+        height: 25px;
+        width: 25px;
+        fill: rgb(75, 73, 73);
+        transition: all 0.5s ease;
+    }
+    p{
+        color: $color-black;
+        font-family: $font-en-primary;
+        font-size: 2.66667vw;
+        font-weight: 400;
+        margin-top: 0.8vw;
+    }
+    &:hover{
+        .svg{
+            fill: $color-primary;
+            transition: all 0.5s ease;
+        }
+        p{
+            color: $color-primary;
+            transition: all 0.5s ease;
+        }
+    }
+}

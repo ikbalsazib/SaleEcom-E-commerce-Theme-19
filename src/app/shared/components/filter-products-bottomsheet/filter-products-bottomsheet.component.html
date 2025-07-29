@@ -1,0 +1,26 @@
+<div class="left-area" >
+  <div class="sidebar">
+    <div class="slide-top" (click)="onHideCategory()">
+      <span >X</span>
+    </div>
+<!--    <app-products-filter-price (dataEmitter)="onPriceRangeChange($event)"></app-products-filter-price>-->
+    @defer (when !isLoading){
+      <app-products-category-filter [activeFilters]="selectedCategories" [data]="categories"
+                                    (resetFilters)="resetCategoryFilter()" (selectedFilters)="onHideCategory()"></app-products-category-filter>
+
+      @if (selectedCategories.length) {
+        <app-filter-sub-category [activeFilters]="selectedSubCategories"
+                                 [data]="subCategories"
+                                 (resetFilters)="resetSubCategoryFilter()" (selectedFilters)="onHideCategory()"></app-filter-sub-category>
+      }
+
+      @if (brands.length) {
+        <app-filter-brand [activeFilters]="selectedBrands" [data]="brands"
+                          (resetFilters)="resetBrandFilter()" (selectedFilters)="onHideCategory()"></app-filter-brand>
+      }
+    }
+    @placeholder (minimum 50ms) {
+      <app-product-details-category-loader ></app-product-details-category-loader>
+    }
+  </div>
+</div>

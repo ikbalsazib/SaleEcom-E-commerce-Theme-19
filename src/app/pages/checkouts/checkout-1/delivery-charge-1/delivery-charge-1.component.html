@@ -1,0 +1,23 @@
+<div class="payment-area">
+<app-title [title]="titleData"></app-title>
+  @defer (when !isLoading){
+    <div class="online-payment">
+      @for (item of deliveryCharges; track item; let i = $index) {
+        <div class="method-info active"
+             [class.active]="item.type === selectedDeliveryCharge?.type" (click)="onSelectDeliveryCharge(item)">
+          <img [src]="getDeliveryTypeImage(item.type)" alt="image" loading="lazy" draggable="false">
+          <div class="checked-icon" [class.visible]="item.type === selectedDeliveryCharge?.type">
+            <svg xmlns="http://www.w3.org/2000/svg" width="49.305" height="49.305" viewBox="0 0 49.305 49.305">
+              <path id="checked-icon" d="M28.028,3.375A24.653,24.653,0,1,0,52.68,28.028,24.649,24.649,0,0,0,28.028,3.375ZM40.65,21.213,24.8,37.13h-.012a2.14,2.14,0,0,1-1.375.652,2.075,2.075,0,0,1-1.387-.676l-6.637-6.637a.472.472,0,0,1,0-.676l2.11-2.11a.458.458,0,0,1,.664,0l5.262,5.262L37.889,18.38a.468.468,0,0,1,.332-.142h0a.43.43,0,0,1,.332.142l2.074,2.145A.467.467,0,0,1,40.65,21.213Z" transform="translate(-3.375 -3.375)" />
+            </svg>
+          </div>
+          <span>{{ item.name }}</span>
+            <span class="note">({{ item.note }})</span>
+        </div>
+      }
+    </div>
+  }@placeholder (minimum 50ms) {
+      <app-payment-card-loader />
+  }
+
+</div>

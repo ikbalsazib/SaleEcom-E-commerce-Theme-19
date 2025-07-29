@@ -1,0 +1,86 @@
+@import "variables";
+.gallery-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color-black, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.gallery-dialog {
+  position: relative;
+  max-width: 90%;
+  //max-height: 100%;
+  background-color: transparent;
+}
+
+.close-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: $color-white;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.image-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 60vw;
+    max-height: 60vw;
+    border-radius: 8px;
+    padding: 10vw 0;
+  }
+
+  .navigation {
+    position: fixed;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: $color-white;
+      font-size: 36px;
+      cursor: pointer;
+      pointer-events: all;
+
+      &:hover {
+        color: #cccccc;
+      }
+
+      &.prev {
+        margin-left: 20px;
+      }
+
+      &.next {
+        margin-right: 20px;
+      }
+    }
+  }
+}
+
+.image-count {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 16px;
+  color: $color-white;
+  z-index: 1001;
+}

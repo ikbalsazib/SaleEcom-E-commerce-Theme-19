@@ -1,0 +1,30 @@
+@import "variables";
+@import "exports/btn";
+
+.no-card {
+  width: 100%;
+  height: auto;
+  border: 1px solid #e8e8e8;
+
+  .lottie-animation {
+    margin: 0 auto;
+  }
+
+  .info {
+    text-align: center;
+
+    h3 {
+      color: $color-black;
+      font-weight: bold;
+    }
+    p {
+      font-size: calc($font-readable + 2px);
+      color: lighten($color-black, 10%);
+    }
+  }
+
+  .action {
+    text-align: center;
+    margin: 15px auto;
+  }
+}

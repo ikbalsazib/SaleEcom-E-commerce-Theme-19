@@ -1,0 +1,14 @@
+<form [formGroup]="otpForm" class="otp-container">
+  <input id="otp0" type="text" maxlength="1" formControlName="otp0" (input)="onInputChange($event, 0)"
+         (keydown)="handleKeyDown($event, 0)" (paste)="pasteOTP($event)"
+         [ngClass]="{'invalid-input': otpForm.get('otp0')?.invalid && otpForm.get('otp0')?.touched}">
+  <input id="otp1" type="text" maxlength="1" formControlName="otp1" (input)="onInputChange($event, 1)"
+         (keydown)="handleKeyDown($event, 1)"
+         [ngClass]="{'invalid-input': otpForm.get('otp1')?.invalid && otpForm.get('otp1')?.touched}">
+  <input id="otp2" type="text" maxlength="1" formControlName="otp2" (input)="onInputChange($event, 2)"
+         (keydown)="handleKeyDown($event, 2)"
+         [ngClass]="{'invalid-input': otpForm.get('otp2')?.invalid && otpForm.get('otp2')?.touched}">
+  <input id="otp3" type="text" maxlength="1" formControlName="otp3" (input)="onInputChange($event, 3)"
+         (keydown)="handleKeyDown($event, 3)"
+         [ngClass]="{'invalid-input': otpForm.get('otp3')?.invalid && otpForm.get('otp3')?.touched}">
+</form>

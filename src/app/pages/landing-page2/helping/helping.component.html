@@ -1,0 +1,61 @@
+<div></div>
+<div class="why-us-section" *ngIf="singleLandingPage?.specificationImage || singleLandingPage?.specifications?.length" id="benefit" [ngStyle]="{ 'background-color': singleLandingPage?.backgroundColor ? singleLandingPage?.backgroundColor : '#E5FFDA' ,'color': singleLandingPage?.textColor ? singleLandingPage?.textColor : 'black' }">
+<div class="container">
+  <div class="title">
+    <h2 class="color">{{singleLandingPage?.title}}</h2>
+  </div>
+  <div class="content-container">
+    <div class="image-box slide-right" #imageBox [ngClass]="{ 'slide-right': imageVisible }"  *ngIf="singleLandingPage?.specificationImage">
+      @if ((isMobile > 600)) {
+      <img [src]="singleLandingPage?.specificationImage ? singleLandingPage?.specificationImage[0] : ''" (click)="openGallery($event,singleLandingPage?.specificationImage,0)" alt="image" />
+      }
+      @else{
+      <img [src]="singleLandingPage?.specificationImage[0]" (click)="openGalleryMobile($event,singleLandingPage?.specificationImage,0)" alt="image" />
+    }
+    </div>
+    <div class="text-box slide-left" *ngIf="singleLandingPage?.specifications?.length" #textBox [ngClass]="{ 'slide-left': textVisible }">
+      <ul>
+        <li *ngFor="let feature of singleLandingPage?.specifications" class="color">{{ feature.title }}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="btn-area">
+    <button class="order-button" (click)="onScrollWithNavigate('payment')">
+      {{ 'placeOrder'  | translate }}
+      <svg
+        data-v-e8d572f6=""
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        aria-hidden="true"
+        role="img"
+        class="icon mr-2"
+        width=".8em"
+        height=".8em"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          fill-rule="evenodd"
+          d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10M9.75 9a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-2.69l-4.72 4.72a.75.75 0 0 1-1.06-1.06l4.72-4.72H10.5A.75.75 0 0 1 9.75 9"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </button>
+  </div>
+</div>
+</div>
+
+@if (isGalleryOpen && (isMobile > 600)) {
+  <app-gallery-image-viewer
+    [images]="galleryImages"
+    [startIndex]="selectedImageIndex"
+    (closeEvent)="closeGallery()"
+  >
+  </app-gallery-image-viewer>
+}
+
+@if(showModal && (isMobile < 600)){
+  <app-image-gallery [selectedIndex]="selectedImageIndex" [images]="galleryImages" [isVisible]="showModal"
+                     (close)="closeModal1()"
+  ></app-image-gallery>
+}

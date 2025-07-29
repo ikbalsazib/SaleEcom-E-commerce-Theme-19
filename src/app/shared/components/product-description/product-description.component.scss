@@ -1,0 +1,110 @@
+@import "variables";
+
+.description-container{
+    position: relative;
+    box-shadow: $box-shadow-black;
+}
+.title{
+    width: 100%;
+    padding: 10px;
+    background-color: lighten($color-gray, 20%);
+    h4{
+        font-family: $font-en-primary;
+        font-size: calc($font-sub-title - 8px);
+        font-weight: 500;
+        color: $color-black;
+
+        display:-webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow:hidden;
+        text-overflow: ellipsis;
+    }
+}
+.description-txt{
+    margin:10px 0 10px 30px;
+    h3{
+        font-family: $font-en-primary;
+        font-size: calc($font-sub-title + 2px);
+        font-weight: 600;
+        color: $color-black;
+        margin-bottom: 10px;
+      }
+      h4{
+        font-family: $font-en-primary;
+        font-size: calc($font-title-desc + 2px);
+        font-weight: 500;
+        color: $color-black;
+        margin-bottom: 10px;
+      }
+      p{
+        font-family: $font-en-primary;
+        font-size: calc($font-title-desc + 2px);
+        font-weight: 500;
+        color: $color-black;
+        margin-bottom: 6px;
+        span{
+          font-weight: 600;
+        }
+      }
+}
+.prod-img{
+    width: 100%;
+    height: 300px;
+    margin-top: 10px;
+}
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+p{
+    margin: 20px 10px;
+    font-family: $font-en-primary;
+    font-size: calc($font-sub-title - 8px);
+    font-weight: 500;
+    color: $color-black;
+}
+.view-more, .view-less{
+    width: 100%;
+    padding: 10px 0;
+    background-color: $color-white;
+    display: flex;
+    justify-content: center;
+    button{
+        max-width: 200px;
+        width: 100%;
+        height: 40px;
+        outline: none;
+        border: 1px solid $color-primary;
+        border-radius: 2px;
+        background-color: $color-white;
+        text-align: center;
+        font-family: $font-en-primary;
+        font-size: $font-title-desc;
+        font-weight: 500;
+        text-transform: uppercase;
+        color: $color-primary;
+        transition: all 0.5s ease;
+        cursor: pointer;
+        &:hover{
+            background-color: $color-primary;
+            color: $color-white;
+            transition: all 0.5s ease;
+        }
+    }
+}
+.view-more{
+    position: absolute;
+    bottom: 0;
+    box-shadow: 0 -40px 30px 20px $color-white;
+}
+@media only screen and (max-width:599px){
+    .description-txt{
+        ul{
+            grid-template-columns: repeat(1,1fr);
+        }
+    }
+}

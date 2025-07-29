@@ -1,0 +1,112 @@
+@import "variables";
+
+header {
+  width: 100%;
+  height: $header-height-sm;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  transition: all 0.3s ease;
+  display: none;
+  align-items: center;
+  background: $color-white;
+  border-bottom: 1px solid #efefef;
+}
+
+.container{
+  width: 95%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.search-container {
+  width: 100%;
+  border: 2px solid $color-primary;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.svg-align{
+
+  margin-top: 4px;
+  padding: 0 10px;
+  cursor: pointer;
+
+  svg{
+    height: 20px;
+    width: 24px;
+  }
+
+}
+.header-mid {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.search-icon {
+  margin-left: 4px;
+  padding: 3px 5px 0;
+  color: $color-primary;
+}
+
+// Animated Search text
+.search-text {
+  width: 100%;
+  height: calc($header-height-sm - 30px);
+  padding: 5px 0 2px 0;
+  box-sizing: content-box;
+  display: flex;
+  justify-content: center;
+
+  span {
+    display: block;
+    height: 100%;
+    padding-left: 10px;
+    color: #6b6b6b;
+    animation: spin_words 6s infinite;
+    font-weight: 500;
+    font-size: calc($font-readable + 1px);
+  }
+
+  .words {
+    overflow: hidden;
+  }
+
+  @keyframes spin_words {
+    10% {
+      transform: translateY(-112%);
+    }
+    25% {
+      transform: translateY(-100%);
+    }
+    35% {
+      transform: translateY(-212%);
+    }
+    50% {
+      transform: translateY(-200%);
+    }
+    60% {
+      transform: translateY(-312%);
+    }
+    75% {
+      transform: translateY(-300%);
+    }
+    85% {
+      transform: translateY(-412%);
+    }
+    100% {
+      transform: translateY(-400%);
+    }
+  }
+
+}
+
+@media only screen and (max-width: 599px) {
+  header{
+    display: flex;
+  }
+}

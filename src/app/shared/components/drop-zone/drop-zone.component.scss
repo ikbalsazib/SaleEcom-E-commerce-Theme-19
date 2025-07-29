@@ -1,0 +1,116 @@
+@import "variables";
+
+/* --- custom-dropzone --- */
+.custom-dropzone {
+  height: 100px;
+  background-color: $color-white;
+  padding: 14px;
+  width: 100%;
+  border: 1px dashed #d0d0d0;
+  border-radius: 5px;
+
+  ngx-dropzone-label {
+    margin: 0;
+    width: 100%;
+  }
+}
+
+::ng-deep {
+  [_nghost-tlk-c221] {
+    height: auto;
+  }
+}
+
+@media (max-width: 631px) {
+  .custom-dropzone {
+    min-height: inherit;
+  }
+}
+
+/* --- label --- */
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+
+  img {
+    width: 33px;
+  }
+
+  .upload-size {
+    p {
+      text-align: center;
+      font-family: $font-en-primary;
+      font-size: 14px;
+      font-weight: 400;
+      color: #444444;
+      letter-spacing: 0.5px;
+
+      a {
+        display: inline !important;
+        color: #2f80ed;
+        font-family: $font-en-primary;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+
+        &:hover {
+          text-decoration: underline;
+          text-decoration-color: #2f80ed;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep.drop-zone-img-preview {
+  display: flex!important;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 10px;
+
+  ngx-dropzone-image-preview {
+    width: 106px;
+    height: 106px !important;
+    min-height: 106px !important;
+
+    img {
+      border-radius: 5px;
+      object-fit: cover;
+      object-position: top center;
+      height: 106px;
+      width: 100%;
+    }
+
+    ngx-dropzone-remove-badge {
+      opacity: 1 !important;
+      top: -7px !important;
+      right: -5px !important;
+    }
+  }
+}
+
+.img-thumb {
+  position: relative;
+  width: 106px;
+  height: 106px !important;
+  min-height: 106px !important;
+
+  button {
+    position: absolute;
+    top: -10;
+    right: 0;
+    color: indianred;
+  }
+
+  img {
+    border-radius: 5px;
+    object-fit: cover;
+    object-position: top center;
+    height: 106px;
+    width: 100%;
+  }
+}

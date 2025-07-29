@@ -1,0 +1,16 @@
+@import "common/headers/header-sm";
+.header-top{
+  display: flex;
+  align-items: center;
+  padding: 8px 0 5px;
+  line-height: 18px;
+  .marquee{
+    margin-left: 5px;
+    flex: 1;
+  }
+}
+.show-hide{
+  .logo{
+    margin-top: 1px;
+  }
+}

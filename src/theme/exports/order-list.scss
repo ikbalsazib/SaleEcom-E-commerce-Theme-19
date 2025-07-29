@@ -1,0 +1,225 @@
+//.container {
+//  max-width: 900px;
+//  width: 100%;
+//}
+.container {
+
+}
+
+.table-area {
+  max-height: 300px; /* 👈 Give it fixed height for scroll to work */
+  overflow-y: auto; /* 👈 Enable scroll */
+}
+
+h2 {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  table-layout: fixed; /* Added to fix overlap */
+  word-wrap: break-word; /* Added to break long words */
+  position: relative;
+  overflow-x: auto;
+}
+
+thead tr {
+  background: #fff;
+}
+
+thead th {
+  text-align: left;
+  font-weight: 400;
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  user-select: none;
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+tbody td {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  vertical-align: middle;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+tbody td:first-child {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody td:nth-child(4) {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Status badges */
+.status {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  user-select: none;
+  white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.delivered {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.cancelled {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.capsule-orange {
+  background-color: #fde68a;
+  color: #c2410c;
+}
+
+.onHoldDesign {
+  background-color: #e0e7ff;
+  color: #3730a3;
+}
+
+.processingDesign {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.shippingDesign {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.courierDesign {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+/* Responsive */
+//@media (max-width: 640px) {
+//.table{
+//  border: none;
+//}
+//table, thead, tbody, th, td, tr {
+//  display: block;
+//}
+//thead tr {
+//  position: absolute;
+//  top: -9999px;
+//  left: -9999px;
+//}
+//tbody tr {
+//  margin-bottom: 1rem;
+//  border: 1px solid #e5e7eb;
+//  border-radius: 0.375rem;
+//  padding: 0.75rem 1rem;
+//  background: white;
+//}
+//tbody td {
+//  padding-left: 50%;
+//  position: relative;
+//  text-align: left;
+//  border: none;
+//  font-weight: 400;
+//  white-space: normal;
+//  overflow-wrap: break-word;
+//}
+//tbody td:first-child {
+//  font-weight: 600;
+//  white-space: nowrap;
+//}
+//tbody td::before {
+//  position: absolute;
+//  top: 50%;
+//  left: 1rem;
+//  transform: translateY(-50%);
+//  font-weight: 600;
+//  font-size: 0.75rem;
+//  color: #6b7280;
+//  white-space: nowrap;
+//}
+//tbody td:nth-of-type(1)::before { content: "Customer"; }
+//tbody td:nth-of-type(2)::before { content: "Products"; }
+//tbody td:nth-of-type(3)::before { content: "Date"; }
+//tbody td:nth-of-type(4)::before { content: "Price"; }
+//tbody td:nth-of-type(5)::before { content: "Status"; }
+//tbody td:nth-of-type(4) {
+//  font-weight: 600;
+//  white-space: nowrap;
+//}
+//tbody td:nth-of-type(5) {
+//  //padding-left: 0;
+//}
+
+//@media only screen and (max-width: 599px) {
+//  .container{
+//    width: 100%;
+//    margin: 0 !important;
+//    padding: 0 4vw 0 4vw;
+//    }
+//}
+//}
+thead {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 2;
+}
+
+/* Mobile Responsive: Horizontal Scroll */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 2vw 0 2vw;
+  }
+  .table-area {
+    width: 100%;
+    //position: relative;
+    //overflow-x: auto;
+
+    //thead {
+    //  position: sticky;
+    //  top: 0;
+    //  background-color: #fff;
+    //  z-index: 2;
+    //}
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      min-width: 600px;
+      background: white;
+    }
+  }
+}

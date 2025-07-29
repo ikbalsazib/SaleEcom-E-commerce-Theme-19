@@ -1,0 +1,24 @@
+@import 'variables';
+.container{
+    width: 100%;
+    $container-max-width: 1440px;
+    background-color: aqua;
+
+     
+}
+.mat-stepper-vertical {
+    margin-top: 60px;
+  }
+  
+  .mat-mdc-form-field {
+    margin-top: 16px;
+  }
+  .con{
+    width: 100%;
+  }
+  .mat-mdc-text-field-wrapper mdc-text-field mdc-text-field--filled mdc-text-field--invalid{
+    background-color: aqua;
+  }
+  .mdc-filled-text-field-container-width{
+    width: 100%;
+  }

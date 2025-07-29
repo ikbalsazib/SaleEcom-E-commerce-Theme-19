@@ -1,0 +1,234 @@
+<div class="container" [ngStyle]="{
+  'justify-content': !carts?.length ? 'center' : 'space-between',
+}">
+  @defer (when !isLoading) {
+    @if (isHydrated && !isLoading && !carts.length) {
+      <div class="no-data">
+        <app-empty-data
+          [needBorder]="false"
+          [iconWidth]="'280px'"
+          [title]="'Your Order List is Empty!'"
+          [titleSize]="'20px'"
+          [desc]="'Sorry! your cart has no item to show. Please add some product to see here.'"
+          [filePath]="'/lottie/no-data-1.json'"
+          [btnTitle]="'Continue Shopping'"
+          [btnUrl]="'/products'"
+        >
+        </app-empty-data>
+      </div>
+    } @else {
+      <div class="cart-items">
+        <div class="cart-items-heading">
+          <h3 class="title">{{'myCart' | translate}}</h3>
+          <div class="cart-items-heading-right">
+            <h3 class="total-items">{{ isSelectedCount }} Items</h3>
+          </div>
+        </div>
+
+        <div class="cart-border-element"></div>
+
+        <div class="cart-header mobile-d-none">
+          <div class="header-area">
+            <div class="select-all mobile-d-none"
+                 [ngClass]="{'hidden': showMobileContent, 'rmv-margin': showMobileContent}">
+              <input type="checkbox" id="select-all" [checked]="isSelectedCount === carts.length"
+                     (change)="toggleSelectAll($event)">
+            </div>
+            <div class="header-item product-details">Product Details</div>
+          </div>
+          <div class="header-right">
+            <div class="header-item d-none quantity">Quantity</div>
+            <div class="header-item d-none price">Price</div>
+            <div class="header-item d-none total">Total</div>
+          </div>
+        </div>
+
+
+        @for (item of carts; track item; let i = $index) {
+
+          <div class="cart-item">
+            <div class="product-info">
+              <input type="checkbox" class="mobile-checkbox" [(ngModel)]="item.isSelected"
+                     (ngModelChange)="onChangeSelect($event, i)">
+              <img [src]="getProductImage(item)"
+                   alt="Product Image"
+                   class="product-image">
+              <div class="details">
+                <a class="product-title"
+                   [routerLink]="['/product-details', item?.product?.slug]">{{ item?.product?.name }}</a>
+                <a class="sku">Category: <a>{{ item.product?.category?.name }}</a></a>
+                @if (item.variation) {
+                  <a class="status">{{ item.variation | variationInfoInline }}</a>
+                }
+                @if (item?.product?.minimumWholesaleQuantity) {
+                  <a class="status">MQ: {{ item?.product?.minimumWholesaleQuantity }}</a>
+                }
+              </div>
+            </div>
+            <div class="qty-area">
+              <div class="quantity-container">
+                <button class="quantity-button" (click)="onDecrementQty(item?._id, i, item?.selectedQty)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M19 13H5v-2h14v2z"/>
+                  </svg>
+                </button>
+                <input type="number" numberOnly [maxValue]="cartMaxQuantity" [(ngModel)]="item.selectedQty"
+                       class="quantity-input" min="1" readonly>
+                <button class="quantity-button" (click)="onIncrementQty(item?._id, i)">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#5f6368">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="price mobile-d-none">
+                <p>{{ (item?.product | productPrice : "salePrice" : item?.variation?._id : item?.selectedQty : item?.isWholesale) | currencyCtr}}</p>
+                @if ((item?.product | productPrice : "discountAmount" : item?.variation?._id) > 0) {
+                  <p class="price-discount">
+                    <del>
+                      {{ (item?.product | productPrice : "regularPrice" : item?.variation?._id : item?.selectedQty) | currencyCtr }}
+                    </del>
+                  </p>
+                }
+              </div>
+              <p class="total mobile-d-none">{{ item?.product | productPrice : "salePrice" : item?.variation?._id : item?.selectedQty : item?.isWholesale }}</p>
+
+              <div class="mobile-view">
+                <div class="price web-d-none">
+                  <p>{{ (item?.product | productPrice : "salePrice" : item?.variation?._id : item?.selectedQty : item?.isWholesale) | currencyCtr }}</p>
+                  @if ((item?.product | productPrice : "discountAmount" : item?.variation?._id) > 0) {
+                    <p class="price-discount">
+                      <del>
+                        {{ (item?.product | productPrice : "regularPrice" : item?.variation?._id : item?.selectedQty) | currencyCtr}}
+                      </del>
+                    </p>
+                  }
+                </div>
+                <p class="total web-d-none mobile-d-none">{{ item?.product | productPrice : "salePrice" : item?.variation?._id : item?.selectedQty : item?.isWholesale}}</p>
+
+                <div class="delete-icon" (click)="onDeleteSingleCartItem(item)">
+                  <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512">
+                    <path
+                      d="M18,6h0a1,1,0,0,0-1.414,0L12,10.586,7.414,6A1,1,0,0,0,6,6H6A1,1,0,0,0,6,7.414L10.586,12,6,16.586A1,1,0,0,0,6,18H6a1,1,0,0,0,1.414,0L12,13.414,16.586,18A1,1,0,0,0,18,18h0a1,1,0,0,0,0-1.414L13.414,12,18,7.414A1,1,0,0,0,18,6Z"/>
+                  </svg>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+    @if (!isLoading && carts.length) {
+      <div class="cart-checkout sticky-view">
+        <div class="checkout-container sticky-view">
+          <div class="select-all web-d-none" [ngClass]="{'hidden': showMobileContent, 'rmv-margin': showMobileContent}">
+            <input type="checkbox" id="select-all-mobile" [checked]="isSelectedCount === carts.length"
+                   (change)="toggleSelectAll($event)">
+            <label for="select-all"> All</label>
+          </div>
+
+          <div class="checkout-bottom">
+            <div class="order-summary-container">
+              <div class="order-summary" (click)="openSummeryBottomSheet()"
+                   [ngClass]="{'show-content': showMobileContent, 'rmv-margin': showMobileContent}">
+                <div class="subtotal">
+                  <div class="sub-total-cart">
+                    <span>Subtotal</span>
+                    <span>{{ cartRegularSubTotal | currencyCtr }}</span>
+                  </div>
+                  <span class="arrow" [ngClass]="{'arrow-rotate': showMobileContent}">
+                        <svg fill="#000000" height="15px" width="15px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 330">
+                <path
+                  d="M325.606,229.393l-150.004-150C172.79,76.58,168.974,75,164.996,75c-3.979,0-7.794,1.581-10.607,4.394l-149.996,150c-5.858,5.858-5.858,15.355,0,21.213c5.857,5.857,15.355,5.858,21.213,0l139.39-139.393l139.397,139.393C307.322,253.536,311.161,255,315,255c3.839,0,7.678-1.464,10.607-4.394C331.464,244.748,331.464,235.251,325.606,229.393z"/>
+              </svg>
+                  </span>
+                </div>
+                <div class="shipping-fee">Total Item: ({{ isSelectedCount }})</div>
+              </div>
+
+              <div class="mobile-hidden-content" [ngClass]="{'show-content': showMobileContent}">
+                <div class="modal-content">
+                  <div class="cart-items-heading">
+                    <h3>{{'orderSummary' | translate}}</h3>
+                  </div>
+                  <div class="checkout-border-element"></div>
+                  <div class="cost-summary">
+                    <div class="summary-item"><span>{{'subTotal' | translate}}</span><span>{{ cartRegularSubTotal | currencyCtr}}</span></div>
+                    <div class="summary-item"><span>{{'discount' | translate}}</span><span>{{ cartDiscountAmount | currencyCtr}}</span></div>
+                    <div class="summary-item total"><span>{{'grandTotal' | translate}}</span><span>{{ cartSaleSubTotal | currencyCtr}}</span></div>
+                    <div class="checkout-btn-mobile-view" routerLink="/checkout">
+                      <button class="btn pc-btn">{{'checkout' | translate}}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @if (carts.length > 0) {
+              <a routerLink="/checkout" class="btn mb-btn">{{'checkout' | translate}}</a>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  } @placeholder (minimum 50ms) {
+    <div class="cart-loader">
+      <app-cart-loader></app-cart-loader>
+    </div>
+  }
+</div>
+
+@if (!isLoading && carts.length) {
+  <div class="container">
+    <div class="suggestion-section">
+      <h3 class="title">You May Like </h3>
+
+      <div class="suggestion-border-element"></div>
+      <div class="products-cards">
+
+        @defer (when !isLoading) {
+          @switch (productCardViews) {
+            @case ('Product Card 1') {
+              @for (item of products; track $index) {
+                <app-product-card-1 [product]="item"></app-product-card-1>
+              }
+            }
+            @case ('Product Card 2') {
+              @for (item of products; track $index) {
+                <app-product-card-2 [product]="item"></app-product-card-2>
+              }
+            }
+            @case ('Product Card 3') {
+              @for (item of products; track $index) {
+                <app-product-card-3 [product]="item"></app-product-card-3>
+              }
+            }
+            @case ('Product Card 4') {
+              @for (item of products; track $index) {
+                <app-product-card-4 [product]="item"></app-product-card-4>
+              }
+            }
+          }
+
+        } @placeholder (minimum 50ms) {
+          @for (data of [].constructor(10); track $index) {
+            <app-product-card-loader/>
+          }
+        }
+      </div>
+    </div>
+
+  </div>
+}
+
+
+
+
+
+
+
+
+

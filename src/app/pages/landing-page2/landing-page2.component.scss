@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+
+::ng-deep *{
+  // background: white!important;
+  font-family: "Hind Siliguri", sans-serif;
+}
+.payment{
+  background: #ffffff;
+  padding: 40px 0;
+}
+
+::ng-deep .header-2{
+  display: none;
+}

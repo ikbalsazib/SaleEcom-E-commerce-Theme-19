@@ -1,0 +1,85 @@
+@import "variables";
+@import "common/user-account-xl";
+@import "exports/form-input-phone-no";
+@import "exports/form-input-primary";
+@import "exports/btn";
+@import "exports/spinner";
+
+.form-group {
+  margin-top: 20px;
+}
+
+.input-wrapper {
+  margin-top: 9px;
+
+  h3 {
+    padding-bottom: 2px;
+  }
+
+  textarea{
+    width: 100%;
+    height: 214px;
+  }
+}
+
+.active-btn{
+  width: 100%;
+  height: 45px;
+  background-color: #5d36ff;
+  border: 0;
+  margin-top: 15px;
+  font-family: $font-en-primary;
+  font-size: 15px;
+  font-weight: 400;
+  color: $color-white;
+  border-radius: 4px;
+  outline: 0;
+  padding: 5px 12px 4px;
+  transform: scale(1);
+  cursor: pointer;
+}
+
+.deactivate-btn {
+  background-color: rgb(231, 27, 27);
+  color: $color-white;
+  width: 100%;
+  height: 45px;
+  border: 0;
+  margin-top: 15px;
+  font-family: $font-en-primary;
+  font-size: 15px;
+  font-weight: 400;
+  border-radius: 4px;
+  outline: 0;
+  padding: 5px 12px 4px;
+  transform: scale(1);
+  cursor: pointer;
+}
+
+.active-color {
+  color: rgb(39, 216, 39);
+}
+.deactive-color {
+  color: red;
+}
+
+@media only screen and (max-width: 885px){
+  .content {
+    padding: 0 15px;
+  }
+  .reset-deactiva{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width: 599px){
+  .content {
+    padding: 0 15px;
+  }
+  .reset-deactiva{
+    grid-template-columns: 1fr;
+  }
+  .active-btn{
+    margin-bottom: 100px;
+  }
+}
