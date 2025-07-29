@@ -1,8 +1,10 @@
-import {Component, Input} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {Product, VariationList} from "../../../../interfaces/common/product.interface";
 import {StarRatingViewComponent} from "../../star-rating-view/star-rating-view.component";
 import {CurrencyCtrPipe} from "../../../pipes/currency.pipe";
 import {ProductPricePipe} from "../../../pipes/product-price.pipe";
+import {RouterLink} from "@angular/router";
+import {AppConfigService} from "../../../../services/core/app-config.service";
 
 @Component({
   selector: 'app-product-card-5',
@@ -12,7 +14,8 @@ import {ProductPricePipe} from "../../../pipes/product-price.pipe";
   imports: [
     StarRatingViewComponent,
     CurrencyCtrPipe,
-    ProductPricePipe
+    ProductPricePipe,
+    RouterLink
   ]
 })
 export class ProductCard5Component {
@@ -21,7 +24,7 @@ export class ProductCard5Component {
   selectedVariationList: VariationList = null;
   selectedVariation: string = null;
   selectedVariation2: string = null;
-
+  private readonly appConfigService = inject(AppConfigService);
   ngOnInit() {
     // Set Default Variation
     if (this.product?.isVariation) {
@@ -38,6 +41,34 @@ export class ProductCard5Component {
     } else {
       return 0;
     }
+  }
+
+  get productDetailsRouterLink(): any[] {
+    const productSetting = this.appConfigService.getSettingData('productSetting');
+    const slug = this.product?.slug;
+    if (!slug || typeof slug !== 'string' || !slug.trim()) {
+      console.warn('Product slug is missing or invalid:', slug, this.product);
+      return ['/']; // fallback to home or show error
+    }
+    if (!productSetting || !productSetting.urlType) {
+      return ['/product-details', slug];
+    }
+    let link;
+    switch (productSetting.urlType) {
+      case 'website.com/product-details/test-product':
+        link = ['/product-details', slug];
+        break;
+      case 'website.com/products/test-product':
+        link = ['/products', slug];
+        break;
+      case 'website.com/test-product':
+        link = ['/', slug];
+        break;
+      default:
+        link = ['/product-details', slug];
+        break;
+    }
+    return link;
   }
 
 
