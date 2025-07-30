@@ -49,7 +49,7 @@
 
           <div class="product-card-bottom">
             <div class="product-price">
-              <span>{{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}</span>
+              <span class="current-price">{{ (product | productPrice : "salePrice" : selectedVariationList?._id) | currencyCtr }}</span>
               @if ((product | productPrice : "discountAmount" : selectedVariationList?._id) > 0) {
                 <span
                   class="old-price">{{ (product | productPrice : "regularPrice" : selectedVariationList?._id) | currencyCtr }}</span>

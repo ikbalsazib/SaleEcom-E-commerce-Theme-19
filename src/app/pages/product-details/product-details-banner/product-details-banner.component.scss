@@ -319,9 +319,9 @@
 
     .price-amount {
       p {
-        font-size: 46px;
+        font-size: 35px;
         font-weight: 900;
-        color: $color-primary;
+        color: $color-secondary;
       }
     }
 
@@ -337,7 +337,7 @@
       }
 
       .discount-value {
-        font-size: 24px;
+        font-size: 20px;
         color: lighten($color-gray, 10%);
         font-weight: 700;
       }
@@ -1071,6 +1071,12 @@
 
 .social-custom-design {
   margin-top: 20px;
+  p{
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
   .social-buttons {
     display: flex;
     justify-content: space-between;
