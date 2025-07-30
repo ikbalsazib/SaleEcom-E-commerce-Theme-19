@@ -1,6 +1,9 @@
 @import "variables";
 @import "exports/tooltip";
 @import "exports/add-to-cart-varient";
+.current-price{
+  color: $color-secondary!important;
+}
 .color-variant {
   button {
     display: flex;
