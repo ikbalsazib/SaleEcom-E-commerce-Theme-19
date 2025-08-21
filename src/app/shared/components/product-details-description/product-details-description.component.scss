@@ -4,17 +4,26 @@
 .description {
   position: relative;
   width: 100%;
-  word-break:break-word !important;
+  text-align: justify !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
 
   p {
-    word-break: break-word;
+    text-align: justify !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    white-space: normal !important;
     display: block;
     font-family: $font-en-primary !important;
   }
 }
 
 :host ::ng-deep .description p {
-  word-break: break-word;
+  text-align: justify !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
   font-family: $font-en-primary !important;
   ul{
     padding-left: 30px !important;
