@@ -305,6 +305,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         //     }
         //   }
         // }
+        this.updateMetaData();
       },
       error: (err) => {
         this.isLoading = false;

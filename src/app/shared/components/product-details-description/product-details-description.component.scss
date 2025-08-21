@@ -1,20 +1,26 @@
 @import "variables";
 
+
 .description {
   position: relative;
   width: 100%;
-  word-break: break-all !important;
+  word-break:break-word !important;
 
   p {
-    word-break: break-all;
+    word-break: break-word;
     display: block;
     font-family: $font-en-primary !important;
   }
 }
 
 :host ::ng-deep .description p {
-  word-break: break-all;
+  word-break: break-word;
   font-family: $font-en-primary !important;
+  ul{
+    padding-left: 30px !important;
+  } li{
+    padding-left: 30px !important;
+  }
 }
 
 

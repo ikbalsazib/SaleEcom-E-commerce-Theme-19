@@ -17,7 +17,7 @@
 
       <div class="brand-container">
         @defer (when !isLoading){
-          @for(data of brands; track data?._id){
+          @for(data of brands.slice(0,12); track data?._id){
             <app-brand-card [data]="data"></app-brand-card>
           }
         } @placeholder (minimum 50ms) {
