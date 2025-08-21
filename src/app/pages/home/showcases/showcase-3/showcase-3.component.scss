@@ -53,7 +53,7 @@ $container-height-sm: 140px;
 
         li {
           border-bottom: 1px solid lighten($color-black, 85%);
-
+          list-style: none;
           &:last-child {
             border-bottom: none;
           }
