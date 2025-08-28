@@ -13,6 +13,8 @@ import {isPlatformBrowser, NgIf, NgOptimizedImage} from "@angular/common";
 import {ImgCtrlPipe} from "../../../../pipes/img-ctrl.pipe";
 import {HeaderCart3Component} from "./header-cart-3/header-cart-3.component";
 import {Search3Component} from "./search-3/search-3.component";
+import {Category} from "../../../../../interfaces/common/category.interface";
+import {CategoryService} from "../../../../../services/common/category.service";
 
 @Component({
   selector: 'app-header-xl-3',
@@ -43,7 +45,9 @@ export class HeaderXl3Component implements OnInit, OnDestroy {
   user: User;
   isHydrated = false;
   compareListV2: string[] | any[] = [];
-
+  categories: Category[] = [];
+  filteredHomeCategoryMenu: any[] = [];
+  isLoading: boolean = true;
 
   // Scroll
   isHeaderFixed: boolean = false;
@@ -58,6 +62,8 @@ export class HeaderXl3Component implements OnInit, OnDestroy {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly reloadService = inject(ReloadService);
   private readonly productService = inject(ProductService);
+  private readonly categoryService = inject(CategoryService);
+
 
   // Subscriptions
   private subscriptions: Subscription[] = [];
@@ -83,9 +89,31 @@ export class HeaderXl3Component implements OnInit, OnDestroy {
     // Base data
     this.checkHydrated();
     this.getCompareList();
+    this.getAllCategory();
   }
 
 
+  private getAllCategory() {
+    const subscription = this.categoryService.getAllCategory().subscribe({
+      next: (res) => {
+        this.categories = res.data;
+        this.filteredHomeCategoryMenu = this.categories
+          .filter(cat => cat.showHomeMenu === true)
+          .map(cat => ({
+            _id: cat._id,
+            name: cat.name,
+            slug: cat.slug,
+            images: cat.images
+          }));
+        // console.log("filtered filteredHomeCategoryMenu--", this.filteredHomeCategoryMenu);
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
+    this.subscriptions?.push(subscription);
+  }
 
 
   @HostListener('window:scroll')

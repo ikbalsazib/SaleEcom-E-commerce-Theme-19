@@ -16,7 +16,7 @@
     @case ('Category 1') {
       <div class="categories-cards">
         @defer (when !isLoading) {
-          @for (item of categories.slice(0, (breakpointObserver.isMatched('(max-width: 599px)') ? 6 : 8)); track $index) {
+          @for (item of categories.slice(0, (breakpointObserver.isMatched('(max-width: 599px)') ? 16 : 16)); track $index) {
             <app-categories-card [category]="item"></app-categories-card>
           }
         } @placeholder (minimum 50ms) {

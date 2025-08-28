@@ -145,7 +145,14 @@
           <a routerLink="/products">PRODUCTS</a>
           <a routerLink="/brands">BRANDS</a>
           <a routerLink="/order-tracking">TRACK ORDER</a>
-          <a routerLink="/my-wishlist">WISHLIST</a>
+          @for (cat of filteredHomeCategoryMenu; track cat._id) {
+            <a [routerLink]="['/products']"
+               [queryParams]="{ categories: cat?.slug}">
+              {{ cat.name }}
+            </a>
+          }
+
+
         </nav>
       </header>
     </div>

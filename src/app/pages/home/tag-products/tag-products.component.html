@@ -26,86 +26,101 @@
         @if (products?.length) {
           @switch (productCardViews) {
             @case ('Product Card 1') {
-              <app-swiper
-                [visibleSlides]="3"
-                [gap]="20"
-                [navigation]="true"
-                [pagination]="true"
-                [loop]="false"
-                [autoplay]="false"
-                [breakpoints]="breakpoints">
-                @for (item of products.slice(0, visibleProducts); track $index) {
-                  <div #sliderItem class="slider__item">
+<!--              <app-swiper-->
+<!--                [visibleSlides]="3"-->
+<!--                [gap]="20"-->
+<!--                [navigation]="true"-->
+<!--                [pagination]="true"-->
+<!--                [loop]="false"-->
+<!--                [autoplay]="false"-->
+<!--                [breakpoints]="breakpoints">-->
+<!--                @for (item of products.slice(0, visibleProducts); track $index) {-->
+<!--                  <div #sliderItem class="slider__item">-->
+<!--                <app-product-card-1 [product]="item"></app-product-card-1>-->
+<!--                  </div>-->
+<!--                }-->
+<!--              </app-swiper>-->
+              @for (item of products.slice(0, visibleProducts); track $index) {
                 <app-product-card-1 [product]="item"></app-product-card-1>
-                  </div>
-                }
-              </app-swiper>
+              }
             }
             @case ('Product Card 2') {
-              <app-swiper
-                [visibleSlides]="3"
-                [gap]="20"
-                [navigation]="true"
-                [pagination]="true"
-                [loop]="false"
-                [autoplay]="false"
-                [breakpoints]="breakpoints">
-                @for (item of products.slice(0, visibleProducts); track $index) {
-                  <div #sliderItem class="slider__item">
+<!--              <app-swiper-->
+<!--                [visibleSlides]="3"-->
+<!--                [gap]="20"-->
+<!--                [navigation]="true"-->
+<!--                [pagination]="true"-->
+<!--                [loop]="false"-->
+<!--                [autoplay]="false"-->
+<!--                [breakpoints]="breakpoints">-->
+<!--                @for (item of products.slice(0, visibleProducts); track $index) {-->
+<!--                  <div #sliderItem class="slider__item">-->
+<!--                <app-product-card-2 [product]="item"></app-product-card-2>-->
+<!--                  </div>-->
+<!--                }-->
+<!--              </app-swiper>-->
+              @for (item of products.slice(0, visibleProducts); track $index) {
                 <app-product-card-2 [product]="item"></app-product-card-2>
-                  </div>
-                }
-              </app-swiper>
+              }
             }
             @case ('Product Card 3') {
-              <app-swiper
-                [visibleSlides]="3"
-                [gap]="20"
-                [navigation]="true"
-                [pagination]="true"
-                [loop]="false"
-                [autoplay]="false"
-                [breakpoints]="breakpoints">
-                @for (item of products.slice(0, visibleProducts); track $index) {
-                  <div #sliderItem class="slider__item">
+<!--              <app-swiper-->
+<!--                [visibleSlides]="3"-->
+<!--                [gap]="20"-->
+<!--                [navigation]="true"-->
+<!--                [pagination]="true"-->
+<!--                [loop]="false"-->
+<!--                [autoplay]="false"-->
+<!--                [breakpoints]="breakpoints">-->
+<!--                @for (item of products.slice(0, visibleProducts); track $index) {-->
+<!--                  <div #sliderItem class="slider__item">-->
+<!--                <app-product-card-3 [product]="item"></app-product-card-3>-->
+<!--                  </div>-->
+<!--                }-->
+<!--              </app-swiper>-->
+              @for (item of products.slice(0, visibleProducts); track $index) {
                 <app-product-card-3 [product]="item"></app-product-card-3>
-                  </div>
-                }
-              </app-swiper>
+              }
             }
             @case ('Product Card 4') {
-              <app-swiper
-                [visibleSlides]="3"
-                [gap]="20"
-                [navigation]="true"
-                [pagination]="true"
-                [loop]="false"
-                [autoplay]="false"
-                [breakpoints]="breakpoints">
-                @for (item of products.slice(0, visibleProducts); track $index) {
-                  <div #sliderItem class="slider__item">
+<!--              <app-swiper-->
+<!--                [visibleSlides]="3"-->
+<!--                [gap]="20"-->
+<!--                [navigation]="true"-->
+<!--                [pagination]="true"-->
+<!--                [loop]="false"-->
+<!--                [autoplay]="false"-->
+<!--                [breakpoints]="breakpoints">-->
+<!--                @for (item of products.slice(0, visibleProducts); track $index) {-->
+<!--                  <div #sliderItem class="slider__item">-->
+<!--                <app-product-card-4 [product]="item"></app-product-card-4>-->
+<!--                  </div>-->
+<!--                }-->
+<!--              </app-swiper>-->
+              @for (item of products.slice(0, visibleProducts); track $index) {
                 <app-product-card-4 [product]="item"></app-product-card-4>
-                  </div>
-                }
-              </app-swiper>
+              }
             }
           }
         }
       } @placeholder (minimum 50ms) {
-        <app-swiper
-          [visibleSlides]="5"
-          [gap]="20"
-          [navigation]="false"
-          [pagination]="false"
-          [loop]="false"
-          [autoplay]="false"
-          [breakpoints]="breakpoints">
+<!--        <app-swiper-->
+<!--          [visibleSlides]="5"-->
+<!--          [gap]="20"-->
+<!--          [navigation]="false"-->
+<!--          [pagination]="false"-->
+<!--          [loop]="false"-->
+<!--          [autoplay]="false"-->
+<!--          [breakpoints]="breakpoints">-->
+<!--        @for (data of [].constructor(10); track $index) {-->
+<!--          <div #sliderItem class="slider__item">-->
+<!--          <app-product-card-loader/>-->
+<!--          </div>-->
+<!--        }-->
+<!--        </app-swiper>-->
         @for (data of [].constructor(10); track $index) {
-          <div #sliderItem class="slider__item">
           <app-product-card-loader/>
-          </div>
         }
-        </app-swiper>
       }
 
     </div>
@@ -154,6 +169,9 @@
 <!--            </div>-->
           }
 <!--        </app-swiper>-->
+        @for (item of products.slice(0, visibleProducts1); track $index) {
+          <app-product-card-5 [product]="item"></app-product-card-5>
+        }
       </section>
     </section>
   }
