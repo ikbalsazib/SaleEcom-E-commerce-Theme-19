@@ -5,4 +5,5 @@ export interface Category {
     image?: string
     images?: string[]
     color?: string
+  showHomeMenu?: any
   }

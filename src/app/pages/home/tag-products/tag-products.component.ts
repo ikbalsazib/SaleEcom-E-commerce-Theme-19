@@ -43,8 +43,8 @@ export class TagProductsComponent implements OnInit, OnDestroy {
   @Input() isEnableHomeRecentOrder!: any;
   // Store Data
   products: any[] = [];
-  visibleProducts= 8;
-  visibleProducts1= 4;
+  visibleProducts= 10;
+  visibleProducts1= 10;
   private observer!: IntersectionObserver;
 
   // Swiper breakpoints configuration
