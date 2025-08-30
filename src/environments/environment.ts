@@ -1,12 +1,12 @@
 export const environment = {
   production: false,
 
-  apiBaseLink: 'http://localhost:3000',
-  ftpBaseLink: 'http://localhost:3000',
+  // apiBaseLink: 'http://localhost:3000',
+  // ftpBaseLink: 'http://localhost:3000',
 
 
-  // apiBaseLink: 'https://api-client.saleecom.com',
-  // ftpBaseLink: 'https://cdn.saleecom.com',
+  apiBaseLink: 'https://api-client.saleecom.com',
+  ftpBaseLink: 'https://cdn.saleecom.com',
 
 
   ftpPrefixPath: 'https://cdn.saleecom.com/upload/images',
