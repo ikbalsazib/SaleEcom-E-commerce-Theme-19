@@ -5,6 +5,7 @@ import {CurrencyCtrPipe} from "../../../pipes/currency.pipe";
 import {ProductPricePipe} from "../../../pipes/product-price.pipe";
 import {RouterLink} from "@angular/router";
 import {AppConfigService} from "../../../../services/core/app-config.service";
+import {SlicePipe} from "@angular/common";
 
 @Component({
   selector: 'app-product-card-5',
@@ -15,7 +16,8 @@ import {AppConfigService} from "../../../../services/core/app-config.service";
     StarRatingViewComponent,
     CurrencyCtrPipe,
     ProductPricePipe,
-    RouterLink
+    RouterLink,
+    SlicePipe
   ]
 })
 export class ProductCard5Component {

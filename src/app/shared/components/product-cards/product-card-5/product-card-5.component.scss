@@ -29,6 +29,13 @@
   margin: 0 0 6px 0;
   color: #1f2937;
   height: 36px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* কত লাইন show করবে */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word; /* word ভেঙে নামাতে চাইলে */
 }
 
 //.stars {
