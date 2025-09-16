@@ -108,8 +108,10 @@ export class TagProductsComponent implements OnInit, OnDestroy {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       if (result.matches) {
         this.visibleProducts = 8; // Show 6 items on mobile
+        this.visibleProducts1 = 8; // Show 6 items on mobile
       } else {
-        this.visibleProducts = 8; // Show 5 items on desktop
+        this.visibleProducts = 10; // Show 5 items on desktop
+        this.visibleProducts1 = 10; // Show 5 items on desktop
       }
     });
 
@@ -153,7 +155,7 @@ export class TagProductsComponent implements OnInit, OnDestroy {
    */
 
   private getAllProducts() {
-    const subscription = this.productService.getAllProductsByUi({status: 'publish', 'tags.name': this.tag?.name}, 1, 8).subscribe({
+    const subscription = this.productService.getAllProductsByUi({status: 'publish', 'tags.name': this.tag?.name}, 1, 11).subscribe({
       next: (res) => {
         this.products = res.data;
         this.isLoading = false;
