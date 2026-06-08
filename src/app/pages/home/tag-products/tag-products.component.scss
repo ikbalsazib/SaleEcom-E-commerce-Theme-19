@@ -96,13 +96,8 @@
 }
 
 .products-cards {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 15px;
+  display: block;
   margin-bottom: 30px;
-  //::ng-deep.slider__pagination{
-  //  display: none!important;
-  //}
 }
 
 .products-cards1 {
