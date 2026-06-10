@@ -132,7 +132,18 @@ export class OfferAddressComponent implements OnInit, OnChanges, OnDestroy {
 
     const subscription = this.divisionService.getAllDivisions(filter).subscribe({
       next: res => {
-        this.divisions = res.data;
+        const bdDivisions = [
+          'barishal', 'barisal',
+          'chittagong', 'chattogram',
+          'dhaka',
+          'khulna',
+          'mymensingh',
+          'rajshahi',
+          'rangpur',
+          'sylhet',
+          'বরিশাল', 'চট্টগ্রাম', 'ঢাকা', 'খুলনা', 'ময়মনসিংহ', 'রাজশাহী', 'রংপুর', 'সিলেট'
+        ];
+        this.divisions = res.data ? res.data.filter(d => bdDivisions.includes(d.name?.trim().toLowerCase())) : [];
       },
       error: err => {
         console.log(err);

@@ -333,6 +333,17 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
   onAddToCart(event: MouseEvent, type: 'addToCart' | 'buyNow') {
     event.stopPropagation();
 
+    if (this.product?.isVariation && (!this.selectedVariationList || !this.selectedVariationList.name)) {
+      let msg = 'Please select variation.';
+      if (this.product.variation) {
+        msg = `Please select ${this.product.variation.toLowerCase()}.`;
+      }
+      this.uiService.message(msg, 'warn');
+      this.variationBorder = true;
+      this.reloadService.needRefreshSticky$(true);
+      return;
+    }
+
     const getVariationOption = () => {
       if (this.product?.variation && this.product.variation2) {
         return `${this.product?.variation}, ${this.product.variation2}`
@@ -360,28 +371,14 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
       } else {
         this.buyNowLoader = true;
       }
-      if(this.product?.isVariation && this.selectedVariationList?.name == null){
-        // this.uiService.message('Please select the variation of this product.', "warn");
-        this.variationBorder = true;
-        this.reloadService.needRefreshSticky$(true);
-        return;
-      }else {
-        this.addToCartDB(data, type);
-      }
+      this.addToCartDB(data, type);
       // Event & Data Layer
       if (isPlatformBrowser(this.platformId)) {
         this.addToCartEvent();
       }
     } else {
-      if(this.product?.isVariation && this.selectedVariationList?.name == null){
-        // this.uiService.message('Please select the variation of this product.', "warn");
-        this.variationBorder = true;
-        this.reloadService.needRefreshSticky$(true);
-        return;
-      } else {
-        this.cartService.addCartItemToLocalStorage(data);
-        this.reloadService.needRefreshCart$(true);
-      }
+      this.cartService.addCartItemToLocalStorage(data);
+      this.reloadService.needRefreshCart$(true);
       // Event & Data Layer
       if (isPlatformBrowser(this.platformId)) {
         this.addToCartEvent();
@@ -398,11 +395,7 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
       }
 
       if (type === 'buyNow') {
-        if(this.product?.isVariation && this.selectedVariationList?.name == null){
-          return;
-        }
         this.uiService.message('Success! Product added to your cart.', "success");
-
         this.router.navigate(['/checkout']).then();
         this.buyNowLoader = false;
       }

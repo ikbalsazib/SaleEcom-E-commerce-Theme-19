@@ -365,6 +365,22 @@ a.social-icon:hover {
   max-width: $container-max-width;
   margin: 0 auto;
   gap: 15px;
+
+  @media only screen and (max-width: 991px) {
+    padding: 20px 15px;
+    gap: 12px;
+  }
+
+  @media only screen and (max-width: 599px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 20px 15px;
+  }
+
+  @media only screen and (max-width: 360px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .feature-item {
@@ -373,6 +389,27 @@ a.social-icon:hover {
   gap: 12px;
   max-width: 200px;
   text-align: left;
+
+  @media only screen and (max-width: 991px) {
+    max-width: 160px;
+    gap: 10px;
+  }
+
+  @media only screen and (max-width: 599px) {
+    max-width: 100%;
+    gap: 10px;
+  }
+
+  svg {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+
+    @media only screen and (max-width: 599px) {
+      width: 32px;
+      height: 32px;
+    }
+  }
 }
 
 .feature-item img {
@@ -383,12 +420,20 @@ a.social-icon:hover {
 .feature-item strong {
   display: block;
   font-size: 14px;
+
+  @media only screen and (max-width: 599px) {
+    font-size: 13px;
+  }
 }
 
 .feature-item p {
   margin: 4px 0 0;
   font-size: 13px;
   opacity: 0.9;
+
+  @media only screen and (max-width: 599px) {
+    font-size: 12px;
+  }
 }
 
 
