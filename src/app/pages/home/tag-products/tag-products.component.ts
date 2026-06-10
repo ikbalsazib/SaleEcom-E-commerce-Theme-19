@@ -45,6 +45,7 @@ export class TagProductsComponent implements OnInit, OnDestroy {
   products: any[] = [];
   visibleProducts= 10;
   visibleProducts1= 10;
+  showAllMobileProducts = false;
   private observer!: IntersectionObserver;
 
   // Swiper breakpoints configuration
@@ -155,7 +156,7 @@ export class TagProductsComponent implements OnInit, OnDestroy {
    */
 
   private getAllProducts() {
-    const subscription = this.productService.getAllProductsByUi({status: 'publish', 'tags.name': this.tag?.name}, 1, 11).subscribe({
+    const subscription = this.productService.getAllProductsByUi({status: 'publish', 'tags.name': this.tag?.name}, 1, 21).subscribe({
       next: (res) => {
         this.products = res.data;
         this.isLoading = false;

@@ -168,7 +168,18 @@ export class ManageAddressComponent implements OnInit, OnDestroy {
       .subscribe(
         (res) => {
           if (res.success) {
-            this.divisions = res.data;
+            const bdDivisions = [
+              'barishal', 'barisal',
+              'chittagong', 'chattogram',
+              'dhaka',
+              'khulna',
+              'mymensingh',
+              'rajshahi',
+              'rangpur',
+              'sylhet',
+              'বরিশাল', 'চট্টগ্রাম', 'ঢাকা', 'খুলনা', 'ময়মনসিংহ', 'রাজশাহী', 'রংপুর', 'সিলেট'
+            ];
+            this.divisions = res.data ? res.data.filter(d => bdDivisions.includes(d.name?.trim().toLowerCase())) : [];
           }
         },
         (err) => {
