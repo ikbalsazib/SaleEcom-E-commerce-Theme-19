@@ -1,5 +1,5 @@
 {
-  "shop": "6a21938a52507fbf35efd46b",
+  "shop": "67c2c0d2f410e8cf9adef9ee",
   "themeColors": {
     "primary": "#83B735",
     "secondary": "#F85E0A",
@@ -75,5 +75,11 @@
     "checkoutType": "onePageCheckout",
     "isEnableDeliveryCharge": true,
     "isEnableAdvancePayment": true
+  },
+  "analytics": {
+    "tagManagerId": "GTM-MVHXZXQX",
+    "facebookPixelId": "1383964383569043",
+    "IsManageFbPixelByTagManager": false,
+    "tiktokPixelId": "D5O9873C77UCP1E7DD40"
   }
 }

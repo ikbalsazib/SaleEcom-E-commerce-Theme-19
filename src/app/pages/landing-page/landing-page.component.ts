@@ -23,6 +23,10 @@ import {Meta, Title} from "@angular/platform-browser";
 import {CanonicalService} from "../../services/core/canonical.service";
 import {OfferAddressComponent} from "./offer-address/offer-address.component";
 import {TranslatePipe} from "../../shared/pipes/translate.pipe";
+import {GtmService} from '../../services/core/gtm.service';
+import {UtilsService} from '../../services/core/utils.service';
+import {AppConfigService} from '../../services/core/app-config.service';
+import {TiktokPixelService} from '../../services/core/tiktok-pixel.service';
 
 @Component({
   selector: 'app-landing-page',
@@ -89,6 +93,12 @@ export class LandingPageComponent implements OnInit, OnDestroy {
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
   private readonly canonicalService = inject(CanonicalService);
+  private readonly gtmService = inject(GtmService);
+  private readonly utilsService = inject(UtilsService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tiktokPixelService = inject(TiktokPixelService);
+
+  private eventId: string;
 
 
   // Subscriptions
@@ -136,8 +146,9 @@ export class LandingPageComponent implements OnInit, OnDestroy {
           if (isPlatformBrowser(this.platformId)) {
             setTimeout(() => {
               this.checkBackgroundChange(this.singleLandingPage?.background);
+              // Fire ViewContent when product loads
+              this.viewContentEvent();
             }, 100)
-
           }
         },
         error: err => {
@@ -350,7 +361,183 @@ export class LandingPageComponent implements OnInit, OnDestroy {
       needSaveAddress: true,
     }
 
+    this.initiateCheckoutEvent();
     this.addOrder(data);
+  }
+
+  /**
+   * Tracking Events
+   * viewContentEvent()
+   * initiateCheckoutEvent()
+   */
+  private viewContentEvent(): void {
+    const product: any = this.carts[0]?.product;
+    if (!product?._id) return;
+
+    this.eventId = this.utilsService.generateEventId();
+
+    const user_data = this.utilsService.getUserData({
+      email: this.userService.getUserLocalDataByField('email'),
+      phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
+      external_id: this.userService.getUserLocalDataByField('userId'),
+      firstName: this.userService.getUserLocalDataByField('name'),
+      city: this.userService.getUserLocalDataByField('division'),
+    });
+
+    const price = Number(product.salePrice || product.regularPrice || 0);
+    const custom_data: any = {
+      contents: [{ id: String(product._id), quantity: 1, item_price: price }],
+      content_ids: [String(product._id)],
+      content_type: 'product',
+      content_name: product.name,
+      content_category: product.category?.name,
+      value: price,
+      currency: 'BDT',
+      num_items: 1,
+    };
+
+    const eventTime = Math.floor(Date.now() / 1000);
+    const fbc = this.utilsService.getFbc();
+    const fbp = this.utilsService.getFbp();
+
+    const viewContentData: any = {
+      event_name: 'ViewContent',
+      event_time: eventTime,
+      creationTime: eventTime,
+      event_id: this.eventId,
+      action_source: 'website',
+      event_source_url: location.href,
+      custom_data: { ...custom_data, fbp, fbc },
+      original_event_data: { event_name: 'ViewContent', event_time: eventTime },
+      ...(Object.keys(user_data).length > 0 && { user_data }),
+    };
+
+    if (this.gtmService.facebookPixelId && !this.gtmService.isManageFbPixelByTagManager) {
+      this.gtmService.trackByFacebookPixel('ViewContent', custom_data, this.eventId);
+    }
+
+    this.gtmService.trackViewContent(viewContentData).subscribe({ next: () => {}, error: () => {} });
+
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+      this.tiktokPixelService.track('ViewContent', {
+        value: price,
+        currency: 'BDT',
+        contents: [{ content_id: String(product._id), content_type: 'product', content_name: product.name, content_category: product.category?.name, quantity: 1, price }] as any[],
+        content_name: product.name,
+        content_category: product.category?.name,
+        ...(userEmail ? { email: userEmail } : {}),
+        ...(userPhone ? { phone_number: userPhone } : {}),
+      }, this.eventId);
+      this.tiktokPixelService.trackServerEvent({
+        event: 'ViewContent',
+        eventId: this.eventId,
+        value: price,
+        currency: 'BDT',
+        contents: [{ content_id: String(product._id), content_type: 'product', content_name: product.name, content_category: product.category?.name, quantity: 1, price }] as any[],
+        email: userEmail,
+        phoneNo: userPhone,
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+      });
+    }
+
+    if (this.gtmService.tagManagerId) {
+      this.gtmService.pushToDataLayer({
+        event: 'view_item',
+        ecommerce: {
+          currency: 'BDT',
+          value: price,
+          items: [{ item_id: product._id, item_name: product.name, item_category: product.category?.name, price, quantity: 1 }],
+        }
+      });
+    }
+  }
+
+  private initiateCheckoutEvent(): void {
+    this.eventId = this.utilsService.generateEventId();
+
+    const user_data = this.utilsService.getUserData({
+      email: this.userService.getUserLocalDataByField('email'),
+      phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
+      external_id: this.userService.getUserLocalDataByField('userId'),
+      firstName: this.userService.getUserLocalDataByField('name'),
+      city: this.userService.getUserLocalDataByField('division'),
+    });
+
+    const contents = this.carts.map(m => ({
+      id: String(m.product['_id']),
+      quantity: Number(m.selectedQty) || 1,
+      item_price: Number(m.product['salePrice'] || m.product['regularPrice'] || 0),
+    }));
+
+    const custom_data: any = {
+      content_ids: contents.map(c => c.id),
+      contents,
+      content_type: 'product',
+      value: this.grandTotal,
+      num_items: this.carts.length,
+      currency: 'BDT',
+    };
+
+    const eventTime = Math.floor(Date.now() / 1000);
+    const fbc = this.utilsService.getFbc();
+    const fbp = this.utilsService.getFbp();
+
+    const trackData: any = {
+      event_name: 'InitiateCheckout',
+      event_time: eventTime,
+      creationTime: eventTime,
+      event_id: this.eventId,
+      action_source: 'website',
+      event_source_url: location.href,
+      custom_data: { ...custom_data, fbp, fbc },
+      original_event_data: { event_name: 'InitiateCheckout', event_time: eventTime },
+      ...(Object.keys(user_data).length > 0 && { user_data }),
+    };
+
+    if (!this.gtmService.isManageFbPixelByTagManager) {
+      this.gtmService.trackByFacebookPixel('InitiateCheckout', custom_data, this.eventId);
+    }
+
+    this.gtmService.trackInitiateCheckout(trackData).subscribe({ next: () => {}, error: () => {} });
+
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+      this.tiktokPixelService.trackInitiateCheckout(this.carts as any[], this.grandTotal, { email: userEmail, phoneNo: userPhone });
+      this.tiktokPixelService.trackServerEvent({
+        event: 'InitiateCheckout',
+        eventId: this.eventId,
+        value: this.grandTotal,
+        currency: 'BDT',
+        contents: contents.map(c => ({ content_id: c.id, content_type: 'product', quantity: c.quantity, price: c.item_price })),
+        email: userEmail,
+        phoneNo: userPhone,
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+      });
+    }
+
+    if (this.gtmService.tagManagerId) {
+      this.gtmService.pushToDataLayer({
+        event: 'begin_checkout',
+        ecommerce: {
+          currency: 'BDT',
+          value: this.grandTotal,
+          items: this.carts.map(m => ({
+            item_id: m.product['_id'],
+            item_name: m.product['name'],
+            item_category: m.product['category']?.['name'],
+            price: Number(m.product['salePrice'] || m.product['regularPrice'] || 0),
+            quantity: Number(m.selectedQty) || 1,
+          })),
+        }
+      });
+    }
   }
 
 

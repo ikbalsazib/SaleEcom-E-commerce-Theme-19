@@ -50,8 +50,6 @@ export class UtilsService {
     } else {
       return `${min}`;
     }
-
-
   }
 
   routeBaseVisibility(currentUrl: string) {
@@ -94,75 +92,204 @@ export class UtilsService {
    * hashDataSha256()
    * formatPhoneNumber()
    */
-  // hashDataSha256(value: string): string {
-  //   return CryptoJS.SHA256(value).toString(CryptoJS.enc.Hex);
-  // }
+
+  // 1) Dedup-safe eventId: event_<timestamp>_<random>
+  generateEventId(): string {
+    const ts = Date.now();
+    if (
+      typeof window !== 'undefined' &&
+      'crypto' in window &&
+      (window.crypto as any).getRandomValues
+    ) {
+      const a = new Uint32Array(2);
+      window.crypto.getRandomValues(a);
+      const rand = `${a[0].toString(36)}${a[1].toString(36)}`.slice(0, 10);
+      return `event_${ts}_${rand}`;
+    }
+    return `event_${ts}_${Math.random().toString(36).slice(2, 12)}`;
+  }
 
   formatPhoneNumber(phone: string): string {
-    // Ensure phone is in E.164 format (e.g., +1234567890)
     return phone?.replace(/\D/g, ''); // Remove non-numeric characters
   }
-  generateEventId(): string {
-    return Math.random().toString(36).substring(2, 15); // Generate unique event ID
+
+  // 2) Safe BD phone normalize (E.164 without '+', e.g. 8801XXXXXXXXX)
+  normalizeBdPhone(raw?: string): string | undefined {
+    if (!raw) return undefined;
+    let p = (raw + '').replace(/\D/g, ''); // keep digits
+
+    // Strip leading 00 (e.g., 0088017… -> 88017…)
+    if (p.startsWith('00')) p = p.slice(2);
+
+    if (p.startsWith('880')) return p;
+    if (p.startsWith('88')) return '880' + p.slice(2);
+
+    // Local BD numbers usually 11 digits starting with 01
+    if (p.startsWith('0') && p.length >= 11) return '880' + p.slice(1);
+
+    // Fallback: if it already looks like 1XXXXXXXXX, assume local and prefix 880
+    if (p.length === 10 || p.length === 11) return p.startsWith('1') ? ('880' + p) : p;
+
+    return p;
   }
 
-  // Hashing method
+  toTitleCase(str: string): string {
+    return str
+      .toLowerCase()
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  // 3) Text normalizer for ct/st/zp (Now uses Title Case)
+  normText(value?: string): string | undefined {
+    if (!value) return undefined;
+    const v = this.toTitleCase(value.trim())
+      .normalize('NFKD')               // strip diacritics
+      .replace(/[\u0300-\u036f]/g, '') // combining marks
+      .replace(/\s+/g, ' ');           // remove extra spaces
+    return v;
+  }
+
+  // 4) DOB normalizer -> YYYYMMDD (digits only)
+  private normDob(value?: string): string | undefined {
+    if (!value) return undefined;
+    const digits = value.replace(/\D/g, '');
+    if (digits.length === 8) return digits;
+    return digits.length === 8 ? digits : undefined;
+  }
+
+  getFbp(): string | null {
+    if (typeof window === 'undefined') return null;
+    const cookieStr = document.cookie || '';
+    const match = cookieStr.match(/_fbp=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  getFbc(): string | null {
+    if (typeof window === 'undefined') return null;
+    const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+
+    if (fbclid) {
+      const fbc = `fb.0.${Date.now()}.${fbclid}`;
+      localStorage.setItem('_fbc', fbc);
+      return fbc;
+    }
+
+    return localStorage.getItem('_fbc') || null;
+  }
+
+  // 5) Safer cookie reader + optional setter for _fbc when fbclid present
+  getFbCookies(): { fbp?: string; fbc?: string; 'x-fb-ck-fbc'?: string; 'x-fb-ck-fbp'?: string } {
+    const out: any = {};
+    if (typeof window === 'undefined') return out;
+
+    const fbp = this.getFbp();
+    if (fbp) {
+      out.fbp = fbp;
+      out['x-fb-ck-fbp'] = fbp;
+    }
+
+    const fbc = this.getFbc();
+    if (fbc) {
+      out.fbc = fbc;
+      out['x-fb-ck-fbc'] = fbc;
+    }
+
+    return out;
+  }
+
+  // 6) Hash helper - preserve case for Title Case support
   hashDataSha256(value: string): string {
-    return sha256(value).toString();
+    return sha256(value.trim()).toString();
   }
 
-  // 🔹 Final user_data generator method
-  getUserData(pixelUserData: PixelUserData): { em?: string; ph?: string } {
-    const {email, phoneNo, firstName, lastName, gender, dob, city, zip, external_id} = pixelUserData;
-    const userData: any = {};
-
-    if (phoneNo) {
-      const formattedPhone = this.formatPhoneNumber('88' + phoneNo);
-      userData.ph = this.hashDataSha256(formattedPhone);
-    } else {
-      userData.ph = this.hashDataSha256('8801700000000');
-    }
-
-    if (email) {
-      const normalizedEmail = email.trim().toLowerCase();
-      userData.em = this.hashDataSha256(normalizedEmail);
-    } else {
-      userData.em = this.hashDataSha256('noemail@gmail.com');
-    }
-
-    if (city) {
-      const normalizedCity = city.trim().toLowerCase();
-      userData.ct = [this.hashDataSha256(normalizedCity)];
-    } else {
-      userData.ct = [this.hashDataSha256('global')];
-    }
-
-    userData.country = [this.hashDataSha256('bd')];
-    userData.fn = [this.hashDataSha256(firstName ?? 'Mr')];
-    userData.ln = [this.hashDataSha256(lastName ?? 'Unknown')];
-    // userData.ge = this.hashDataSha256(gender ?? 'm');
-    userData.st = [this.hashDataSha256('bd')];
-    // userData.zp = this.hashDataSha256(zip ?? '1200');
-    // userData.db = this.hashDataSha256(dob ?? '19970216');
-    userData.external_id = [this.hashDataSha256(external_id ?? `${Date.now()}`)];
-
-    return {...userData, ...this.getFbCookies()};
+  sha256(value: string): string {
+    if (!value) return '';
+    return sha256(value.trim().toLowerCase()).toString();
   }
 
+  // 7) Final user_data
+  getUserData(pixelUserData: PixelUserData): {
+    em?: string; ph?: string; fn?: string; ln?: string; ct?: string;
+    country?: string; st?: string; zp?: string; db?: string;
+    external_id?: string; fbp?: string; fbc?: string;
+    'x-fb-ck-fbc'?: string; 'x-fb-ck-fbp'?: string;
+  } {
+    const { email, phoneNo, firstName, lastName, dob, city, zip, external_id, state, country } = pixelUserData;
+    const user_data: any = {};
 
-  getFbCookies(): { fbp?: string; fbc?: string } | {} {
-    const cookies = Object.fromEntries(
-      document.cookie.split(';').map(cookie => {
-        const [key, ...valParts] = cookie.trim().split('=');
-        return [key, valParts.join('=')];
-      })
-    );
+    if (email) user_data.em = this.hashDataSha256(email);
+    const normalizedPhone = this.normalizeBdPhone(phoneNo);
+    if (normalizedPhone) user_data.ph = this.hashDataSha256(normalizedPhone);
 
-    const result: { fbp?: string; fbc?: string } = {};
-    if (cookies['_fbp']) result.fbp = cookies['_fbp'];
-    if (cookies['_fbc']) result.fbc = cookies['_fbc'];
+    const fn = this.normText(firstName);
+    const ln = this.normText(lastName);
+    const ct = this.normText(city);
+    const st = this.normText(state);
+    const zp = zip ? (zip + '').trim().toLowerCase() : undefined;
+    const cc = (country || 'bd').trim().toLowerCase();
 
-    return result;
+    if (fn) user_data.fn = this.hashDataSha256(fn);
+    if (ln) user_data.ln = this.hashDataSha256(ln);
+    if (ct) user_data.ct = this.hashDataSha256(ct);
+    if (st) user_data.st = this.hashDataSha256(st);
+    if (zp) user_data.zp = this.hashDataSha256(zp);
+
+    const d = this.normDob(dob);
+    if (d) user_data.db = this.hashDataSha256(d);
+
+    user_data.country = this.hashDataSha256(cc); // e.g., 'bd'
+
+    if (external_id) user_data.external_id = this.hashDataSha256(external_id);
+
+    Object.assign(user_data, this.getFbCookies()); // fbp/fbc raw (no hash)
+
+    return user_data;
+  }
+
+  /**
+   * TikTok cookies / identifiers
+   * - ttclid: from URL param or cookie
+   * - _ttp: first-party TikTok cookie
+   */
+  getTiktokCookies(): { ttclid?: string; ttp?: string } {
+    const out: { ttclid?: string; ttp?: string } = {};
+    try {
+      const cookieStr = document.cookie || '';
+      const jar: Record<string, string> = {};
+      cookieStr.split(';').forEach(pair => {
+        const trimmed = pair.trim();
+        if (!trimmed) return;
+        const eq = trimmed.indexOf('=');
+        if (eq === -1) return;
+        const k = trimmed.slice(0, eq);
+        const v = trimmed.slice(eq + 1);
+        jar[k] = decodeURIComponent(v);
+      });
+
+      if (jar['_ttp']) {
+        out.ttp = jar['_ttp'];
+      }
+
+      if (jar['ttclid']) {
+        out.ttclid = jar['ttclid'];
+      }
+
+      // Capture ttclid from URL if present and persist in cookie
+      const url = new URL(location.href);
+      const ttclidParam = url.searchParams.get('ttclid');
+      if (ttclidParam) {
+        out.ttclid = out.ttclid || ttclidParam;
+        try {
+          const expires = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
+          document.cookie = `ttclid=${encodeURIComponent(ttclidParam)}; Path=/; Expires=${expires}; SameSite=Lax`;
+        } catch {
+        }
+      }
+    } catch {
+    }
+    return out;
   }
 
 }

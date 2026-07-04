@@ -33,11 +33,13 @@ import {ProductDetailsReviewsComponent} from "./product-details-reviews/product-
 import {UtilsService} from "../../services/core/utils.service";
 import {UserService} from "../../services/common/user.service";
 import {GtmService} from '../../services/core/gtm.service';
+import {TiktokPixelService} from '../../services/core/tiktok-pixel.service';
 import {isPlatformBrowser} from '@angular/common';
 import {ThemeViewSetting} from "../../interfaces/common/setting.interface";
 
 import {Checkout2Component} from '../checkouts/checkout-2/checkout-2.component';
 import {PricePipe} from "../../shared/pipes/price.pipe";
+import {ProductPricePipe} from "../../shared/pipes/product-price.pipe";
 import {SettingService} from "../../services/common/setting.service";
 
 
@@ -60,7 +62,7 @@ import {SettingService} from "../../services/common/setting.service";
     ProductDetailsReviewsComponent,
     Checkout2Component,
   ],
-  providers: [PricePipe]
+  providers: [PricePipe, ProductPricePipe]
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
 
@@ -94,6 +96,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
   private readonly utilsService = inject(UtilsService);
   private readonly gtmService = inject(GtmService);
+  private readonly tiktokPixelService = inject(TiktokPixelService);
   private readonly router = inject(Router);
   private readonly title = inject(Title);
   private readonly meta = inject(Meta);
@@ -101,6 +104,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   private readonly productService = inject(ProductService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly pricePipe = inject(PricePipe);
+  private readonly productPricePipe = inject(ProductPricePipe);
   private readonly settingService = inject(SettingService);
 
   // Subscriptions
@@ -296,27 +300,40 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   private viewContentEvent(): void {
+    if (!this.product?._id) return;
+
     // 1️⃣ Generate Event ID
     this.generateEventId();
+
     // 2️⃣ Hashed user_data
     const user_data = this.utilsService.getUserData({
       email: this.userService.getUserLocalDataByField('email'),
       phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
       external_id: this.userService.getUserLocalDataByField('userId'),
-      lastName: this.userService.getUserLocalDataByField('name'),
+      firstName: this.userService.getUserLocalDataByField('name'),
       city: this.userService.getUserLocalDataByField('division'),
     });
 
+    // Variation-aware price: ProductPricePipe handles variation fallback automatically
+    // When isVariation=true, parent salePrice is 0 — use ProductPricePipe with undefined variationId
+    // so it picks the first variation price automatically
+    const price = Number(
+      this.productPricePipe.transform(this.product, 'salePrice', undefined, 1) || 0
+    );
+    const itemId = String(this.product._id);
+
     // 3️⃣ Prepare custom_data
     const custom_data = {
-      content_ids: [this.product?._id],
+      contents: [{ id: itemId, quantity: 1, item_price: price }],
+      content_ids: [itemId],
       content_type: 'product',
       content_name: this.product?.name,
       content_category: this.product?.category?.name,
       content_subcategory: this.product?.subCategory?.name,
-      value: (this.pricePipe.transform(this.product, 'salePrice')).toString(),
+      value: Number(price.toFixed(2)),
       currency: 'BDT',
-      num_items: '1'
+      num_items: 1,
+      shipping: 0
     };
 
     const eventTime = Math.floor(Date.now() / 1000);
@@ -324,59 +341,88 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     const original_event_data = {
       event_name: 'ViewContent',
       event_time: eventTime,
-    }
+    };
 
     // 4️⃣ Prepare server-side payload
+    const fbc = this.utilsService.getFbc();
+    const fbp = this.utilsService.getFbp();
+
     const viewContentData: any = {
       event_name: 'ViewContent',
       event_time: eventTime,
+      creationTime: eventTime,
       event_id: this.eventId,
       action_source: 'website',
-      event_source_url: location.href,
-      custom_data,
+      event_source_url: page_url,
+      custom_data: { ...custom_data, fbp, fbc },
       original_event_data,
-      ...(Object.keys(user_data).length > 0 && {user_data}),
+      ...(Object.keys(user_data).length > 0 && { user_data }),
     };
 
+    // 5️⃣ Browser: Facebook Pixel
     if (this.gtmService.facebookPixelId && !this.gtmService.isManageFbPixelByTagManager) {
       this.gtmService.trackByFacebookPixel('ViewContent', custom_data, this.eventId);
-      // 7️⃣ Server: Send to Facebook Conversions API
-      this.gtmService.trackViewContent(viewContentData).subscribe({
-        next: () => {
-        },
-        error: () => {
+    }
+
+    // 6️⃣ Server: Meta CAPI
+    this.gtmService.trackViewContent(viewContentData).subscribe({
+      next: () => {},
+      error: () => {},
+    });
+
+    // 7️⃣ Browser: TikTok Pixel
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+
+      const tiktokBrowserData: any = {
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: custom_data.contents.map((c: any) => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        content_name: custom_data.content_name,
+        content_category: custom_data.content_category,
+        content_subcategory: custom_data.content_subcategory,
+      };
+
+      if (userEmail) tiktokBrowserData.email = userEmail;
+      if (userPhone) tiktokBrowserData.phone_number = userPhone;
+
+      this.tiktokPixelService.track('ViewContent', tiktokBrowserData, this.eventId);
+
+      // 8️⃣ Server: TikTok Events API
+      this.tiktokPixelService.trackServerEvent({
+        event: 'ViewContent',
+        eventId: this.eventId,
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: custom_data.contents.map((c: any) => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        email: userEmail,
+        phoneNo: userPhone,
+        externalId: this.userService.getUserLocalDataByField('userId'),
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+        customProperties: {
+          content_name: custom_data.content_name,
+          content_category: custom_data.content_category,
+          content_subcategory: custom_data.content_subcategory,
+          num_items: custom_data.num_items,
         },
       });
     }
 
-    // 6️⃣ Browser: GTM (if Pixel is managed by GTM)
-    if (this.gtmService.tagManagerId) {
-      this.gtmService.pushToDataLayer({
-        event: 'ViewContent',
-        event_id: this.eventId,
-        page_url: window.location.href,
-        event_time: Math.floor(Date.now() / 1000),
-        action_source: 'website',
-        ecommerce: {
-          detail: {
-            products: [
-              {
-                id: this.product?._id,
-                name: this.product?.name,
-                category: this.product?.category?.name,
-                subcategory: this.product?.subCategory?.name,
-                price: this.product?.regularPrice,
-                currency: 'BDT',
-                quantity: 1,
-              }
-            ],
-            custom_data,
-            original_event_data,
-            ...(Object.keys(user_data).length > 0 && {user_data}),
-          }
-        }
-      });
-    }
+    // 9️⃣ Browser: GTM Data Layer (GA4 Standard view_item)
+    // Removed because product-details-banner-one / product-details-banner-two fires the viewItemEvent (GTM view_item) to prevent duplicates.
   }
 
 

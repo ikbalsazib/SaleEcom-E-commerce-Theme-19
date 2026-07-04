@@ -12,17 +12,20 @@ import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from "@angular/material/bottom
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgClass} from "@angular/common";
 import {ProductPricePipe} from "../../../shared/pipes/product-price.pipe";
-import {ImageLoadErrorDirective} from "../../../shared/directives/image-load-error.directive";
 import {MatIcon} from "@angular/material/icon";
 import {CurrencyCtrPipe} from '../../../shared/pipes/currency.pipe';
 import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
+import {TiktokPixelService} from "../../../services/core/tiktok-pixel.service";
+import {GtmService} from "../../../services/core/gtm.service";
+import {UtilsService} from "../../../services/core/utils.service";
+import {AppConfigService} from "../../../services/core/app-config.service";
 
 @Component({
   selector: 'app-buy-modal',
   templateUrl: './buy-modal.component.html',
   styleUrls: ['./buy-modal.component.scss'],
   standalone: true,
-  providers: [PricePipe],
+  providers: [PricePipe, ProductPricePipe],
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -64,7 +67,14 @@ export class BuyModalComponent  implements OnInit {
     private router: Router,
     private userService: UserService,
     private cartService: CartService,
+    private tiktokPixelService: TiktokPixelService,
+    private gtmService: GtmService,
+    private utilsService: UtilsService,
+    private appConfigService: AppConfigService,
+    private productPricePipe: ProductPricePipe,
   ) { }
+
+  private eventId: string;
 
   ngOnInit() {
     this.product = this.data.product;
@@ -176,6 +186,7 @@ export class BuyModalComponent  implements OnInit {
 
   onAddToCart(event: MouseEvent, type: 'addToCart' | 'buyNow') {
     event.stopPropagation();
+    this.addToCartEvent();
     const getVariationOption = () => {
       if (this.product?.variation && this.product.variation2) {
         return `${this.product?.variation}, ${this.product.variation2}`
@@ -263,4 +274,139 @@ export class BuyModalComponent  implements OnInit {
     });
     this.subscriptions?.push(subscription);
   }
+
+  private generateEventId() {
+    this.eventId = this.utilsService.generateEventId();
+  }
+
+  private addToCartEvent(): void {
+    if (!this.product) return;
+
+    const qty = Number(this.selectedQty);
+    const unitPrice =
+      Number(this.productPricePipe.transform(this.product, 'salePrice', this.selectedVariationList?._id, 1)) ||
+      Number(this.product?.regularPrice) ||
+      0;
+
+    if (!unitPrice) return;
+
+    // 1️⃣ Generate Unique Event ID
+    this.generateEventId();
+
+    // 2️⃣ Hashed User Data
+    const user_data = this.utilsService.getUserData({
+      email: this.userService.getUserLocalDataByField('email'),
+      phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
+      external_id: this.userService.getUserLocalDataByField('userId'),
+      firstName: this.userService.getUserLocalDataByField('name'),
+      city: this.userService.getUserLocalDataByField('division'),
+    });
+
+    const contents = [{ id: String(this.product?._id), quantity: qty, item_price: unitPrice }];
+
+    // 3️⃣ Prepare custom_data
+    const custom_data = {
+      contents,
+      content_ids: [String(this.product?._id)],
+      content_name: this.product?.name,
+      content_category: (this.product?.category as any)?.name || '',
+      content_type: 'product',
+      value: Number((unitPrice * qty).toFixed(2)),
+      currency: 'BDT',
+      num_items: qty,
+      shipping: 0,
+      ...this.utilsService.getFbCookies(),
+    };
+
+    const eventTime = Math.floor(Date.now() / 1000);
+    const original_event_data = { event_name: 'AddToCart', event_time: eventTime };
+
+    // 4️⃣ Server-side Payload (Meta CAPI)
+    const trackData: any = {
+      event_name: 'AddToCart',
+      event_time: eventTime,
+      creationTime: eventTime,
+      event_id: this.eventId,
+      action_source: 'website',
+      event_source_url: location.href,
+      custom_data,
+      original_event_data,
+      user_data,
+      ...this.utilsService.getFbCookies()
+    };
+
+    // 5️⃣ Browser: Facebook Pixel
+    if (
+      this.gtmService.facebookPixelId &&
+      !this.gtmService.isManageFbPixelByTagManager
+    ) {
+      console.log(`[Browser Pixel] Firing AddToCart event. ID: ${this.eventId}`);
+      this.gtmService.trackByFacebookPixel(
+        'AddToCart',
+        custom_data,
+        this.eventId
+      );
+    }
+
+    this.gtmService.trackAddToCart(trackData).subscribe({
+      next: () => {},
+      error: () => {},
+    });
+
+    // 6️⃣ Browser: GTM Data Layer Push (GA4 Format)
+    if (this.gtmService.tagManagerId) {
+      this.gtmService.pushToDataLayer({
+        event: 'add_to_cart',
+        ecommerce: {
+          currency: 'BDT',
+          value: custom_data.value,
+          items: [{
+            item_id: this.product?._id,
+            item_name: this.product?.name,
+            item_category: (this.product?.category as any)?.name || '',
+            price: unitPrice,
+            quantity: qty,
+          }],
+        }
+      });
+    }
+
+    // 7️⃣ TikTok Pixel
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+
+      const tiktokBrowserData: any = {
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: contents.map(c => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        content_name: custom_data.content_name,
+        content_category: custom_data.content_category,
+      };
+
+      if (userEmail) tiktokBrowserData.email = userEmail;
+      if (userPhone) tiktokBrowserData.phone_number = userPhone;
+
+      this.tiktokPixelService.track('AddToCart', tiktokBrowserData, this.eventId);
+
+      this.tiktokPixelService.trackServerEvent({
+        event: 'AddToCart',
+        eventId: this.eventId,
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: tiktokBrowserData.contents,
+        email: userEmail,
+        phoneNo: userPhone,
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+      });
+    }
+  }
 }
+

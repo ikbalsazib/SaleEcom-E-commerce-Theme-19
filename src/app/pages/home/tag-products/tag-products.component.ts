@@ -96,6 +96,7 @@ export class TagProductsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    console.log(`🔄 TagProductsComponent initialized for tag:`, this.tag);
     // Theme Base
     this.getSettingData();
 
@@ -158,11 +159,12 @@ export class TagProductsComponent implements OnInit, OnDestroy {
   private getAllProducts() {
     const subscription = this.productService.getAllProductsByUi({status: 'publish', 'tags.name': this.tag?.name}, 1, 21).subscribe({
       next: (res) => {
+        console.log(`✅ Products for tag "${this.tag?.name}" loaded:`, res.data.length, 'products');
         this.products = res.data;
         this.isLoading = false;
       },
       error: (err) => {
-        console.log(err);
+        console.error(`❌ Products error for tag "${this.tag?.name}":`, err);
         this.isLoading = false;
       },
     });

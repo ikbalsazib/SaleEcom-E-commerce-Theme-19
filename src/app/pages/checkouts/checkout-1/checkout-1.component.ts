@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
 import {FormGroup, FormsModule, NgForm} from "@angular/forms";
 import {Cart} from "../../../interfaces/common/cart.interface";
 import {User, UserAddress} from "../../../interfaces/common/user.interface";
@@ -9,11 +9,15 @@ import {UiService} from "../../../services/core/ui.service";
 import {ReloadService} from "../../../services/core/reload.service";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {UserDataService} from "../../../services/common/user-data.service";
-import {DOCUMENT} from "@angular/common";
+import {DOCUMENT, isPlatformBrowser} from "@angular/common";
 import {CART_MAX_QUANTITY} from '../../../core/utils/app-data';
 import {ProductPricePipe} from '../../../shared/pipes/product-price.pipe';
 import {DeliveryCharge, Setting} from '../../../interfaces/common/setting.interface';
 import {UserService} from '../../../services/common/user.service';
+import {AppConfigService} from '../../../services/core/app-config.service';
+import {GtmService} from '../../../services/core/gtm.service';
+import {TiktokPixelService} from '../../../services/core/tiktok-pixel.service';
+import {UtilsService} from '../../../services/core/utils.service';
 import {TitleComponent} from "../../../shared/components/title/title.component";
 import {CouponCardComponent} from "../../../shared/components/coupon-card/coupon-card.component";
 import {OrderItemCardComponent} from "../../../shared/components/order-item-card/order-item-card.component";
@@ -75,6 +79,10 @@ export class Checkout1Component implements OnInit, OnDestroy {
   // Loading
   isLoading: boolean = false;
 
+  // Tracking
+  private eventId: string;
+  private hasInitiatedCheckout = false;
+
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
@@ -89,6 +97,11 @@ export class Checkout1Component implements OnInit, OnDestroy {
   private readonly uiService = inject(UiService);
   private readonly productPricePipe = inject(ProductPricePipe);
   private readonly userService = inject(UserService);
+  private readonly gtmService = inject(GtmService);
+  private readonly utilsService = inject(UtilsService);
+  private readonly appConfigService = inject(AppConfigService);
+  private readonly tiktokPixelService = inject(TiktokPixelService);
+  private readonly platformId = inject(PLATFORM_ID);
 
 
   ngOnInit() {
@@ -114,6 +127,173 @@ export class Checkout1Component implements OnInit, OnDestroy {
     // Base Data
     if (this.userService.isUser) {
       this.getLoggedInUserData();
+    }
+
+    // Initiate Checkout Tracking
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        this.initiateCheckoutEvent();
+      }, 500);
+    }
+  }
+
+
+  /**
+   * Utils
+   * generateEventId()
+   * initiateCheckoutEvent()
+   */
+  private generateEventId() {
+    this.eventId = this.utilsService.generateEventId();
+  }
+
+  private initiateCheckoutEvent(): void {
+    if (this.hasInitiatedCheckout || !this.carts?.length) return;
+    this.hasInitiatedCheckout = true;
+
+    // 1️⃣ Generate Unique Event ID
+    this.generateEventId();
+
+    // 2️⃣ Get hashed user data
+    const user_data = this.utilsService.getUserData({
+      email: this.userService.getUserLocalDataByField('email'),
+      phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
+      external_id: this.userService.getUserLocalDataByField('userId'),
+      firstName: this.userService.getUserLocalDataByField('name'),
+      city: this.userService.getUserLocalDataByField('division'),
+    });
+
+    // 3️⃣ Prepare contents (variation-aware via ProductPricePipe)
+    const contents = this.carts.map((c) => ({
+      id: String((c.product as any)['_id']),
+      quantity: Number(c.selectedQty ?? 1),
+      item_price: Number(
+        this.productPricePipe.transform(
+          c.product,
+          'salePrice',
+          c.variation?._id,
+          1,
+          c?.isWholesale
+        ) || (c.product as any)['salePrice'] || (c.product as any)['currentPrice'] || 0
+      ),
+    }));
+
+    const fbc = this.utilsService.getFbc();
+    const fbp = this.utilsService.getFbp();
+
+    // 4️⃣ Prepare custom_data
+    const custom_data = {
+      content_ids: contents.map(c => c.id),
+      contents,
+      content_type: 'product',
+      value: Number(this.grandTotal ?? 0),
+      currency: 'BDT',
+      num_items: contents.reduce((sum, item) => sum + item.quantity, 0),
+      content_name: this.carts.map(c => (c.product as any)['name']).join(', '),
+      content_category: this.carts.map(c => (c.product as any)['category']?.['name']).filter(c => c).join(', '),
+      shipping: Number(this.deliveryChargeAmount || this.deliveryCharge?.deliveryCharge || 0),
+      fbp: fbp,
+      fbc: fbc,
+    };
+
+    if (fbp) user_data.fbp = fbp;
+    if (fbc) user_data.fbc = fbc;
+
+    const eventTime = Math.floor(Date.now() / 1000);
+    const original_event_data = {
+      event_name: 'InitiateCheckout',
+      event_time: eventTime,
+    };
+
+    // 5️⃣ Server-side payload for Meta CAPI
+    const trackData: any = {
+      event_name: 'InitiateCheckout',
+      event_time: eventTime,
+      creationTime: eventTime,
+      event_id: this.eventId,
+      action_source: 'website',
+      event_source_url: location.href,
+      custom_data,
+      original_event_data,
+      ...(Object.keys(user_data).length > 0 && { user_data }),
+    };
+
+    // 6️⃣ Browser: Facebook Pixel
+    if (this.gtmService.facebookPixelId && !this.gtmService.isManageFbPixelByTagManager) {
+      console.log(`[Browser Pixel] Firing InitiateCheckout event. ID: ${this.eventId}`);
+      this.gtmService.trackByFacebookPixel('InitiateCheckout', custom_data, this.eventId);
+    } else {
+      console.log(`[Browser Pixel] InitiateCheckout Skipped. PixelID: ${this.gtmService.facebookPixelId}, ManagedByGTM: ${this.gtmService.isManageFbPixelByTagManager}`);
+    }
+
+    // 7️⃣ Server: Meta Conversions API
+    this.gtmService.trackInitiateCheckout(trackData).subscribe({
+      next: () => { console.log(`[CAPI Success] InitiateCheckout tracked.`); },
+      error: (err) => { console.error(`[CAPI Error] InitiateCheckout failed:`, err); },
+    });
+
+    // 8️⃣ Browser: GTM dataLayer push (GA4 begin_checkout)
+    if (this.gtmService?.tagManagerId) {
+      this.gtmService.pushToDataLayer({
+        event: 'begin_checkout',
+        ecommerce: {
+          currency: 'BDT',
+          value: Number(this.grandTotal ?? 0),
+          items: this.carts.map((c) => ({
+            item_id: (c.product as any)['_id'],
+            item_name: (c.product as any)['name'],
+            item_category: (c.product as any)['category']?.['name'],
+            price: Number(
+              this.productPricePipe.transform(c.product, 'salePrice', c.variation?._id, 1, c?.isWholesale) || 0
+            ),
+            quantity: Number(c.selectedQty) || 1,
+          })),
+        },
+      });
+    }
+
+    // 9️⃣ TikTok: Browser + Server
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+
+      const tiktokBrowserData: any = {
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: contents.map(c => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        num_items: custom_data.num_items,
+      };
+
+      if (userEmail) tiktokBrowserData.email = userEmail;
+      if (userPhone) tiktokBrowserData.phone_number = userPhone;
+
+      // Browser-side TikTok Pixel
+      this.tiktokPixelService.track('InitiateCheckout', tiktokBrowserData, this.eventId);
+
+      // Server-side TikTok Events API
+      this.tiktokPixelService.trackServerEvent({
+        event: 'InitiateCheckout',
+        eventId: this.eventId,
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: contents.map(c => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        email: userEmail,
+        phoneNo: userPhone,
+        externalId: this.userService.getUserLocalDataByField('userId'),
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+      });
     }
   }
 
