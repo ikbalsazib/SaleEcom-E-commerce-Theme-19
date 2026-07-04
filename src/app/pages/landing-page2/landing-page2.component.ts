@@ -26,6 +26,8 @@ import {PricePipe} from "../../shared/pipes/price.pipe";
 import {ShopInformationService} from "../../services/common/shop-information.service";
 import {ShopInformation} from "../../interfaces/common/shop-information.interface";
 import {UserService} from '../../services/common/user.service';
+import {TiktokPixelService} from '../../services/core/tiktok-pixel.service';
+import {AppConfigService} from '../../services/core/app-config.service';
 
 @Component({
   selector: 'app-landing-page2',
@@ -85,6 +87,8 @@ export class LandingPage2Component implements OnInit, OnDestroy {
   private readonly shopInfoService = inject(ShopInformationService);
   private readonly userService = inject(UserService);
   private readonly pricePipe = inject(PricePipe);
+  private readonly tiktokPixelService = inject(TiktokPixelService);
+  private readonly appConfigService = inject(AppConfigService);
   // Subscriptions
   private subscriptions: Subscription[] = [];
 
@@ -260,29 +264,73 @@ export class LandingPage2Component implements OnInit, OnDestroy {
     // 6️⃣ Browser: GTM (if Pixel is managed by GTM)
     if (this.gtmService.tagManagerId) {
       this.gtmService.pushToDataLayer({
-        event: 'ViewContent',
-        event_id: this.eventId,
-        page_url: window.location.href,
-        event_time: Math.floor(Date.now() / 1000),
-        action_source: 'website',
+        event: 'view_item',
         ecommerce: {
-          detail: {
-            products: [
-              {
-                id: this.product?._id,
-                name: this.product?.name,
-                category: this.product?.category?.name,
-                subcategory: this.product?.subCategory?.name,
-                price: this.product?.regularPrice,
-                currency: 'BDT',
-                quantity: 1,
-              }
-            ],
-            custom_data,
-            original_event_data,
-            ...(Object.keys(user_data).length > 0 && {user_data}),
-          }
-        }
+          currency: 'BDT',
+          value: Number(this.pricePipe.transform(this.product, 'salePrice')) || 0,
+          items: [
+            {
+              item_id: this.product?._id,
+              item_name: this.product?.name,
+              item_category: this.product?.category?.name,
+              price: Number(this.pricePipe.transform(this.product, 'salePrice')) || 0,
+              quantity: 1,
+            }
+          ],
+        },
+      });
+    }
+
+    // 7️⃣ TikTok: Browser + Server
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+
+      const price = Number(this.pricePipe.transform(this.product, 'salePrice')) || 0;
+
+      const tiktokBrowserData: any = {
+        value: price,
+        currency: 'BDT',
+        contents: [{
+          content_id: String(this.product?._id),
+          content_type: 'product',
+          quantity: 1,
+          price: price,
+        }],
+        content_name: this.product?.name,
+        content_category: this.product?.category?.name,
+      };
+
+      if (userEmail) tiktokBrowserData.email = userEmail;
+      if (userPhone) tiktokBrowserData.phone_number = userPhone;
+
+      // Browser-side TikTok Pixel
+      this.tiktokPixelService.track('ViewContent', tiktokBrowserData, this.eventId);
+
+      // Server-side TikTok Events API
+      this.tiktokPixelService.trackServerEvent({
+        event: 'ViewContent',
+        eventId: this.eventId,
+        value: price,
+        currency: 'BDT',
+        contents: [{
+          content_id: String(this.product?._id),
+          content_type: 'product',
+          quantity: 1,
+          price: price,
+        }],
+        email: userEmail,
+        phoneNo: userPhone,
+        externalId: this.userService.getUserLocalDataByField('userId'),
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+        customProperties: {
+          content_name: this.product?.name,
+          content_category: this.product?.category?.name,
+          content_subcategory: this.product?.subCategory?.name,
+          num_items: 1,
+        },
       });
     }
   }

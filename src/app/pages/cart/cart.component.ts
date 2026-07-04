@@ -29,6 +29,7 @@ import {ProductCard3Component} from "../../shared/components/product-cards/produ
 import {CurrencyCtrPipe} from '../../shared/pipes/currency.pipe';
 import {TranslatePipe} from "../../shared/pipes/translate.pipe";
 import {ProductCard4Component} from "../../shared/components/product-cards/product-card-4/product-card-4.component";
+import {GtmService} from '../../services/core/gtm.service';
 
 
 @Component({
@@ -89,6 +90,7 @@ export class CartComponent implements OnInit, OnDestroy {
   private readonly bottomSheet = inject(MatBottomSheet);
   private readonly router = inject(Router);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly gtmService = inject(GtmService);
 
 
   // Subscriptions
@@ -202,6 +204,7 @@ export class CartComponent implements OnInit, OnDestroy {
             this.isLoading = false;
 
             this.cartService.updateCartList(this.carts);
+            this.pushViewCartToGtm();
           }, error: err => {
             this.isLoading = false;
             console.log(err)
@@ -213,6 +216,32 @@ export class CartComponent implements OnInit, OnDestroy {
     }
     this.getAllProducts();
   }
+
+  private pushViewCartToGtm() {
+    if (!this.gtmService?.tagManagerId || !this.carts?.length) return;
+    const totalValue = this.carts.reduce((sum, m) => {
+      const price = Number(m.product?.['salePrice'] || m.product?.['regularPrice'] || 0);
+      return sum + price * (Number(m.selectedQty) || 1);
+    }, 0);
+    this.gtmService.pushToDataLayer({
+      event: 'view_cart',
+      ecommerce: {
+        currency: 'BDT',
+        value: totalValue,
+        items: this.carts.map(m => ({
+          item_id: m.product?.['_id'],
+          item_name: m.product?.['name'],
+          item_category: m.product?.['category']?.['name'],
+          price: Number(
+            this.productPricePipe.transform(m.product, 'salePrice', m.variation?._id, 1, m?.isWholesale) || 
+            m.product?.['salePrice'] || m.product?.['regularPrice'] || 0
+          ),
+          quantity: Number(m.selectedQty) || 1,
+        })),
+      }
+    });
+  }
+
 
   private getCarsItemFromLocal(refresh?: boolean) {
     const items = this.cartService.getCartItemFromLocalStorage();

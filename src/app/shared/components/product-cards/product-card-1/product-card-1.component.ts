@@ -31,6 +31,7 @@ import {StarRatingViewComponent} from '../../star-rating-view/star-rating-view.c
 import {GtmService} from "../../../../services/core/gtm.service";
 import {PricePipe} from "../../../pipes/price.pipe";
 import {UtilsService} from "../../../../services/core/utils.service";
+import {TiktokPixelService} from "../../../../services/core/tiktok-pixel.service";
 
 @Component({
   selector: 'app-product-card-1',
@@ -85,8 +86,10 @@ export class ProductCard1Component implements OnInit, OnDestroy {
   private readonly appConfigService = inject(AppConfigService);
   private readonly gtmService = inject(GtmService);
   private readonly pricePipe = inject(PricePipe);
+  private readonly productPricePipe = inject(ProductPricePipe);
   private readonly utilsService = inject(UtilsService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly tiktokPixelService = inject(TiktokPixelService);
 
   // Wishlist Signal
   wishlists: Signal<Wishlist[]> = this.newWishlistService.newWishlistItems;
@@ -348,9 +351,9 @@ export class ProductCard1Component implements OnInit, OnDestroy {
       content_name: this.product?.name,
       content_category: this.product?.category?.name,
       content_subcategory: this.product?.subCategory?.name,
-      value: (this.pricePipe.transform(this.product, 'salePrice')).toString(),
+      value: Number(this.pricePipe.transform(this.product, 'salePrice') || 0),
       currency: 'BDT',
-      num_items: '1'
+      num_items: 1
     };
 
     const eventTime = Math.floor(Date.now() / 1000);
@@ -383,32 +386,68 @@ export class ProductCard1Component implements OnInit, OnDestroy {
       });
     }
 
-    // 6️⃣ Browser: GTM Push (if Pixel is managed via GTM)
+    // 6️⃣ Browser: GTM Push — GA4 Standard (add_to_cart with ecommerce wrapper)
     if (this.gtmService.tagManagerId) {
+      const activeItem = this.selectedVariationList || this.product;
+      const unitPrice = Number(
+        this.productPricePipe.transform(activeItem, 'salePrice', this.selectedVariationList?._id, 1) || 
+        this.pricePipe.transform(this.product, 'salePrice') || 0
+      );
       this.gtmService.pushToDataLayer({
-        event: 'AddToCart',
-        event_id: this.eventId,
-        page_url: window.location.href,
-        event_time: Math.floor(Date.now() / 1000),
-        action_source: 'website',
+        event: 'add_to_cart',
         ecommerce: {
-          add: {
-            products: [
-              {
-                id: this.product?._id,
-                name: this.product?.name,
-                category: this.product?.category?.name,
-                subcategory: this.product?.subCategory?.name,
-                price: this.product?.regularPrice,
-                currency: 'BDT',
-                quantity: 1,
-              }
-            ],
-            custom_data,
-            original_event_data,
-            ...(Object.keys(user_data).length > 0 && {user_data}),
-          }
-        }
+          currency: 'BDT',
+          value: unitPrice,
+          items: [{
+            item_id: this.product?._id,
+            item_name: this.product?.name,
+            item_category: this.product?.category?.name,
+            price: unitPrice,
+            quantity: 1,
+          }],
+        },
+      });
+    }
+
+    // 7️⃣ TikTok: Browser + Server
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+      const unitPrice = Number(this.pricePipe.transform(this.product, 'salePrice')) || 0;
+
+      const tiktokBrowserData: any = {
+        content_ids: [String(this.product?._id)],
+        content_type: 'product',
+        quantity: 1,
+        currency: 'BDT',
+        value: unitPrice,
+        description: this.product?.name,
+      };
+
+      if (userEmail) tiktokBrowserData.email = userEmail;
+      if (userPhone) tiktokBrowserData.phone_number = userPhone;
+
+      // Browser-side TikTok Pixel
+      this.tiktokPixelService.track('AddToCart', tiktokBrowserData, this.eventId);
+
+      // Server-side TikTok Events API
+      this.tiktokPixelService.trackServerEvent({
+        event: 'AddToCart',
+        eventId: this.eventId,
+        value: unitPrice,
+        currency: 'BDT',
+        contents: [{
+          content_id: String(this.product?._id),
+          content_type: 'product',
+          quantity: 1,
+          price: unitPrice,
+        }],
+        email: userEmail,
+        phoneNo: userPhone,
+        externalId: this.userService.getUserLocalDataByField('userId'),
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
       });
     }
 

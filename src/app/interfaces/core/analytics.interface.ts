@@ -9,4 +9,5 @@ export interface PixelUserData {
   zip?: string;
   dob?: string;
   external_id?: string;
+  country?: string;
 }

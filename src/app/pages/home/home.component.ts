@@ -200,9 +200,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: res => {
           this.tags = res.data;
+          console.log('✅ Tags loaded:', this.tags.length, 'tags', this.tags);
         },
         error: (err) => {
-          console.log(err)
+          console.error('❌ Tags error:', err);
         }
       });
     this.subscriptions?.push(subscription);

@@ -26,6 +26,8 @@ import {ReloadService} from "../../../services/core/reload.service";
 import {StorageService} from '../../../services/core/storage.service';
 import {UiService} from "../../../services/core/ui.service";
 import {UtilsService} from '../../../services/core/utils.service';
+import {TiktokPixelService} from '../../../services/core/tiktok-pixel.service';
+import {AppConfigService} from '../../../services/core/app-config.service';
 import {
   OrderItemCardMobileComponent
 } from "../../../shared/components/order-item-card-mobile/order-item-card-mobile.component";
@@ -147,6 +149,8 @@ export class Checkout2Component implements OnInit, AfterViewInit, OnDestroy {
   private readonly couponService = inject(CouponService);
   private readonly gtmService = inject(GtmService);
   private readonly utilsService = inject(UtilsService);
+  private readonly tiktokPixelService = inject(TiktokPixelService);
+  private readonly appConfigService = inject(AppConfigService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly fb = inject(FormBuilder);
   private readonly settingService = inject(SettingService);
@@ -1157,7 +1161,12 @@ export class Checkout2Component implements OnInit, AfterViewInit, OnDestroy {
     this.eventId = this.utilsService.generateEventId();
   }
 
+  private hasInitiatedCheckout = false;
+
   private initiateCheckoutEvent(): void {
+    if (this.hasInitiatedCheckout || !this.carts?.length) return;
+    this.hasInitiatedCheckout = true;
+
     // 1️⃣ Generate Unique Event ID
     this.generateEventId();
 
@@ -1166,74 +1175,145 @@ export class Checkout2Component implements OnInit, AfterViewInit, OnDestroy {
       email: this.userService.getUserLocalDataByField('email'),
       phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
       external_id: this.userService.getUserLocalDataByField('userId'),
-      lastName: this.userService.getUserLocalDataByField('name'),
+      firstName: this.userService.getUserLocalDataByField('name'),
       city: this.userService.getUserLocalDataByField('division'),
     });
 
+    // 3️⃣ Prepare contents (variation-aware via ProductPricePipe)
+    const contents = this.carts.map((c) => ({
+      id: String(c.product['_id']),
+      quantity: Number(c.selectedQty ?? 1),
+      item_price: Number(
+        this.productPricePipe.transform(
+          c.product,
+          'salePrice',
+          c.variation?._id,
+          1,
+          c?.isWholesale
+        ) || c.product['salePrice'] || c.product['currentPrice'] || 0
+      ),
+    }));
+
+    const fbc = this.utilsService.getFbc();
+    const fbp = this.utilsService.getFbp();
+
     // 3️⃣ Prepare custom_data
     const custom_data = {
-      content_ids: this.carts.map(m => m.product['_id']),
-      value: this.grandTotal,
-      num_items: this.carts.length,
+      content_ids: contents.map(c => c.id),
+      contents,
+      content_type: 'product',
+      value: Number(this.grandTotal ?? 0),
       currency: 'BDT',
+      num_items: contents.reduce((sum, item) => sum + item.quantity, 0),
+      content_name: this.carts.map(c => c.product['name']).join(', '),
+      content_category: this.carts.map(c => c.product['category']?.['name']).filter(c => c).join(', '),
+      shipping: Number(this.deliveryChargeAmount || this.deliveryCharge?.deliveryCharge || 0),
+      fbp: fbp,
+      fbc: fbc
     };
+
+    if (fbp) user_data.fbp = fbp;
+    if (fbc) user_data.fbc = fbc;
 
     const eventTime = Math.floor(Date.now() / 1000);
     const original_event_data = {
       event_name: 'InitiateCheckout',
       event_time: eventTime,
-    }
+    };
 
     // 4️⃣ Server-side payload for CAPI
     const trackData: any = {
       event_name: 'InitiateCheckout',
-      event_time: Math.floor(Date.now() / 1000),
+      event_time: eventTime,
+      creationTime: eventTime,
       event_id: this.eventId,
       action_source: 'website',
       event_source_url: location.href,
       custom_data,
       original_event_data,
-      ...(Object.keys(user_data).length > 0 && {user_data}),
+      ...(Object.keys(user_data).length > 0 && { user_data }),
     };
 
     // 5️⃣ Browser: Facebook Pixel (if not managed via GTM)
     if (!this.gtmService.isManageFbPixelByTagManager) {
-      this.gtmService.trackByFacebookPixel('InitiateCheckout', custom_data, this.eventId);
+      console.log(`[Browser Pixel] Firing InitiateCheckout event. ID: ${this.eventId}`);
+      this.gtmService.trackByFacebookPixel(
+        'InitiateCheckout',
+        custom_data,
+        this.eventId
+      );
+    } else {
+      console.log(`[Browser Pixel] InitiateCheckout Skipped. PixelID: ${this.gtmService.facebookPixelId}, ManagedByGTM: ${this.gtmService.isManageFbPixelByTagManager}`);
+    }
 
-      // 7️⃣ Server: Send to Conversions API
-      this.gtmService.trackInitiateCheckout(trackData).subscribe({
-        next: () => {
-        },
-        error: () => {
+    // 6️⃣ Server: Facebook Conversions API
+    console.log(`[CAPI] Firing InitiateCheckout event. ID: ${this.eventId}`);
+    this.gtmService.trackInitiateCheckout(trackData).subscribe({
+      next: () => {
+        console.log(`[CAPI Success] InitiateCheckout tracked.`);
+      },
+      error: (err) => {
+        console.error(`[CAPI Error] InitiateCheckout failed:`, err);
+      },
+    });
+
+    // 7️⃣ TikTok Tracking (Standardized via Service)
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+
+      this.tiktokPixelService.trackInitiateCheckout(this.carts as any[], this.grandTotal, {
+        email: userEmail,
+        phoneNo: userPhone,
+      });
+
+      // Server: TikTok Events API
+      this.tiktokPixelService.trackServerEvent({
+        event: 'InitiateCheckout',
+        eventId: this.eventId,
+        value: this.grandTotal,
+        currency: 'BDT',
+        contents: contents.map(c => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        email: userEmail,
+        phoneNo: userPhone,
+        externalId: this.userService.getUserLocalDataByField('userId'),
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+        customProperties: {
+          num_items: this.carts.length,
         },
       });
     }
 
-    // 6️⃣ Browser: GTM dataLayer push
+    // 8️⃣ Browser: GTM dataLayer push (GA4 begin_checkout)
     if (this.gtmService?.tagManagerId) {
+      // Calculate total value
+      const totalValue = this.carts.reduce((sum, m) => {
+        const itemPrice = Number(this.productPricePipe.transform(m.product, 'salePrice', m.variation?._id, 1, m?.isWholesale)) || 0;
+        return sum + (itemPrice * m.selectedQty);
+      }, 0);
+
+      // Push GA4 compatible event
       this.gtmService.pushToDataLayer({
-        event: 'InitiateCheckout',
-        event_id: this.eventId,
-        page_url: window.location.href,
-        event_time: Math.floor(Date.now() / 1000),
-        action_source: 'website',
+        event: 'begin_checkout',
         ecommerce: {
-          checkout: {
-            actionField: {
-              num_items: this.carts.length,
-            },
-            products: this.carts.map(m => ({
-              id: m.product['_id'],
-              name: m.product['name'],
-              category: m.product['category']?.['name'],
-              price: m.product['salePrice'],
-              quantity: m.selectedQty,
-            })),
-            custom_data,
-            original_event_data,
-            ...(Object.keys(user_data).length > 0 && {user_data}),
-          }
-        }
+          currency: 'BDT',
+          value: totalValue,
+          coupon: this.coupon?.couponCode || '',
+          items: this.carts.map((m) => ({
+            item_id: m.product['_id'],
+            item_name: m.product['name'],
+            item_category: m.product['category']?.['name'],
+            price: Number(this.productPricePipe.transform(m.product, 'salePrice', m.variation?._id, 1, m?.isWholesale) || 0),
+            quantity: m.selectedQty,
+          })),
+        },
       });
     }
   }

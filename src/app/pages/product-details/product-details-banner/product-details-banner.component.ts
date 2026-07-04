@@ -41,6 +41,8 @@ import {AppConfigService} from "../../../services/core/app-config.service";
 import {CurrencyCtrPipe} from "../../../shared/pipes/currency.pipe";
 import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
 import {PricePipe} from "../../../shared/pipes/price.pipe";
+import {TiktokPixelService} from "../../../services/core/tiktok-pixel.service";
+import {ProductPricePipe as ProductPricePipeImport} from "../../../shared/pipes/product-price.pipe";
 
 @Component({
   selector: 'app-product-details-banner',
@@ -60,7 +62,7 @@ import {PricePipe} from "../../../shared/pipes/price.pipe";
     CurrencyCtrPipe,
     TranslatePipe,
   ],
-  providers: [PricePipe],
+  providers: [PricePipe, ProductPricePipe],
   standalone: true
 })
 export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestroy {
@@ -144,6 +146,7 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
   private readonly utilsService = inject(UtilsService);
   private readonly gtmService = inject(GtmService);
   private readonly pricePipe = inject(PricePipe);
+  private readonly productPricePipe = inject(ProductPricePipeImport);
 
   // Subscriptions
   private subscriptions: Subscription[] = [];
@@ -167,6 +170,12 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
         this.onScrollSection();
       }
     });
+    // Fire view_item event when banner loads
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        this.viewItemEvent();
+      }, 200);
+    }
   }
 
 
@@ -698,15 +707,20 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
     });
 
     // 3️⃣ Prepare custom_data
+    const activeItem = this.selectedVariationList || this.product;
+    const unitPrice = Number(
+      this.productPricePipe.transform(activeItem, 'salePrice', this.selectedVariationList?._id, 1) || 
+      this.pricePipe.transform(activeItem, 'salePrice') || 0
+    );
     const custom_data = {
       content_ids: [this.product?._id],
       content_type: 'product',
       content_name: this.product?.name,
       content_category: this.product?.category?.name,
       content_subcategory: this.product?.subCategory?.name,
-      value: (this.pricePipe.transform(this.product, 'salePrice')).toString(),
+      value: Number(unitPrice * (this.selectedQty || 1)),
       currency: 'BDT',
-      num_items: '1'
+      num_items: this.selectedQty || 1
     };
 
     const eventTime  = Math.floor(Date.now() / 1000);
@@ -737,32 +751,21 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
       });
     }
 
-    // 6️⃣ Browser: GTM Push (if Pixel is managed via GTM)
+    // 6️⃣ Browser: GTM Push — GA4 Standard (add_to_cart with ecommerce wrapper)
     if (this.gtmService.tagManagerId) {
       this.gtmService.pushToDataLayer({
-        event: 'AddToCart',
-        event_id: this.eventId,
-        page_url: window.location.href,
-        event_time: Math.floor(Date.now() / 1000),
-        action_source: 'website',
+        event: 'add_to_cart',
         ecommerce: {
-          add: {
-            products: [
-              {
-                id: this.product?._id,
-                name: this.product?.name,
-                category: this.product?.category?.name,
-                subcategory: this.product?.subCategory?.name,
-                price: this.product?.regularPrice,
-                currency: 'BDT',
-                quantity: 1,
-              }
-            ],
-            custom_data,
-            original_event_data,
-            ...(Object.keys(user_data).length > 0 && { user_data }),
-          }
-        }
+          currency: 'BDT',
+          value: unitPrice * (this.selectedQty || 1),
+          items: [{
+            item_id: this.product?._id,
+            item_name: this.product?.name,
+            item_category: this.product?.category?.name,
+            price: unitPrice,
+            quantity: this.selectedQty || 1,
+          }],
+        },
       });
     }
 
@@ -782,8 +785,42 @@ export class ProductDetailsBannerComponent implements OnInit, OnChanges, OnDestr
         return null;
     }
   }
+  /**
+   * View Item Event (GA4)
+   * Called when product details banner loads
+   */
+  private viewItemEvent(): void {
+    if (!this.product?._id) return;
+    
+    // 1️⃣ Generate Event ID
+    this.generateEventId();
+    
+    // 2️⃣ Get price - use ProductPricePipe for variation-aware pricing
+    const activeItem = this.selectedVariationList || this.product;
+    const unitPrice = Number(
+      this.productPricePipe.transform(activeItem, 'salePrice', this.selectedVariationList?._id, 1) || 
+      this.pricePipe.transform(activeItem, 'salePrice') || 0
+    );
 
-
+    // 3️⃣ Browser: GTM Push — GA4 Standard (view_item)
+    if (this.gtmService.tagManagerId) {
+      this.gtmService.pushToDataLayer({
+        event: 'view_item',
+        ecommerce: {
+          currency: 'BDT',
+          value: unitPrice,
+          items: [{
+            item_id: this.product?._id,
+            item_name: this.product?.name,
+            item_category: this.product?.category?.name,
+            item_category2: this.product?.subCategory?.name,
+            price: unitPrice,
+            quantity: 1,
+          }],
+        }
+      });
+    }
+  }
   /**
    * On Destroy
    */

@@ -50,6 +50,8 @@ import {OtpInputComponent} from "../../../shared/components/otp-input/otp-input.
 import {UserService} from '../../../services/common/user.service';
 import {CouponService} from "../../../services/common/coupon.service";
 import {DiscountTypeEnum} from "../../../enum/product.enum";
+import {TiktokPixelService} from '../../../services/core/tiktok-pixel.service';
+import {AppConfigService} from '../../../services/core/app-config.service';
 
 @Component({
   selector: 'app-payment-area',
@@ -138,6 +140,8 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   private readonly userService = inject(UserService);
   private readonly dialog = inject(MatDialog);
   private readonly couponService = inject(CouponService);
+  private readonly tiktokPixelService = inject(TiktokPixelService);
+  private readonly appConfigService = inject(AppConfigService);
 
 
   constructor(private fb: FormBuilder, private orderService: OrderService, @Inject(DOCUMENT) private document: Document, private utilsService: UtilsService, private uiService: UiService, private router: Router,) {
@@ -639,73 +643,119 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
       email: this.userService.getUserLocalDataByField('email'),
       phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
       external_id: this.userService.getUserLocalDataByField('userId'),
-      lastName: this.userService.getUserLocalDataByField('name'),
+      firstName: this.userService.getUserLocalDataByField('name'),
       city: this.userService.getUserLocalDataByField('division'),
     });
 
+    const contents = this.carts.map(m => ({
+      id: String(m.product['_id']),
+      quantity: Number(m.selectedQty) || 1,
+      item_price: Number(m.product['salePrice'] || m.product['regularPrice'] || 0),
+    }));
+
     // 3️⃣ Prepare custom_data
-    const custom_data = {
-      content_ids: this.carts.map(m => m.product['_id']),
+    const custom_data: any = {
+      content_ids: contents.map(c => c.id),
+      contents,
+      content_type: 'product',
+      content_name: this.carts.map(m => m.product['name']).join(', '),
+      content_category: this.carts.map(m => m.product['category']?.['name']).filter(Boolean).join(', '),
       value: this.grandTotal,
       num_items: this.carts.length,
       currency: 'BDT',
     };
 
     const eventTime = Math.floor(Date.now() / 1000);
+    const fbc = this.utilsService.getFbc();
+    const fbp = this.utilsService.getFbp();
 
     const original_event_data = {
       event_name: 'InitiateCheckout',
       event_time: eventTime,
-    }
+    };
 
     // 4️⃣ Server-side payload for CAPI
     const trackData: any = {
       event_name: 'InitiateCheckout',
-      event_time: Math.floor(Date.now() / 1000),
+      event_time: eventTime,
+      creationTime: eventTime,
       event_id: this.eventId,
       action_source: 'website',
       event_source_url: location.href,
-      custom_data,
+      custom_data: { ...custom_data, fbp, fbc },
       original_event_data,
-      ...(Object.keys(user_data).length > 0 && {user_data}),
+      ...(Object.keys(user_data).length > 0 && { user_data }),
     };
 
     // 5️⃣ Browser: Facebook Pixel (if not managed via GTM)
     if (!this.gtmService.isManageFbPixelByTagManager) {
       this.gtmService.trackByFacebookPixel('InitiateCheckout', custom_data, this.eventId);
+    }
 
-      // 7️⃣ Server: Send to Conversions API
-      this.gtmService.trackInitiateCheckout(trackData).subscribe({
-        next: () => {
-        },
-        error: () => {
-        },
+    // 6️⃣ Server: Meta CAPI (always fire)
+    this.gtmService.trackInitiateCheckout(trackData).subscribe({
+      next: () => {},
+      error: () => {},
+    });
+
+    // 7️⃣ Browser: GTM dataLayer push (GA4 begin_checkout)
+    if (this.gtmService?.tagManagerId) {
+      this.gtmService.pushToDataLayer({
+        event: 'begin_checkout',
+        ecommerce: {
+          currency: 'BDT',
+          value: this.grandTotal,
+          items: this.carts.map(m => ({
+            item_id: m.product['_id'],
+            item_name: m.product['name'],
+            item_category: m.product['category']?.['name'],
+            price: Number(m.product['salePrice'] || m.product['regularPrice'] || 0),
+            quantity: Number(m.selectedQty) || 1,
+          })),
+        }
       });
     }
 
-    // 6️⃣ Browser: GTM dataLayer push
-    if (this.gtmService?.tagManagerId) {
-      this.gtmService.pushToDataLayer({
+    // 8️⃣ Browser & Server: TikTok Tracking
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.userService.getUserLocalDataByField('email');
+      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+
+      const tiktokBrowserData: any = {
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: contents.map(c => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        content_name: custom_data.content_name,
+        content_category: custom_data.content_category,
+      };
+
+      if (userEmail) tiktokBrowserData.email = userEmail;
+      if (userPhone) tiktokBrowserData.phone_number = userPhone;
+
+      this.tiktokPixelService.track('InitiateCheckout', tiktokBrowserData, this.eventId);
+
+      this.tiktokPixelService.trackServerEvent({
         event: 'InitiateCheckout',
-        event_id: this.eventId,
-        page_url: window.location.href,
-        ecommerce: {
-          checkout: {
-            actionField: {
-              num_items: this.carts.length,
-            },
-            products: this.carts.map(m => ({
-              id: m.product['_id'],
-              name: m.product['name'],
-              category: m.product['category']?.['name'],
-              price: m.product['salePrice'],
-              quantity: m.selectedQty,
-            })),
-            custom_data,
-            original_event_data,
-            ...(Object.keys(user_data).length > 0 && {user_data}),
-          }
-        }
+        eventId: this.eventId,
+        value: custom_data.value,
+        currency: custom_data.currency,
+        contents: contents.map(c => ({
+          content_id: c.id,
+          content_type: 'product',
+          quantity: c.quantity,
+          price: c.item_price,
+        })),
+        email: userEmail,
+        phoneNo: userPhone,
+        externalId: this.userService.getUserLocalDataByField('userId'),
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
       });
     }
   }
