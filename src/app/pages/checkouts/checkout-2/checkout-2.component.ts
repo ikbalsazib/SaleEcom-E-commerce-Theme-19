@@ -727,6 +727,7 @@ export class Checkout2Component implements OnInit, AfterViewInit, OnDestroy {
         providerName: this.selectedPaymentProvider,
         deliveryNote: this.dataForm?.get('deliveryNote')?.value ?? '',
         deliveryType: this.deliveryCharge?.type,
+        deliveryCharge: this.deliveryChargeAmount,
         userOffer: this.userOfferDiscount?.offerType,
         needSaveAddress: true,
         coupon: this.coupon ? this.coupon?._id : null,

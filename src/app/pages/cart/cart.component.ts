@@ -261,7 +261,7 @@ export class CartComponent implements OnInit, OnDestroy {
                 ...{product: products.find((t2) => t2._id === t1.product)},
               }));
               this.cartService.updateCartList(this.carts);
-
+              this.pushViewCartToGtm();
             }
             this.isLoading = false;
           },
