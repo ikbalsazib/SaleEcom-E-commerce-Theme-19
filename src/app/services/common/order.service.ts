@@ -46,7 +46,7 @@ export class OrderService {
     (API_URL + (isUserAuth ? 'add-order-by-user' : 'add-order-by-anonymous'), data);
   }
 
-  addIncompleteOrder(data: Order, isUserAuth: boolean) {
+  addIncompleteOrder(data: any, isUserAuth: boolean) {
     return this.httpClient.post<ResponsePayload>
     (API_URL + ( isUserAuth ? 'add-incomplete-order-by-user' : 'add-incomplete-order-by-anonymous'), data);
   }
@@ -83,7 +83,7 @@ export class OrderService {
     return this.httpClient.put<{ message: string, success: boolean }>(API_URL + 'update-by-user/' + id, data);
   }
 
-  updateIncompleteOrderById(id: string, data: Order) {
+  updateIncompleteOrderById(id: string, data: any) {
     return this.httpClient.put<{ message: string, success: boolean }>(API_URL + 'update-incomplete-order-by-id/' + id, data);
   }
 

@@ -2,9 +2,16 @@
 <div class="our-product" [ngStyle]="{ 'background-color': singleLandingPage?.backgroundColor,'color': singleLandingPage?.textColor ? singleLandingPage?.textColor : 'black' }">
     <div class="containter">
         <!-- Product Images Section -->
+<!--      @if (isAllowedShop){-->
+<!--        <div class="product-section">-->
+<!--            <span>আমাদের বই কতটা প্রিমিয়াম? দেখে নিন নিজেই —</span>-->
+<!--        </div>-->
+<!--        }@else{-->
         <div class="product-section">
-            <span>{{ 'productShownImage'  | translate }}</span>
+          <span>{{singleLandingPage.productHeaderTitle ?? 'productShownImage'  | translate }}</span>
         </div>
+<!--      }-->
+
       @if ((isMobile > 600)) {
         <div class="product-images" >
             <img  (click)="openGallery($event, singleLandingPage?.product?.images,i)" *ngFor="let data of singleLandingPage?.product?.images;let i= index" [src]="data" alt="Close-up of assorted sweets in a box">

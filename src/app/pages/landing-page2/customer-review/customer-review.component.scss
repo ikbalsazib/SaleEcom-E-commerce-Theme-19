@@ -2,7 +2,7 @@
 
 .faq-area{
   //background-color: #FFFFFF;
-  background-color: #E5FFDA;
+  background-color: #F3E7F6!important;
 }
 
 .container {
@@ -12,12 +12,24 @@
   padding: 35px 15px;
 }
 
-h1 {
+.text-color{
+  text-align: center;
+  color: #550000;
+  margin-top: 0;
+  margin-bottom: .5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  font-size: 1.25rem;
+}
+
+h2 {
   text-align: center;
   font-size: 2rem;
-  font-weight: bold;
   margin-bottom: 20px;
-  text-decoration: underline;
+  font-weight: 700 !important;
+  margin-top: 0;
+  line-height: 1.2;
+  //text-decoration: underline;
 }
 
 .product-images {
@@ -43,17 +55,30 @@ h1 {
 }
 
 .order-button {
-  background-color: $color-primary;
-  color: white;
-  font-size: 1.125rem;
-  font-weight: bold;
-  padding: 8px 24px;
-  border: none;
-  border-radius: 9999px;
+  //background-color: $color-primary;
+  //color: white;
+  font-size: 1.5rem !important;
+  //padding: 8px 24px;
+  //border: none;
+  //border-radius: 9999px;
+  padding: .5rem 1rem !important;
+  font-weight: 700 !important;
   display: flex;
   align-items: center;
   cursor: pointer;
+  background-color: #237c05;
+  border: 4px solid #3ba118;
+  border-radius: 9px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: white;
+  white-space: normal;
+  margin-bottom: 1rem !important;
+  //margin-top: 2.5rem !important;
 
+  &:hover {
+    background: #ed1f27 !important;
+    border-color: #c31818 !important;
+  }
   svg {
     margin: 0px;
     padding: 5px 10px;
@@ -62,7 +87,7 @@ h1 {
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: scroll;
-    color: #fff;
+    color: white;
     font-size: 55px;
     font-style: normal;
     text-align: center;
@@ -71,24 +96,24 @@ h1 {
     text-decoration: none;
   }
 
-  &:hover {
-    transform: translate(10px);
-    transition: transform 0.3s;
-  }
+  //&:hover {
+  //  transform: translate(10px);
+  //  transition: transform 0.3s;
+  //}
 }
 .review-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 2rem;
+  //display: grid;
+  //grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  //gap: 1.5rem;
+  //padding: 2rem;
 }
 
 .review-card {
   text-align: center;
-  background: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  //background: #fff;
+  //padding: 1.5rem;
+  //border-radius: 12px;
+  //box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s;
 
   &:hover {
@@ -96,12 +121,14 @@ h1 {
   }
 
   .avatar {
-    width: 70px;
-    height: 70px;
+    //width: 70px;
+    //height: 70px;
+    max-width: 100%;
     object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 0.8rem;
-    box-shadow: 0 0 0 2px #f1f1f1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    //border-radius: 50%;
+    //margin-bottom: 0.8rem;
+    //box-shadow: 0 0 0 2px #f1f1f1;
   }
 
   .stars {
@@ -118,7 +145,7 @@ h1 {
     color: gray;  /* Gray color for empty stars */
   }
   .message {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #555;
     margin: 0.8rem 0 1rem;
   }
@@ -141,6 +168,15 @@ h1 {
   }
 
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-bottom: 2px solid black;
   }
+  .order-button{
+    padding: 1px 24px;
+  }
+
+  .container {
+  padding: 25px 15px;
+}
 }
