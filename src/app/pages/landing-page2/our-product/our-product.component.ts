@@ -1,4 +1,4 @@
-import {Component, HostListener, inject, Input, PLATFORM_ID} from '@angular/core';
+import {Component, HostListener, inject, Input, PLATFORM_ID, OnInit, OnDestroy} from '@angular/core';
 import {ReloadService} from "../../../services/core/reload.service";
 import {isPlatformBrowser, NgForOf, NgStyle, ViewportScroller} from "@angular/common";
 import {Router} from "@angular/router";
@@ -7,6 +7,8 @@ import {
 } from "../../../shared/components/gallery-image-viewer/gallery-image-viewer.component";
 import {ImageGalleryComponent} from "../image-gallery/image-gallery.component";
 import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
+import {AppConfigService} from "../../../services/core/app-config.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-our-product',
@@ -21,24 +23,66 @@ import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
   ],
   standalone: true
 })
-export class OurProductComponent {
+export class OurProductComponent implements OnInit, OnDestroy {
   @Input() singleLandingPage: any;
   isMobile: number = window.innerWidth;
   selectedMenu = 0;
   showModal = false;
   imageVisible = false;
   textVisible = false;
-
+  allShopID= ['6878c87616b1225e28ee5a1a', '6868f0ab0d00ada7a9b37586'];
   // Gallery
   isGalleryOpen: boolean = false;
   galleryImages: string[] = [];
   selectedImageIndex: number = 0;
   @Input() cartSaleSubTotal: any;
 
+  // Add property to track if config is loaded
+  private configLoaded = false;
+  private configSubscription: Subscription;
+  private _isAllowedShop = false;
+
   private readonly reloadService = inject(ReloadService);
   private readonly router = inject(Router);
   private readonly viewportScroller = inject(ViewportScroller);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly appConfigService = inject(AppConfigService);
+
+  ngOnInit() {
+    // Subscribe to config changes
+    this.configSubscription = this.appConfigService.config$.subscribe(config => {
+      if (config) {
+        this.configLoaded = true;
+        // this.updateAllowedShopStatus();
+      }
+    });
+
+    // Also try to load config directly
+    this.loadConfig();
+  }
+
+  private async loadConfig() {
+    try {
+      await this.appConfigService.loadConfig();
+      this.configLoaded = true;
+      this.updateAllowedShopStatus();
+    } catch (error) {
+      console.error('Error loading config:', error);
+    }
+  }
+
+  private updateAllowedShopStatus() {
+    const shopId = this.appConfigService.getSettingData('shop');
+
+    // Handle different data types
+    let normalizedShopId = shopId;
+    if (typeof shopId === 'object' && shopId !== null) {
+      normalizedShopId = shopId._id || shopId.id || shopId;
+    }
+
+    this._isAllowedShop = !!normalizedShopId && this.allShopID.includes(normalizedShopId);
+  }
+
   /**
    * SCROLL WITH NAVIGATE
    * onScrollWithNavigate()
@@ -115,6 +159,16 @@ export class OurProductComponent {
         this.imageVisible = false;
         this.textVisible = false;
       }
+    }
+  }
+
+  get isAllowedShop(): boolean {
+    return this._isAllowedShop;
+  }
+
+  ngOnDestroy() {
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
     }
   }
 }

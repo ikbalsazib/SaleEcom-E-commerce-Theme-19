@@ -41,6 +41,7 @@
     font-weight: bold;
     margin-bottom: 20px;
     text-decoration: underline;
+    //border-bottom: 2px solid black;
   }
 
   .faq-item {
@@ -64,7 +65,7 @@
         transition: transform 0.3s ease;
       }
       .qusn{
-        font-weight: 700;
+        font-weight: 400;
       }
       svg{
         width: 8px;
@@ -72,7 +73,7 @@
         fill: black;
       }
       span{
-        font-size: 1rem;
+        font-size: 1.5rem;
         display: flex;
         align-items: center;
         gap: 5px;
@@ -148,6 +149,19 @@
     margin-bottom: 0;
   }
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-bottom: 2px solid black;
+  }
+
+  .container {
+    padding: 19px 15px;
+  }
+  .order-button{
+    padding: 1px 24px;
+  }
+  .faq-item .question span {
+    font-size: 1.2rem;
+    line-height: 24px;
   }
 }

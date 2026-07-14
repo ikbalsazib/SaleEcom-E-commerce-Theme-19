@@ -2,30 +2,37 @@ import {isPlatformBrowser, NgClass, NgFor, NgIf, ViewportScroller} from '@angula
 import {Component, HostListener, inject, Input, PLATFORM_ID} from '@angular/core';
 import {ReloadService} from "../../../services/core/reload.service";
 import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
+import {PricePipe} from "../../../shared/pipes/price.pipe";
+import {ProductPricePipe} from "../../../shared/pipes/product-price.pipe";
 
 @Component({
   selector: 'app-faq',
   templateUrl: './faq.component.html',
   styleUrl: './faq.component.scss',
-  standalone:true,
+  standalone: true,
   imports: [
     NgFor,
     NgIf,
     NgClass,
     TranslatePipe
-  ]
+  ],
+  providers: [PricePipe, ProductPricePipe],
 })
 export class FaqComponent {
   @Input() singleLandingPage: any;
+  @Input() product: any;
   selectedMenu = 0;
   imageVisible = false;
   textVisible = false;
-
+  private eventId: string;
   @Input() cartSaleSubTotal: any;
 
   private readonly reloadService = inject(ReloadService);
   private readonly viewportScroller = inject(ViewportScroller);
   private readonly platformId = inject(PLATFORM_ID);
+
+  ngOnInit(): void {
+  }
 
 // Store Data
   faqList = [
@@ -61,12 +68,12 @@ export class FaqComponent {
 
 
 // Store selected opened index
-openedIndex: number | null = null;
+  openedIndex: number | null = null;
 
 // Toggle selected FAQ
-toggleFaq(index: number): void {
-  this.openedIndex = this.openedIndex === index ? null : index;
-}
+  toggleFaq(index: number): void {
+    this.openedIndex = this.openedIndex === index ? null : index;
+  }
 
 
   /**
@@ -102,4 +109,5 @@ toggleFaq(index: number): void {
       }
     }
   }
+
 }

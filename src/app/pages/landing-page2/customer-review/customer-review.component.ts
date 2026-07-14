@@ -1,7 +1,6 @@
 import {Component, inject, Input, SimpleChanges} from '@angular/core';
-import {NgFor, NgIf, NgStyle} from "@angular/common";
+import {NgIf} from "@angular/common";
 import {ReloadService} from "../../../services/core/reload.service";
-import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
 
 @Component({
   selector: 'app-customer-review',
@@ -9,10 +8,7 @@ import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
   styleUrl: './customer-review.component.scss',
   standalone:true,
   imports: [
-    NgFor,
-    NgStyle,
-    NgIf,
-    TranslatePipe
+    NgIf
   ]
 })
 export class CustomerReviewComponent {
@@ -21,6 +17,15 @@ export class CustomerReviewComponent {
   reveData: any;
 
   selectedMenu = 0;
+
+
+  // Swiper breakpoints configuration
+  breakpoints = {
+    1200: { slidesPerView: 4, spaceBetween: 20 },
+    992: { slidesPerView: 4, spaceBetween: 15 },
+    768: { slidesPerView: 2, spaceBetween: 15 },
+    0: { slidesPerView: 1, spaceBetween: 10 }
+  };
 
   ngOnChanges(changes: SimpleChanges) {
     this.reveData = this.singleLandingPage;

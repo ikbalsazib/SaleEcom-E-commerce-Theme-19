@@ -6,17 +6,20 @@
   margin: auto;
   padding: 35px 15px;
 }
-.color{
+
+.color {
   //color: black;
 }
+
 .why-us-section {
-  //background-color: #FFFFFF;
-  background-color: #E5FFDA;
+  background-color: #FFFFFF!important;
+  //background-color: #E5FFDA;
   //padding: 2rem;
-  .title{
+  .title {
     display: flex;
     justify-content: center;
   }
+
   h2 {
     border-bottom: 2px solid black;
     font-size: 2rem;
@@ -26,11 +29,12 @@
     padding-bottom: 0.3rem;
     text-align: center;
   }
+
   .content-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
+    //align-items: center;
 
     .image-box {
       flex: 1 1 300px;
@@ -50,6 +54,15 @@
       flex: 1 1 400px;
       padding: 1rem;
 
+      h3 {
+        font-family: 'Hind Siliguri', sans-serif;
+        color: #550000;
+        text-align: left;
+        font-weight: 700;
+        margin-bottom: 20px;
+        margin-top: 0;
+        font-size: 22px;
+      }
 
       ul {
         list-style: none;
@@ -57,19 +70,19 @@
         margin: 0;
 
         li {
-          margin-bottom: 0.8rem;
+          //margin-bottom: 0.8rem;
           font-size: 1rem;
           line-height: 1.6;
           position: relative;
-          padding-left: 1.5rem;
+          //padding-left: 1.5rem;
 
-          &::before {
-            content: "✔";
-            color: #ffc107;
-            position: absolute;
-            left: 0;
-            top: 0;
-          }
+          //&::before {
+          //  content: "✔";
+          //  color: #ffc107;
+          //  position: absolute;
+          //  left: 0;
+          //  top: 0;
+          //}
         }
       }
     }
@@ -79,6 +92,7 @@
 .slide-right {
   animation: slide-right 1.2s ease forwards;
 }
+
 @keyframes slide-right {
   from {
     transform: translateX(-100%);
@@ -93,6 +107,7 @@
 .slide-left {
   animation: slide-left 1.2s ease forwards;
 }
+
 @keyframes slide-left {
   from {
     transform: translateX(100%);
@@ -103,7 +118,8 @@
     opacity: 1;
   }
 }
-.btn-area{
+
+.btn-area {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -123,7 +139,7 @@
   cursor: pointer;
 
   svg {
-    margin: 0px;
+    margin: 0;
     padding: 5px 10px;
     background-size: cover;
     // background-color: #01640D;
@@ -156,6 +172,14 @@
     padding: 1rem 0;
   }
   .why-us-section h2 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+  }
+  .order-button {
+    padding: 1px 24px;
+  }
+
+  .why-us-section .content-container .text-box ul li {
+    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
   }
 }

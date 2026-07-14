@@ -1,4 +1,4 @@
-import {DOCUMENT, isPlatformBrowser, NgClass, NgFor, NgIf, ViewportScroller} from '@angular/common';
+import {DOCUMENT, isPlatformBrowser, NgClass, NgIf, ViewportScroller} from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -7,6 +7,7 @@ import {
   inject,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   PLATFORM_ID,
   ViewChild,
@@ -21,12 +22,13 @@ import {
   Validators,
 } from '@angular/forms';
 import {Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {Subscription, debounceTime} from 'rxjs';
 import {PricePipe} from '../../../shared/pipes/price.pipe';
 import {ProductPricePipe} from '../../../shared/pipes/product-price.pipe';
 import {TranslatePipe} from '../../../shared/pipes/translate.pipe';
 import {CurrencyCtrPipe} from '../../../shared/pipes/currency.pipe';
 import {UtilsService} from '../../../services/core/utils.service';
+import {TiktokPixelService} from "../../../services/core/tiktok-pixel.service";
 import {UiService} from '../../../services/core/ui.service';
 import {OrderService} from '../../../services/common/order.service';
 import {ReloadService} from '../../../services/core/reload.service';
@@ -50,20 +52,21 @@ import {OtpInputComponent} from "../../../shared/components/otp-input/otp-input.
 import {UserService} from '../../../services/common/user.service';
 import {CouponService} from "../../../services/common/coupon.service";
 import {DiscountTypeEnum} from "../../../enum/product.enum";
-import {TiktokPixelService} from '../../../services/core/tiktok-pixel.service';
-import {AppConfigService} from '../../../services/core/app-config.service';
+import {AppConfigService} from "../../../services/core/app-config.service";
+import {PaymentMethodComponent} from "../../checkouts/components/payment-method/payment-method.component";
 
 @Component({
   selector: 'app-payment-area',
   templateUrl: './payment-area.component.html',
   styleUrl: './payment-area.component.scss',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NgIf, NgFor, GalleryImageViewerComponent, ImageGalleryComponent, DeliveryCharge2Component, TranslatePipe, NgClass, MatRadioGroup, MatRadioButton, CurrencyCtrPipe, OtpInputComponent],
+  imports: [ReactiveFormsModule, FormsModule, NgIf, GalleryImageViewerComponent, ImageGalleryComponent, DeliveryCharge2Component, TranslatePipe, NgClass, MatRadioGroup, MatRadioButton, CurrencyCtrPipe, OtpInputComponent, PaymentMethodComponent],
   providers: [PricePipe, ProductPricePipe],
 })
-export class PaymentAreaComponent implements OnInit, OnChanges {
+export class PaymentAreaComponent implements OnInit, OnChanges, OnDestroy {
   // Inputs
   @Input() singleLandingPage: any;
+  @Input() chatLink: any;
 
   // ViewChild Refs
   @ViewChild('payment') mainEl!: ElementRef;
@@ -71,14 +74,19 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   @ViewChild('phoneInput') phoneInput!: ElementRef;
   @ViewChild('addressInput') addressInput!: ElementRef;
   @ViewChild('otpInput') otpInput!: ElementRef;
-
+  allowedShopIds1 = ['692d89a8597c97480fcceb9f','690c2389d71f4cf10fe34fe4'];
   dataForm: FormGroup;
   quantity = 1;
   animateGrandTotal = false;
   needRefreshForm: boolean = false;
+
+  hasZeroDeliveryCharge: boolean = false;
+
   deliveryChargeAmount: number = 0;
   private readonly productPricePipe = inject(ProductPricePipe);
   selectedPaymentProvider = 'Cash on Delivery';
+  selectedPaymentProviderType: string;
+  allPaymentProvider: any;
   note: any;
   public countdown = 60; // seconds
   private countdownInterval: any;
@@ -88,6 +96,7 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   couponCode: string = null;
   couponDiscount: number = 0;
   deliveryCharge: any;
+  isIncompleteOrderId: boolean = false;
   userLandingDiscount: any;
   currency = 'BDT';
   isLoaded: boolean = false;
@@ -104,30 +113,39 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   isValidOtp: boolean = false;
   isSendOtp: boolean = false;
   isCoupon: boolean = false;
+  incompleteOrderId: any;
+  incompleteOrderData: any;
   isPageLoading: boolean = false;
   coupon: Coupon = null;
   divisions?: Division[] = [];
   selectedDivision: string | null = null;
   dropdownVisible = false;
+  country: any;
   deliveryOptionType: any;
+  productSetting: any;
   isEnableOrderNote: boolean;
   isEnableOtp: boolean;
   advancePayment: any[] = [];
-
+  allShopID = ['688712bcdcdd7416499b7808'];
   // Gallery
   isGalleryOpen: boolean = false;
   galleryImages: string[] = [];
   selectedImageIndex: number = 0;
   showModal = false;
   isMobile: number;
+  shopId: any;
 
   // Store Data
   selectedVariationList: any = null;
   selectedVariation: string = null;
   selectedVariation2: string = null;
 
+  // Product selection data - will be populated from singleLandingPage
+  availableProducts: any[] = [];
+
   // Subscriptions
   private subscriptions: Subscription[] = [];
+  private hasInitiatedCheckout = false;
 
   // Inject
   private readonly reloadService = inject(ReloadService);
@@ -140,15 +158,14 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   private readonly userService = inject(UserService);
   private readonly dialog = inject(MatDialog);
   private readonly couponService = inject(CouponService);
-  private readonly tiktokPixelService = inject(TiktokPixelService);
   private readonly appConfigService = inject(AppConfigService);
-
+  private readonly tiktokPixelService = inject(TiktokPixelService);
 
   constructor(private fb: FormBuilder, private orderService: OrderService, @Inject(DOCUMENT) private document: Document, private utilsService: UtilsService, private uiService: UiService, private router: Router,) {
 
     this.dataForm = this.fb.group({
       name: [null, Validators.required],
-      division: [null, Validators.required],
+      division: ['outside-dhaka', Validators.required],
       phoneNo: [null, [Validators.required, this.mobileValidator]],
       shippingAddress: [null, Validators.required],
       code: [null, this.isSendOtp ? [Validators.required] : []]
@@ -157,22 +174,40 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.getSetting();
+    this.initializeProducts();
     this.createCartFromLandingPage();
-    this.getAllDivision();
+
 
     if (isPlatformBrowser(this.platformId)) {
       this.isMobile = window.innerWidth;
     }
-    this.getSetting();
+
 
     if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
-        this.initiateCheckoutEvent();
+        if (!this.isAllowedShop) {
+          this.initiateCheckoutEvent();
+        }
       }, 100)
     }
+
+    this.subscriptions.push(
+      this.dataForm.valueChanges.pipe(debounceTime(1000)).subscribe(() => {
+        if (this.isIncompleteOrderId && this.incompleteOrderId) {
+          this.updateIncompleteOrderById();
+        }
+      })
+    );
+  }
+
+  isAllowedShop(): boolean {
+    const shopId = this.appConfigService.getSettingData('shop');
+    return !!shopId && this.allShopID.includes(shopId);
   }
 
   ngOnChanges() {
+    this.initializeProducts();
     this.createCartFromLandingPage();
     this.product = this.singleLandingPage?.product;
     if (this.product?.isVariation) {
@@ -182,27 +217,62 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   }
 
   createCartFromLandingPage() {
-    const product = this.singleLandingPage?.product;
+    // Create cart from selected products using original product data
+    this.carts = this.availableProducts
+      .filter(product => product.isSelected)
+      .map(product => {
+        let variation = null;
 
-    if (!product) return;
+        // Handle variation products
+        if (product.originalProduct.isVariation && product.selectedSize !== 'Default') {
+          // Find the correct variation from the product's variationList
+          const selectedVariation = product.originalProduct.variationList?.find(
+            (v: any) => v.name === product.selectedSize
+          );
 
-    const cartItem = {
-      isSelected: true,
-      product: product,
-      quantity: this.quantity,
-      selectedQty: this.quantity,
-      variation: this.selectedVariationList
-        ? {
-          name: this.selectedVariationList.name,
-          _id: this.selectedVariationList._id,
-          image: this.selectedVariationList?.image,
-          sku: this.selectedVariationList.sku
+          if (selectedVariation) {
+            variation = {
+              name: product.selectedSize,
+              _id: selectedVariation._id,
+              image: selectedVariation.image || product.image,
+              sku: selectedVariation.sku || product.id + '_' + product.selectedSize,
+              salePrice: selectedVariation.salePrice,
+              regularPrice: selectedVariation.regularPrice,
+              wholesalePrice: selectedVariation.wholesalePrice,
+              deliveryCharge: selectedVariation.deliveryCharge,
+              advancePayment: selectedVariation.advancePayment,
+            };
+          }
         }
-        : null,
-    };
 
-    this.carts = [cartItem];
+        return {
+          isSelected: true,
+          product: product.originalProduct, // Use the original product data
+          quantity: product.quantity,
+          selectedQty: product.quantity,
+          variation: variation
+        };
+      });
 
+    // Update incomplete order if it exists
+    if (this.isIncompleteOrderId && this.incompleteOrderId) {
+      this.updateIncompleteOrderById();
+    }
+    
+    this.validateCoupon();
+  }
+
+
+  onChangePaymentMethod(event: any) {
+    this.selectedPaymentProvider = event;
+  }
+
+  onChangePaymentType(event: any) {
+    this.selectedPaymentProviderType = event;
+  }
+
+  allPaymentMethod(event: any) {
+    this.allPaymentProvider = event;
   }
 
   private addOrder(data: any) {
@@ -214,7 +284,7 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
           switch (res.data.providerName) {
             case 'Cash on Delivery': {
               this.uiService.message(res.message, 'success');
-              this.router.navigate(['/success-order'], {
+               this.router.navigate(['/success-order'], {
                 queryParams: {orderId: res.data.orderId, orderForm: 'landing-page'},
               }).then();
               break;
@@ -254,6 +324,12 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
    * onConfirmOrder()
    */
   public onConfirmOrder() {
+    const selectedProducts = this.getSelectedProducts();
+    if (!selectedProducts.length) {
+      this.uiService.message('কোনো প্রোডাক্ট সিলেক্ট করা হয়নি। দয়া করে প্রোডাক্ট সিলেক্ট করুন।', "warn");
+      return;
+    }
+
     if (!this.carts.length) {
       this.uiService.message('Empty Cart! sorry your cart is empty.', "warn");
       this.router.navigate(['/']).then();
@@ -291,6 +367,70 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
       return;
     }
 
+    // const getCartOrProductIds = () => {
+    //   return this.carts.map(m => m.product['_id']);
+    // }
+    // // this.openOtpDialog()
+    //
+    // const cartData = () => {
+    //   return this.carts.map(m => {
+    //     return {
+    //       ...m,
+    //       ...{
+    //         product: m.product['_id']
+    //       }
+    //     }
+    //   })
+    //
+    // }
+    //
+    // const data: any = {
+    //   user: null,
+    //   orderType: 'anonymous',
+    //   carts: getCartOrProductIds(),
+    //   cartData: cartData(),
+    //   name: this.dataForm.value?.name,
+    //   phoneNo: this.dataForm.value?.phoneNo,
+    //   shippingAddress: this.dataForm.value?.shippingAddress,
+    //   division: this.dataForm.value?.division,
+    //   area: this.shippingAddress?.area ?? 'Unknown',
+    //   zone: this.shippingAddress?.zone ?? 'Unknown',
+    //   addressType: this.shippingAddress?.addressType,
+    //   email: null,
+    //   orderFrom: 'Landing Page',
+    //   providerName: this.selectedPaymentProvider,
+    //   note: this.note,
+    //   deliveryType: this.deliveryCharge?.type,
+    //   coupon: this.coupon ? this.coupon?._id : null,
+    //   userLanding: this.userLandingDiscount?.landingType,
+    //   needSaveAddress: true,
+    // }
+
+    // OTP Check Logic
+    if (!this.isEnableOtp) {
+      this.addOrder(this.orderFinalData);
+    } else {
+      if (!this.isSendOtp) {
+        if (this.dataForm.invalid) {
+          this.scrollToField(this.phoneInput);
+          this.uiService.message('সঠিক তথ্য দিন', 'warn');
+          return;
+        }
+        this.generateOtpWithPhoneNo();
+      } else {
+        if (!this.otpCode) {
+          // this.scrollToField(this.otpInput);
+          this.uiService.message('ওটিপি কোড লিখুন', 'warn');
+          return;
+        }
+        this.validateOtpWithPhoneNo(this.orderFinalData);
+      }
+    }
+
+  }
+
+
+  private get orderFinalData() {
     const getCartOrProductIds = () => {
       return this.carts.map(m => m.product['_id']);
     }
@@ -308,49 +448,31 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
 
     }
 
-    const data: any = {
-      user: null,
-      orderType: 'anonymous',
-      carts: getCartOrProductIds(),
-      cartData: cartData(),
-      name: this.dataForm.value?.name,
-      phoneNo: this.dataForm.value?.phoneNo,
-      shippingAddress: this.dataForm.value?.shippingAddress,
-      division: this.dataForm.value?.division,
-      area: this.shippingAddress?.area ?? 'Unknown',
-      zone: this.shippingAddress?.zone ?? 'Unknown',
-      addressType: this.shippingAddress?.addressType,
-      email: null,
-      orderFrom: 'Landing Page',
-      providerName: this.selectedPaymentProvider,
-      note: this.note,
-      deliveryType: this.deliveryCharge?.type,
-      coupon: this.coupon ? this.coupon?._id : null,
-      userLanding: this.userLandingDiscount?.landingType,
-      needSaveAddress: true,
+    return {
+      ...{
+        user: null,
+        orderType: 'anonymous',
+        carts: getCartOrProductIds(),
+        cartData: cartData(),
+        name: this.dataForm.value?.name,
+        phoneNo: this.dataForm.value?.phoneNo,
+        shippingAddress: this.dataForm.value?.shippingAddress,
+        division: this.dataForm.value?.division,
+        area: this.shippingAddress?.area ?? 'Unknown',
+        zone: this.shippingAddress?.zone ?? 'Unknown',
+        addressType: this.shippingAddress?.addressType,
+        email: null,
+        orderFrom: 'Landing Page',
+        providerName: this.selectedPaymentProvider,
+        note: this.note,
+        deliveryType: this.deliveryCharge?.type,
+        coupon: this.coupon ? this.coupon?._id : null,
+        userLanding: this.userLandingDiscount?.landingType,
+        needSaveAddress: true,
+        providerType: this.selectedPaymentProviderType,
+        incompleteOrderId: this.incompleteOrderId ?? null,
+      },
     }
-
-    // OTP Check Logic
-    if (!this.isEnableOtp) {
-      this.addOrder(data);
-    } else {
-      if (!this.isSendOtp) {
-        if (this.dataForm.invalid) {
-          this.scrollToField(this.phoneInput);
-          this.uiService.message('সঠিক তথ্য দিন', 'warn');
-          return;
-        }
-        this.generateOtpWithPhoneNo();
-      } else {
-        if (!this.otpCode) {
-          // this.scrollToField(this.otpInput);
-          this.uiService.message('ওটিপি কোড লিখুন', 'warn');
-          return;
-        }
-        this.validateOtpWithPhoneNo(data);
-      }
-    }
-
   }
 
   /**
@@ -474,31 +596,22 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
       name: 1,
     };
     const filter: FilterData = {
-      filter: {status: 'publish'},
+      filter: {country: this.country?.name, status: 'publish'},
       select: mSelect,
       pagination: null,
-      sort: {name: 1},
+      sort: { name: 1 },
     };
 
-    const subscription = this.divisionService.getAllDivisions(filter).subscribe({
-      next: res => {
-        const bdDivisions = [
-          'barishal', 'barisal',
-          'chittagong', 'chattogram',
-          'dhaka',
-          'khulna',
-          'mymensingh',
-          'rajshahi',
-          'rangpur',
-          'sylhet',
-          'বরিশাল', 'চট্টগ্রাম', 'ঢাকা', 'খুলনা', 'ময়মনসিংহ', 'রাজশাহী', 'রংপুর', 'সিলেট'
-        ];
-        this.divisions = res.data ? res.data.filter(d => bdDivisions.includes(d.name?.trim().toLowerCase())) : [];
-      },
-      error: err => {
-        console.log(err);
-      }
-    });
+    const subscription = this.divisionService
+      .getAllDivisions(filter)
+      .subscribe({
+        next: (res) => {
+          this.divisions = res.data;
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
     this.subscriptions?.push(subscription);
   }
 
@@ -509,10 +622,16 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
     })
       .subscribe({
         next: res => {
-          this.isLoading = false;
-          this.isSendOtp = true;
-          this.startCountdown(); // টাইমার চালু
-          // this.uiService.message(res.message, 'success')
+          if (res.success) {
+
+            this.isLoading = false;
+            this.isSendOtp = true;
+            this.startCountdown(); // টাইমার চালু
+            // this.uiService.message(res.message, 'success')
+          } else {
+            this.isLoading = false;
+            this.uiService.message(res.message, 'wrong')
+          }
         },
         error: err => {
           console.log(err);
@@ -626,6 +745,57 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   }
 
 
+
+
+  get cartDeliveryChargeTotal(): number {
+    // ---- Detect inside city using division ----
+    const currentDivision = (this.dataForm?.value?.division ?? '').toString().trim().toLowerCase();
+    const deliveryCity = (this.deliveryCharge?.city ?? '').toString().trim().toLowerCase();
+    const isInsideCity = currentDivision && deliveryCity && currentDivision === deliveryCity;
+
+    this.hasZeroDeliveryCharge = false;
+
+    // ---- Global delivery charge ----
+    const globalCharge = Number(this.deliveryCharge?.deliveryCharge) || 0;
+
+    // console.log('carts',this.carts)
+    // ---- Calculate per-product delivery charge ----
+    const productCharges = (this.carts ?? []).map((item: any) => {
+      const pd = item?.product?.deliveryCharge;
+      const enabled = pd?.isEnableDeliveryCharge === true;
+
+      if (enabled) {
+        const rawCharge = isInsideCity ? pd?.insideCity : pd?.outsideCity;
+        const charge = Number(rawCharge);
+
+        if (Number.isFinite(charge)) {
+          if (charge === 0) this.hasZeroDeliveryCharge = true;
+          return charge;
+        }
+      }
+
+      // fallback → will use global charge later
+      return null;
+    });
+
+    // ---- Sum all valid product charges ----
+    const perProductTotal = productCharges
+      .filter((x) => x !== null)
+      .reduce((acc, val) => acc + val, 0);
+
+    const needsGlobal = productCharges.some((x) => x === null);
+
+    const total = perProductTotal + (needsGlobal ? globalCharge : 0);
+
+    if (needsGlobal && globalCharge === 0) {
+      this.hasZeroDeliveryCharge = true;
+    }
+
+    return total;
+  }
+
+
+
   /**
    * Utils
    * generateEventId()
@@ -635,46 +805,49 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
   }
 
   private initiateCheckoutEvent(): void {
+    if (this.hasInitiatedCheckout || !this.carts?.length) return;
+    this.hasInitiatedCheckout = true;
+
     // 1️⃣ Generate Unique Event ID
     this.generateEventId();
 
     // 2️⃣ Get hashed user data
     const user_data = this.utilsService.getUserData({
-      email: this.userService.getUserLocalDataByField('email'),
-      phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
+      email: this.dataForm.value.email || this.userService.getUserLocalDataByField('email'),
+      phoneNo: this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo'),
       external_id: this.userService.getUserLocalDataByField('userId'),
-      firstName: this.userService.getUserLocalDataByField('name'),
-      city: this.userService.getUserLocalDataByField('division'),
+      firstName: this.dataForm.value.name || this.userService.getUserLocalDataByField('name'),
+      city: this.dataForm.value.division || this.userService.getUserLocalDataByField('division'),
     });
 
-    const contents = this.carts.map(m => ({
-      id: String(m.product['_id']),
-      quantity: Number(m.selectedQty) || 1,
-      item_price: Number(m.product['salePrice'] || m.product['regularPrice'] || 0),
+    // 3️⃣ Prepare contents
+    const contents = this.carts.map((c: any) => ({
+      id: String(c.product['_id']),
+      quantity: Number(c.selectedQty ?? 1),
+      item_price: Number(this.productPricePipe.transform(c.product, 'salePrice', c.variation?._id, 1, c.isWholesale)) || 0,
     }));
 
-    // 3️⃣ Prepare custom_data
-    const custom_data: any = {
+    // 4️⃣ Prepare custom_data
+    const custom_data = {
       content_ids: contents.map(c => c.id),
       contents,
       content_type: 'product',
-      content_name: this.carts.map(m => m.product['name']).join(', '),
-      content_category: this.carts.map(m => m.product['category']?.['name']).filter(Boolean).join(', '),
-      value: this.grandTotal,
-      num_items: this.carts.length,
+      value: Number(this.grandTotal ?? 0),
       currency: 'BDT',
+      num_items: contents.reduce((sum, item) => sum + item.quantity, 0),
+      content_name: this.carts.map(c => c.product['name']).join(', '),
+      content_category: this.carts.map(c => c.product['category']?.['name']).filter(c => c).join(', '),
+      shipping: Number(this.deliveryChargeAmount || 0),
+      ...this.utilsService.getFbCookies()
     };
 
     const eventTime = Math.floor(Date.now() / 1000);
-    const fbc = this.utilsService.getFbc();
-    const fbp = this.utilsService.getFbp();
-
     const original_event_data = {
       event_name: 'InitiateCheckout',
       event_time: eventTime,
     };
 
-    // 4️⃣ Server-side payload for CAPI
+    // 5️⃣ Server-side payload for CAPI
     const trackData: any = {
       event_name: 'InitiateCheckout',
       event_time: eventTime,
@@ -682,49 +855,26 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
       event_id: this.eventId,
       action_source: 'website',
       event_source_url: location.href,
-      custom_data: { ...custom_data, fbp, fbc },
+      custom_data,
       original_event_data,
       ...(Object.keys(user_data).length > 0 && { user_data }),
     };
 
-    // 5️⃣ Browser: Facebook Pixel (if not managed via GTM)
-    if (!this.gtmService.isManageFbPixelByTagManager) {
+    // 6️⃣ Send to Meta APIs
+    if (this.gtmService.facebookPixelId && !this.gtmService.isManageFbPixelByTagManager) {
       this.gtmService.trackByFacebookPixel('InitiateCheckout', custom_data, this.eventId);
     }
+    this.gtmService.trackInitiateCheckout(trackData).subscribe();
 
-    // 6️⃣ Server: Meta CAPI (always fire)
-    this.gtmService.trackInitiateCheckout(trackData).subscribe({
-      next: () => {},
-      error: () => {},
-    });
-
-    // 7️⃣ Browser: GTM dataLayer push (GA4 begin_checkout)
-    if (this.gtmService?.tagManagerId) {
-      this.gtmService.pushToDataLayer({
-        event: 'begin_checkout',
-        ecommerce: {
-          currency: 'BDT',
-          value: this.grandTotal,
-          items: this.carts.map(m => ({
-            item_id: m.product['_id'],
-            item_name: m.product['name'],
-            item_category: m.product['category']?.['name'],
-            price: Number(m.product['salePrice'] || m.product['regularPrice'] || 0),
-            quantity: Number(m.selectedQty) || 1,
-          })),
-        }
-      });
-    }
-
-    // 8️⃣ Browser & Server: TikTok Tracking
+    // 7️⃣ TikTok Tracking
     const analytics = this.appConfigService.getSettingData('analytics');
     if (analytics?.tiktokPixelId) {
-      const userEmail = this.userService.getUserLocalDataByField('email');
-      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
+      const userEmail = this.dataForm.value.email || this.userService.getUserLocalDataByField('email');
+      const userPhone = this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo');
 
       const tiktokBrowserData: any = {
-        value: custom_data.value,
-        currency: custom_data.currency,
+        value: this.grandTotal,
+        currency: 'BDT',
         contents: contents.map(c => ({
           content_id: c.id,
           content_type: 'product',
@@ -743,31 +893,242 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
       this.tiktokPixelService.trackServerEvent({
         event: 'InitiateCheckout',
         eventId: this.eventId,
-        value: custom_data.value,
-        currency: custom_data.currency,
+        value: this.grandTotal,
+        currency: 'BDT',
+        contents: tiktokBrowserData.contents,
+        email: userEmail,
+        phoneNo: userPhone,
+        externalId: this.userService.getUserLocalDataByField('userId'),
+        ttclid: this.tiktokPixelService.getTtclid(),
+        ttp: this.tiktokPixelService.getTtp(),
+        customProperties: {
+          content_name: custom_data.content_name,
+          content_category: custom_data.content_category,
+        }
+      });
+    }
+
+    // 8️⃣ GTM Data Layer Push (GA4)
+    if (this.gtmService.tagManagerId) {
+      const name = this.dataForm.value.name || this.userService.getUserLocalDataByField('name') || '';
+      const nameParts = name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+      this.gtmService.pushToDataLayer({
+        event: 'begin_checkout',
+        ecommerce: {
+          currency: 'BDT',
+          value: this.grandTotal,
+          items: contents.map((c, i) => ({
+            item_id: c.id,
+            item_name: this.carts[i].product['name'],
+            item_category: this.carts[i].product['category']?.['name'],
+            price: c.item_price,
+            quantity: c.quantity,
+          }))
+        },
+        user_data: [{
+          em: this.utilsService.hashDataSha256(this.dataForm.value.email || this.userService.getUserLocalDataByField('email')?.trim()?.toLowerCase() || ''),
+          ph: this.utilsService.hashDataSha256(this.utilsService.normalizeBdPhone(this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo')) || ''),
+          fn: this.utilsService.hashDataSha256(this.utilsService.normText(firstName) || ''),
+          ln: this.utilsService.hashDataSha256(this.utilsService.normText(lastName) || ''),
+          ct: (this.dataForm.value.division || this.userService.getUserLocalDataByField('division')) ? this.utilsService.hashDataSha256(this.utilsService.normText(this.dataForm.value.division || this.userService.getUserLocalDataByField('division')) || '') : '',
+          country: this.utilsService.hashDataSha256('Bangladesh'),
+          country_code: this.utilsService.hashDataSha256('BD')
+        }]
+      });
+    }
+  }
+
+  private completePaymentEvent(orderId: string): void {
+    // 1️⃣ Use orderId as eventId for deduplication
+    this.eventId = orderId;
+
+    // 2️⃣ Get hashed user data
+    const cleanData = (data: any, titleCase: boolean = false) => {
+      let d = String(data || '').trim();
+      if (!d || d.toLowerCase() === 'n/a' || d.toLowerCase() === 'outside-dhaka') return '';
+      if (titleCase) { d = this.utilsService.toTitleCase(d); }
+      return d;
+    };
+
+    const formatExternalIdName = (name: string) => {
+      const d = String(name || '').trim().toLowerCase();
+      if (!d || d === 'n/a') return '';
+      return d.charAt(0).toUpperCase() + d.slice(1);
+    };
+
+    const rawId = (
+      formatExternalIdName(this.dataForm.value.name || this.userService.getUserLocalDataByField('name')) +
+      cleanData(this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo')) +
+      cleanData(this.dataForm.value.email || this.userService.getUserLocalDataByField('email')) +
+      cleanData(this.dataForm.value.shippingAddress || this.userService.getUserLocalDataByField('address')) +
+      cleanData(this.dataForm.value.division || this.userService.getUserLocalDataByField('division'))
+    ).replace(/\s+/g, '');
+
+    const externalIdRaw = rawId.charAt(0).toUpperCase() + rawId.slice(1).toLowerCase();
+
+    const user_data = this.utilsService.getUserData({
+      email: this.dataForm.value.email || this.userService.getUserLocalDataByField('email'),
+      phoneNo: this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo'),
+      external_id: externalIdRaw,
+      firstName: this.dataForm.value.name || this.userService.getUserLocalDataByField('name'),
+      city: this.dataForm.value.division || this.userService.getUserLocalDataByField('division'),
+    });
+
+    // 3️⃣ Prepare contents
+    const contents = this.carts.map((c: any) => ({
+      id: String(c.product['_id']),
+      quantity: Number(c.selectedQty ?? 1),
+      item_price: Number(this.productPricePipe.transform(c.product, 'salePrice', c.variation?._id, 1, c.isWholesale)) || 0,
+    }));
+
+    // 4️⃣ Prepare custom_data
+    const custom_data = {
+      content_ids: contents.map(c => c.id),
+      contents,
+      content_type: 'product',
+      value: Number(this.grandTotal ?? 0),
+      currency: 'BDT',
+      num_items: contents.reduce((sum, item) => sum + item.quantity, 0),
+      content_name: this.carts.map(c => c.product['name']).join(', '),
+      content_category: this.carts.map(c => c.product['category']?.['name']).filter(c => c).join(', '),
+      shipping: Number(this.deliveryChargeAmount || 0),
+      ...this.utilsService.getFbCookies()
+    };
+
+    const eventTime = Math.floor(Date.now() / 1000);
+    const original_event_data = {
+      event_name: 'Purchase',
+      event_time: eventTime,
+    };
+
+    // 5️⃣ Server-side payload for CAPI
+    const trackData: any = {
+      event_name: 'Purchase',
+      event_time: eventTime,
+      creationTime: eventTime,
+      event_id: this.eventId,
+      action_source: 'website',
+      event_source_url: location.href,
+      custom_data,
+      original_event_data,
+      ...(Object.keys(user_data).length > 0 && { user_data }),
+    };
+
+    // 6️⃣ Send to Meta APIs
+    if (this.gtmService.facebookPixelId && !this.gtmService.isManageFbPixelByTagManager) {
+      this.gtmService.trackByFacebookPixel('Purchase', custom_data, this.eventId);
+    }
+    this.gtmService.trackPurchase(trackData).subscribe();
+
+    // 7️⃣ TikTok Tracking
+    const analytics = this.appConfigService.getSettingData('analytics');
+    if (analytics?.tiktokPixelId) {
+      const userEmail = this.dataForm.value.email || this.userService.getUserLocalDataByField('email');
+      const userPhone = this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo');
+
+      const tiktokBrowserData: any = {
+        value: this.grandTotal,
+        currency: 'BDT',
         contents: contents.map(c => ({
           content_id: c.id,
           content_type: 'product',
           quantity: c.quantity,
           price: c.item_price,
         })),
+        content_name: custom_data.content_name,
+        content_category: custom_data.content_category,
+      };
+
+      if (userEmail) tiktokBrowserData.email = userEmail;
+      if (userPhone) tiktokBrowserData.phone_number = userPhone;
+
+      this.tiktokPixelService.track('CompletePayment', tiktokBrowserData, this.eventId);
+
+      this.tiktokPixelService.trackServerEvent({
+        event: 'CompletePayment',
+        eventId: this.eventId,
+        value: this.grandTotal,
+        currency: 'BDT',
+        contents: tiktokBrowserData.contents,
         email: userEmail,
         phoneNo: userPhone,
-        externalId: this.userService.getUserLocalDataByField('userId'),
+        externalId: externalIdRaw,
         ttclid: this.tiktokPixelService.getTtclid(),
         ttp: this.tiktokPixelService.getTtp(),
+        customProperties: {
+          order_id: orderId,
+          content_name: custom_data.content_name,
+          content_category: custom_data.content_category,
+        }
+      });
+    }
+
+    // 8️⃣ GTM Data Layer Push (GA4)
+    if (this.gtmService.tagManagerId) {
+      const name = this.dataForm.value.name || this.userService.getUserLocalDataByField('name') || '';
+      const nameParts = name.trim().split(' ');
+      const firstName = nameParts[0];
+      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+      this.gtmService.pushToDataLayer({
+        event: 'purchase',
+        order_id: orderId,
+        event_id: this.eventId,
+        external_id: externalIdRaw,
+        ecommerce: {
+          transaction_id: orderId,
+          affiliation: "Website",
+          value: this.grandTotal,
+          tax: 0,
+          shipping: Number(this.deliveryChargeAmount || 0),
+          currency: 'BDT',
+          items: contents.map((c, i) => ({
+            item_id: c.id,
+            item_name: this.carts[i].product['name'],
+            item_category: this.carts[i].product['category']?.['name'],
+            price: c.item_price,
+            quantity: c.quantity,
+          }))
+        },
+        customer_information: {
+          first_name: firstName,
+          last_name: lastName,
+          phone: this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo'),
+          address_1: this.dataForm.value.shippingAddress || this.userService.getUserLocalDataByField('address'),
+          city: (this.dataForm.value.division || this.userService.getUserLocalDataByField('division')),
+          country: "Bangladesh",
+          country_code: "BD"
+        },
+        user_data: [{
+          external_id: this.utilsService.hashDataSha256(externalIdRaw),
+          em: this.utilsService.hashDataSha256(this.dataForm.value.email || this.userService.getUserLocalDataByField('email')?.trim()?.toLowerCase() || ''),
+          ph: this.utilsService.hashDataSha256(this.utilsService.normalizeBdPhone(this.dataForm.value.phoneNo || this.userService.getUserLocalDataByField('phoneNo')) || ''),
+          fn: this.utilsService.hashDataSha256(this.utilsService.normText(firstName) || ''),
+          ln: this.utilsService.hashDataSha256(this.utilsService.normText(lastName) || ''),
+          ct: (this.dataForm.value.division || this.userService.getUserLocalDataByField('division')) ? this.utilsService.hashDataSha256(this.utilsService.normText(this.dataForm.value.division || this.userService.getUserLocalDataByField('division')) || '') : '',
+          country: this.utilsService.hashDataSha256('Bangladesh'),
+          country_code: this.utilsService.hashDataSha256('BD')
+        }]
       });
     }
   }
 
 
   private getSetting() {
-    const subscription = this.settingService.getSetting('orderSetting advancePayment deliveryOptionType')
+    const subscription = this.settingService.getSetting('orderSetting incompleteOrder advancePayment deliveryOptionType productSetting country')
       .subscribe({
         next: res => {
           this.isEnableOrderNote = res.data?.orderSetting?.isEnableOrderNote;
           this.isEnableOtp = res.data?.orderSetting?.isEnableOtp;
           this.deliveryOptionType = res.data?.deliveryOptionType;
+          this.productSetting = res.data?.productSetting;
+          this.country = res.data?.country;
+          this.getAllDivision();
+
+          this.incompleteOrderData = res.data?.incompleteOrder;
           setTimeout(() => {
             if (
               this.deliveryOptionType?.isEnableInsideCityOutsideCity &&
@@ -779,6 +1140,11 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
 
           if (res.data?.advancePayment && res.data?.advancePayment.length) {
             this.advancePayment = res.data.advancePayment.filter(f => f.status === 'active');
+          }
+
+          if (this.productSetting) {
+
+            this.deliveryChargeAmount = this.cartDeliveryChargeTotal ? this.cartDeliveryChargeTotal : 0;
           }
 
         },
@@ -795,6 +1161,11 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
     if (input.length === 11) {
       this.isLoadingPhoneNo = true;
       this.handlePhoneNumberFilled({phoneNo: input});
+
+      // Check if incomplete order should be created
+      if (this.incompleteOrderData && this.incompleteOrderData.isEnableIncompleteOrder) {
+        this.createIncompleteOrderIfNeeded();
+      }
     }
   }
 
@@ -811,7 +1182,7 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
         next: async res => {
           this.isLoadingPhoneNo = false;
           if (res.success) {
-            this.dataForm.patchValue({shippingAddress: res.data?.shippingAddress})
+            this.dataForm.patchValue( res.data)
           } else {
             this.uiService.message(res.message, 'warn');
           }
@@ -832,22 +1203,66 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
 
   onChangeDeliveryCharge(event: DeliveryCharge) {
     this.deliveryCharge = event;
+    // console.log(this.deliveryCharge)
     // this.deliveryChargeAmount = this.dataForm?.value.division? event.deliveryCharge : 0 ?? 0;
     // this.deliveryChargeAmount = this.dataForm?.value.division ? event.deliveryCharge ?? 0 : 0;
     this.updateDeliveryChargeAmount();
   }
 
+  // updateDeliveryChargeAmount() {
+  //   this.deliveryChargeAmount =
+  //     this.deliveryCharge?.freeDeliveryMinAmount && this.cartSaleSubTotal >= this.deliveryCharge.freeDeliveryMinAmount
+  //       ? 0
+  //       : this.dataForm?.value.division ? this.deliveryCharge?.deliveryCharge ?? 0 : 0;
+  // }
+
+
+  // updateDeliveryChargeAmount() {
+  //
+  //   const isFreeDelivery = this.deliveryCharge?.freeDeliveryMinAmount &&
+  //     this.cartSaleSubTotal >= this.deliveryCharge.freeDeliveryMinAmount;
+  //
+  //   if (this.productSetting?.isEnableDeliveryCharge && this.cartDeliveryChargeTotal > 0) {
+  //     this.deliveryChargeAmount = isFreeDelivery
+  //       ? this.cartDeliveryChargeTotal :
+  //       this.hasZeroDeliveryCharge ? this.cartDeliveryChargeTotal + (this.deliveryCharge?.deliveryCharge ?? 0) : this.cartDeliveryChargeTotal;
+  //   } else {
+  //     this.deliveryChargeAmount = isFreeDelivery
+  //       ? 0
+  //       : (this.deliveryCharge?.deliveryCharge ?? 0);
+  //   }
+  //
+  //
+  //   console.log("  this.deliveryChargeAmount",  this.deliveryChargeAmount)
+  // }
+
   updateDeliveryChargeAmount() {
-    this.deliveryChargeAmount =
-      this.deliveryCharge?.freeDeliveryMinAmount && this.cartSaleSubTotal >= this.deliveryCharge.freeDeliveryMinAmount
-        ? 0
-        : this.dataForm?.value.division ? this.deliveryCharge?.deliveryCharge ?? 0 : 0;
+
+    const isFreeDelivery = this.deliveryCharge?.freeDeliveryMinAmount &&
+      this.cartSaleSubTotal >= this.deliveryCharge.freeDeliveryMinAmount;
+
+    // if (this.cartDeliveryChargeTotal) {
+    //   this.deliveryChargeAmount = isFreeDelivery
+    //     ? this.cartDeliveryChargeTotal :
+    //     this.hasZeroDeliveryCharge ? this.cartDeliveryChargeTotal + (this.deliveryCharge?.deliveryCharge ?? 0) : this.cartDeliveryChargeTotal;
+    // } else {
+    //   this.deliveryChargeAmount = isFreeDelivery
+    //     ? 0
+    //     : (this.deliveryCharge?.deliveryCharge ?? 0);
+    // }
+    this.deliveryChargeAmount = isFreeDelivery
+      ? 0
+      : (this.cartDeliveryChargeTotal ?? 0);
+
+    // console.log("  this.deliveryChargeAmount", this.deliveryChargeAmount)
   }
+
 
   getDeliveryLabel(): string {
     const selected = this.dataForm?.value.division;
     const city = this.deliveryCharge?.city;
     if (!selected || !city) return '';
+    // if (!city) return '';
     return selected === city ? `Inside ${city} :` : `Outside ${city} :`;
   }
 
@@ -925,6 +1340,7 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
     this.isSendOtp = false;
   }
 
+
   /**
    * COUPON HANDLE
    * checkCouponAvailability()
@@ -962,6 +1378,28 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
     this.subscriptions?.push(subscription);
   }
 
+  private validateCoupon() {
+    if (this.couponCode && this.coupon) {
+      this.couponService.checkCouponAvailability({
+        couponCode: this.couponCode,
+        subTotal: this.cartSaleSubTotal,
+      }).subscribe({
+        next: (res) => {
+          if (!res.success) {
+            this.onRemoveCoupon();
+            this.uiService.message('Coupon removed because it is no longer valid for the updated cart amount.', 'warn');
+          } else {
+            this.coupon = res.data;
+            this.calculateCouponDiscount();
+          }
+        },
+        error: () => {
+          this.onRemoveCoupon();
+        }
+      });
+    }
+  }
+
   private calculateCouponDiscount() {
     if (this.coupon.discountType === DiscountTypeEnum.PERCENTAGE) {
       this.couponDiscount = Math.floor(
@@ -986,6 +1424,176 @@ export class PaymentAreaComponent implements OnInit, OnChanges {
 
   onSelectCouponClose() {
     this.isCoupon = false;
+  }
+
+  /**
+   * Product Selection Methods
+   */
+  onProductSelect(productId: string, isSelected: boolean) {
+    const product = this.availableProducts.find(p => p.id === productId);
+    if (product) {
+      product.isSelected = isSelected;
+      this.createCartFromLandingPage();
+      this.updateDeliveryChargeAmount();
+    }
+  }
+
+  onSizeSelect(productId: string, size: string) {
+    const product = this.availableProducts.find(p => p.id === productId);
+    if (product) {
+      product.selectedSize = size;
+
+      // Change product image and price if variation has specific data
+      if (product.originalProduct.isVariation && product.originalProduct.variationList) {
+        const selectedVariation = product.originalProduct.variationList.find(
+          (v: any) => v.name === size
+        );
+        if (selectedVariation) {
+          // Update image if available
+          if (selectedVariation.image && selectedVariation.image.length > 0) {
+            product.image = selectedVariation.image;
+          }
+
+          // Update price based on selected variation
+          product.currentPrice = selectedVariation.salePrice;
+          product.oldPrice = selectedVariation.regularPrice;
+        }
+      }
+
+      this.createCartFromLandingPage();
+    }
+  }
+
+  onQuantityChange(productId: string, change: number) {
+    const product = this.availableProducts.find(p => p.id === productId);
+    if (product) {
+      const newQuantity = product.quantity + change;
+      if (newQuantity >= 1) {
+        product.quantity = newQuantity;
+        this.createCartFromLandingPage();
+        this.updateDeliveryChargeAmount();
+      }
+    }
+  }
+
+  getSelectedProducts() {
+    return this.availableProducts.filter(product => product.isSelected);
+  }
+
+  initializeProducts() {
+    if (this.singleLandingPage?.product && Array.isArray(this.singleLandingPage.product)) {
+      this.availableProducts = this.singleLandingPage.product.map((product: any, index: number) => {
+        // Handle different variation structures
+        let availableSizes = ['Default'];
+        let selectedSize = 'Default';
+        let currentPrice = product.salePrice;
+        let oldPrice = product.regularPrice;
+
+        if (product.isVariation) {
+          if (product.variationOptions && product.variationOptions.length > 0) {
+            availableSizes = product.variationOptions;
+            selectedSize = product.variationOptions[0];
+          } else if (product.variation2Options && product.variation2Options.length > 0) {
+            availableSizes = product.variation2Options;
+            selectedSize = product.variation2Options[0];
+          }
+
+          // Set initial price based on first variation
+          if (product.variationList && product.variationList.length > 0) {
+            const firstVariation = product.variationList.find((v: any) => v.name === selectedSize);
+            if (firstVariation) {
+              currentPrice = firstVariation.salePrice;
+              oldPrice = firstVariation.regularPrice;
+            }
+          }
+        }
+
+        return {
+          id: product._id,
+          name: product.name,
+          image: product.images && product.images.length > 0 ? product.images[0] : '/assets/images/placeholder/test.png',
+          currentPrice: currentPrice,
+          oldPrice: oldPrice,
+          selectedSize: selectedSize,
+          availableSizes: availableSizes,
+          quantity: 1,
+          isSelected: this.isAllowedShop1() ? false : index === 0, // For isAllowedShop1 shops, no product selected by default
+          originalProduct: product // Keep reference to original product data
+        };
+      });
+      // console.log('Products initialized from API:', this.availableProducts);
+    } else {
+      // console.log('No products found in singleLandingPage');
+    }
+  }
+  getSocialLink(type: string): any {
+    switch (type) {
+      case 'messenger':
+        return this.chatLink?.find(f => f.chatType === 'messenger') ?? null;
+      case 'whatsapp':
+        return this.chatLink?.find(f => f.chatType === 'whatsapp') ?? null;
+      case 'phone':
+        return this.chatLink?.find(f => f.chatType === 'phone') ?? null;
+      default:
+        return null;
+    }
+  }
+
+
+  private incompleteOrder() {
+
+    const subscription = this.orderService?.addIncompleteOrder(this.orderFinalData, this.userService?.isUser).subscribe({
+      next: (res) => {
+
+        this.incompleteOrderId = res?.data?._id
+        this.isIncompleteOrderId = true
+        // console.log('success',res);
+      },
+      error: (error) => {
+        console.log(error);
+      },
+    });
+    if (subscription) {
+      this.subscriptions?.push(subscription);
+    }
+
+  }
+
+  private createIncompleteOrderIfNeeded() {
+    // Only create incomplete order if we don't already have one
+    if (!this.isIncompleteOrderId && this.carts.length > 0) {
+      this.incompleteOrder();
+    }
+  }
+
+
+  updateIncompleteOrderById() {
+
+    const subscription = this.orderService?.updateIncompleteOrderById(this.incompleteOrderId, this.orderFinalData).subscribe({
+      next: (res) => {
+        if (res.success) {
+          // console.log("update Incomplete Order");
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching order:', err);
+      }
+    });
+    if (subscription) {
+      this.subscriptions?.push(subscription);
+    }
+  }
+
+  isAllowedShop1(): boolean {
+    const id = this.appConfigService.getSettingData('shop');
+    return !!id && this.allowedShopIds1.includes(id);
+  }
+
+  /**
+   * ON Destroy
+   */
+  ngOnDestroy() {
+    this.subscriptions?.forEach(sub => sub?.unsubscribe());
   }
 
 

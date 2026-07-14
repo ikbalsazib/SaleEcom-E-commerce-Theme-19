@@ -1,0 +1,57 @@
+<div class="container">
+
+  <h5 class="text-color">🛍️ আপনার সুযোগ এসেছে—পরবর্তী সন্তুষ্ট কাস্টমার ও ভাগ্যবান উইনার হোন!</h5>
+  <h2  class="title">বেছে নিন আপনার পছন্দ অনুযায়ী ! </h2>
+  <div class="row product_container">
+
+    @for(data of singleLandingPage?.productDetails; let i = $index; track i){
+      <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+        <div class="product-item">
+          <div class="product-english-name" (click)="onScrollWithNavigate('payment')">{{ data?.name }}</div>
+          <!-- <div class="product-bangla-name"></div> -->
+          <img (click)="onScrollWithNavigate('payment')" [src]="data?.image" alt="Body Care Combo" class="product-image" loading="lazy">
+
+        </div>
+      </div>
+    }
+
+<!--    <div class="col-lg-2 col-md-3 col-sm-4 col-6">-->
+<!--      <div class="product-item">-->
+<!--        <div class="product-english-name">Purse+Watch Gift</div>-->
+<!--        &lt;!&ndash; <div class="product-bangla-name"></div> &ndash;&gt;-->
+<!--        <img src="https://app.miswanfashion.com/uploads/landingPageFiles/0f5518844e854-2025-10-02.webp" alt="Purse+Watch Gift" class="product-image" loading="lazy">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="col-lg-2 col-md-3 col-sm-4 col-6">-->
+<!--      <div class="product-item">-->
+<!--        <div class="product-english-name">Wallet</div>-->
+<!--        &lt;!&ndash; <div class="product-bangla-name"></div> &ndash;&gt;-->
+<!--        <img src="https://app.miswanfashion.com/uploads/landingPageFiles/cf88a978384f-2025-09-18.webp" alt="Wallet" class="product-image" loading="lazy">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="col-lg-2 col-md-3 col-sm-4 col-6">-->
+<!--      <div class="product-item">-->
+<!--        <div class="product-english-name">Sunglass+Wallet</div>-->
+<!--        &lt;!&ndash; <div class="product-bangla-name"></div> &ndash;&gt;-->
+<!--        <img src="https://app.miswanfashion.com/uploads/landingPageFiles/25b1142682e5-2025-09-18.webp" alt="Sunglass+Wallet" class="product-image" loading="lazy">-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="col-lg-2 col-md-3 col-sm-4 col-6">-->
+<!--      <div class="product-item">-->
+<!--        <div class="product-english-name">T-Shirt+Wallet+Sunglass</div>-->
+<!--        &lt;!&ndash; <div class="product-bangla-name"></div> &ndash;&gt;-->
+<!--        <img src="https://app.miswanfashion.com/uploads/landingPageFiles/afc288aafa56-2025-09-30.webp" alt="T-Shirt+Wallet+Sunglass" class="product-image" loading="lazy">-->
+
+<!--      </div>-->
+<!--    </div>-->
+  </div>
+ <div class="btn-area">
+   <button class="order-button" (click)="onScrollWithNavigate('payment')">
+     এখনই অর্ডার করুন
+     <!--      <svg data-v-e8d572f6="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="icon mr-2" width=".8em" height=".8em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10M9.75 9a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-2.69l-4.72 4.72a.75.75 0 0 1-1.06-1.06l4.72-4.72H10.5A.75.75 0 0 1 9.75 9" clip-rule="evenodd"></path></svg>-->
+   </button>
+ </div>
+</div>

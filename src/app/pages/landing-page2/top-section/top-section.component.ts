@@ -1,5 +1,5 @@
 import {Component, HostListener, inject, Input, PLATFORM_ID} from '@angular/core';
-import {isPlatformBrowser, NgForOf, NgIf, NgOptimizedImage, NgStyle} from "@angular/common";
+import {isPlatformBrowser, NgIf, NgOptimizedImage} from "@angular/common";
 import {ReloadService} from "../../../services/core/reload.service";
 import {
   GalleryImageViewerComponent
@@ -7,7 +7,6 @@ import {
 import {ImgCtrlPipe} from "../../../shared/pipes/img-ctrl.pipe";
 import {RouterLink} from "@angular/router";
 import {ImageGalleryComponent} from "../image-gallery/image-gallery.component";
-import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
 
 @Component({
   selector: 'app-top-section',
@@ -15,14 +14,11 @@ import {TranslatePipe} from "../../../shared/pipes/translate.pipe";
   styleUrl: './top-section.component.scss',
   imports: [
     NgIf,
-    NgForOf,
     GalleryImageViewerComponent,
     ImgCtrlPipe,
     NgOptimizedImage,
     RouterLink,
-    ImageGalleryComponent,
-    NgStyle,
-    TranslatePipe
+    ImageGalleryComponent
   ],
   standalone: true
 })
@@ -32,6 +28,12 @@ export class TopSectionComponent {
   selectedMenu = 0;
   showModal = false;
   isMobile: number;
+  // Store Data
+  days: any;
+  hours: any;
+  min: any;
+  sec: any;
+  result: any;
 
   // Store Data
   protected readonly rawSrcset: string = '384w, 640w';
@@ -48,6 +50,9 @@ export class TopSectionComponent {
     ngOnInit(): void {
       if (isPlatformBrowser(this.platformId)) {
         this.isMobile = window.innerWidth;
+          setInterval(() => {
+            this.setTimer();
+          }, 1000)
       }
     }
 
@@ -83,6 +88,35 @@ export class TopSectionComponent {
   closeModal1() {
     this.showModal = false;
   }
+
+
+
+
+
+setTimer() {
+  var dest = new Date(this.singleLandingPage?.endDate).getTime();
+  var now = new Date().getTime();
+  var diff = dest - now;
+  this.days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  this.hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  this.min = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  this.sec = Math.floor((diff % (1000 * 60)) / 1000);
+
+  if (this.days < 10) {
+    this.days = '0' + this.days;
+  }
+  if (this.hours < 10) {
+    this.hours = '0' + this.hours;
+  }
+  if (this.min < 10) {
+    this.min = '0' + this.min;
+  }
+  if (this.sec < 10) {
+    this.sec = "0" + this.sec;
+  }
+
+  this.result = `${this.days} : ${this.hours} : ${this.min} : ${this.sec}`;
+}
 
 
   /***

@@ -287,6 +287,13 @@ const baseRoutes: Routes = [
         (m) => m.LandingPage2Component
       ),
   },
+  {
+    path: 'promotion/:slug',
+    loadComponent: () =>
+      import('../app/pages/landing-page2/landing-page2.component').then(
+        (m) => m.LandingPage2Component
+      ),
+  },
   // {
   //   path: '**',
   //   redirectTo: '',
