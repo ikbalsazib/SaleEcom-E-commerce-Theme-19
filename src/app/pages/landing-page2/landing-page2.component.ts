@@ -1,51 +1,52 @@
-import {Component, ElementRef, HostListener, inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild} from '@angular/core';
-import {isPlatformBrowser, NgIf} from "@angular/common";
-import {ShopInformation} from "../../interfaces/common/shop-information.interface";
-import {ReadyLandingPageService} from "../../services/common/ready-landing-page.service";
-import {ActivatedRoute} from "@angular/router";
-import {GtmService} from "../../services/core/gtm.service";
-import {UtilsService} from "../../services/core/utils.service";
-import {TiktokPixelService} from "../../services/core/tiktok-pixel.service";
-import {AppConfigService} from "../../services/core/app-config.service";
-import {SettingService} from "../../services/common/setting.service";
-import {Meta, Title} from "@angular/platform-browser";
-import {CanonicalService} from "../../services/core/canonical.service";
-import {ReloadService} from "../../services/core/reload.service";
-import {ProductPricePipe} from "../../shared/pipes/product-price.pipe";
-import {ShopInformationService} from "../../services/common/shop-information.service";
-import {UserService} from "../../services/common/user.service";
-import {PricePipe} from "../../shared/pipes/price.pipe";
-import {Subscription} from "rxjs";
-import {HelpingComponent} from "./helping/helping.component";
-import {YoutubeVideoComponent} from "./youtube-video/youtube-video.component";
-import {TopSectionComponent} from "./top-section/top-section.component";
-import {LazyLoadComponentDirective} from "../../shared/directives/lazy-load-component.directive";
-import {CustomerReviewComponent} from "./customer-review/customer-review.component";
-import {WhyBuyProductComponent} from "./why-buy-product/why-buy-product.component";
-import {FooterComponent} from "./footer/footer.component";
-import {PaymentAreaComponent} from "./payment-area/payment-area.component";
-import {SocialChatComponent} from "./social-chat/social-chat.component";
-import {ComboOfferComponent} from "./combo-offer/combo-offer.component";
+import { CommonModule, isPlatformBrowser } from "@angular/common";
+import { Component, ElementRef, HostListener, inject, OnDestroy, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Meta, Title } from "@angular/platform-browser";
+import { ActivatedRoute } from "@angular/router";
+import { Subscription } from "rxjs";
+import { ShopInformation } from "../../interfaces/common/shop-information.interface";
+import { FixedLandingPageService } from "../../services/common/fixed-landing-page.service";
+import { SettingService } from "../../services/common/setting.service";
+import { ShopInformationService } from "../../services/common/shop-information.service";
+import { UserService } from '../../services/common/user.service';
+import { CanonicalService } from "../../services/core/canonical.service";
+import { GtmService } from "../../services/core/gtm.service";
+import { ReloadService } from "../../services/core/reload.service";
+import { UtilsService } from "../../services/core/utils.service";
+import { LazyLoadComponentDirective } from "../../shared/directives/lazy-load-component.directive";
+import { PricePipe } from "../../shared/pipes/price.pipe";
+import { ProductPricePipe } from "../../shared/pipes/product-price.pipe";
+import { CustomerReviewComponent } from "./customer-review/customer-review.component";
+import { FaqComponent } from './faq/faq.component';
+import { FooterComponent } from './footer/footer.component';
+import { HelpingComponent } from "./helping/helping.component";
+import { OurProductComponent } from './our-product/our-product.component';
+import { PaymentAreaComponent } from "./payment-area/payment-area.component";
+import { SocialChatComponent } from "./social-chat/social-chat.component";
+import { TopSectionComponent } from './top-section/top-section.component';
+import { WhyBuyProductComponent } from "./why-buy-product/why-buy-product.component";
+import { YoutubeVideoComponent } from "./youtube-video/youtube-video.component";
 
 @Component({
   selector: 'app-landing-page2',
   templateUrl: './landing-page2.component.html',
   styleUrl: './landing-page2.component.scss',
-  imports: [
-    HelpingComponent,
-    YoutubeVideoComponent,
-    TopSectionComponent,
-    LazyLoadComponentDirective,
-    CustomerReviewComponent,
-    WhyBuyProductComponent,
-    FooterComponent,
-    PaymentAreaComponent,
-    SocialChatComponent,
-    NgIf,
-    ComboOfferComponent
-
-  ],
   standalone: true,
+  imports: [
+    FormsModule,
+    TopSectionComponent,
+    FaqComponent,
+    OurProductComponent,
+    FooterComponent,
+    SocialChatComponent,
+    LazyLoadComponentDirective,
+    CommonModule,
+    YoutubeVideoComponent,
+    CustomerReviewComponent,
+    HelpingComponent,
+    WhyBuyProductComponent,
+    PaymentAreaComponent,
+  ],
   providers: [PricePipe, ProductPricePipe],
 })
 export class LandingPage2Component implements OnInit, OnDestroy {
@@ -72,9 +73,7 @@ export class LandingPage2Component implements OnInit, OnDestroy {
   private readonly footerExcludedShopIds: string[] = ['679511745a429b7bb55421c4', '68948c6052ee077dd82580aa', '6868f0ab0d00ada7a9b37586', '6878c87616b1225e28ee5a1a'];
 
   // Inject
-  private readonly landingPageService = inject(ReadyLandingPageService);
-  private readonly appConfigService = inject(AppConfigService);
-  private readonly tiktokPixelService = inject(TiktokPixelService);
+  private readonly landingPageService = inject(FixedLandingPageService);
   private readonly activateRoute = inject(ActivatedRoute);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly gtmService = inject(GtmService);
@@ -206,12 +205,10 @@ export class LandingPage2Component implements OnInit, OnDestroy {
   }
 
   private viewContentEvent(): void {
-    if (!this.product?._id) return;
-
-    // 1️⃣ Generate Unique Event ID
+    if (!this.product?._id) return; // ✅ guard
+    // 1️⃣ Generate Event ID
     this.generateEventId();
-
-    // 2️⃣ Get hashed user data
+    // 2️⃣ Hashed user_data
     const user_data = this.utilsService.getUserData({
       email: this.userService.getUserLocalDataByField('email'),
       phoneNo: this.userService.getUserLocalDataByField('phoneNo'),
@@ -222,123 +219,77 @@ export class LandingPage2Component implements OnInit, OnDestroy {
 
     const price = Number(this.pricePipe.transform(this.product, 'salePrice')) || 0;
 
-    // 3️⃣ Prepare contents
-    const contents = [
-      {
-        id: String(this.product._id),
-        quantity: 1,
-        item_price: price,
-      },
-    ];
-
-    // 4️⃣ Prepare custom_data
+    // 3️⃣ Prepare custom_data
     const custom_data = {
-      content_ids: [String(this.product._id)],
-      contents,
+      contents: [{ id: String(this.product._id), quantity: 1, item_price: price }],
       content_type: 'product',
       content_name: this.product?.name,
       content_category: this.product?.category?.name,
-      value: price,
+      content_subcategory: this.product?.subCategory?.name,
+      value: Number(price.toFixed(2)),
       currency: 'BDT',
       num_items: 1,
-      ...this.utilsService.getFbCookies()
     };
 
     const eventTime = Math.floor(Date.now() / 1000);
+    const page_url = location.href;
     const original_event_data = {
       event_name: 'ViewContent',
       event_time: eventTime,
     };
 
-    // 5️⃣ Server-side payload for CAPI
-    const trackData: any = {
+    // 4️⃣ Prepare server-side payload
+    const viewContentData: any = {
       event_name: 'ViewContent',
       event_time: eventTime,
-      creationTime: eventTime,
       event_id: this.eventId,
       action_source: 'website',
-      event_source_url: location.href,
+      event_source_url: page_url,
       custom_data,
       original_event_data,
       ...(Object.keys(user_data).length > 0 && { user_data }),
     };
 
-    // 6️⃣ Send to Meta APIs
-    if (this.gtmService.facebookPixelId && !this.gtmService.isManageFbPixelByTagManager) {
-      this.gtmService.trackByFacebookPixel('ViewContent', custom_data, this.eventId);
+    // 5️⃣ Browser: Facebook Pixel
+    if (
+      this.gtmService.facebookPixelId &&
+      !this.gtmService.isManageFbPixelByTagManager
+    ) {
+      this.gtmService.trackByFacebookPixel(
+        'ViewContent',
+        custom_data,
+        this.eventId
+      );
     }
-    this.gtmService.trackViewContent(trackData).subscribe();
 
-    // 7️⃣ TikTok Tracking
-    const analytics = this.appConfigService.getSettingData('analytics');
-    if (analytics?.tiktokPixelId) {
-      const userEmail = this.userService.getUserLocalDataByField('email');
-      const userPhone = this.userService.getUserLocalDataByField('phoneNo');
-
-      const tiktokBrowserData: any = {
-        value: price,
-        currency: 'BDT',
-        contents: [{
-          content_id: String(this.product?._id),
-          content_type: 'product',
-          quantity: 1,
-          price: price,
-        }],
-        content_name: this.product?.name,
-        content_category: this.product?.category?.name,
-      };
-
-      if (userEmail) tiktokBrowserData.email = userEmail;
-      if (userPhone) tiktokBrowserData.phone_number = userPhone;
-
-      this.tiktokPixelService.track('ViewContent', tiktokBrowserData, this.eventId);
-
-      this.tiktokPixelService.trackServerEvent({
-        event: 'ViewContent',
-        eventId: this.eventId,
-        value: price,
-        currency: 'BDT',
-        contents: tiktokBrowserData.contents,
-        email: userEmail,
-        phoneNo: userPhone,
-        externalId: this.userService.getUserLocalDataByField('userId'),
-        ttclid: this.tiktokPixelService.getTtclid(),
-        ttp: this.tiktokPixelService.getTtp(),
-        customProperties: {
-          content_name: this.product?.name,
-          content_category: this.product?.category?.name,
-        }
+    // 6️⃣ Server: Facebook Conversions API (CAPI) - Always fire if Pixel ID exists
+    if (this.gtmService.facebookPixelId) {
+      this.gtmService.trackViewContent(viewContentData).subscribe({
+        next: () => {
+        },
+        error: () => {
+        },
       });
     }
 
-    // 8️⃣ GTM Data Layer Push (GA4)
+    // 6️⃣ Browser: GTM (if Pixel is managed by GTM)
     if (this.gtmService.tagManagerId) {
-      const nameParts = (this.userService.getUserLocalDataByField('name') || '').trim().split(' ');
-      const firstName = nameParts[0];
-      const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-
+      // Push GA4 compatible event
       this.gtmService.pushToDataLayer({
         event: 'view_item',
         ecommerce: {
           currency: 'BDT',
           value: price,
-          items: [{
-            item_id: String(this.product?._id),
-            item_name: this.product?.name,
-            item_category: this.product?.category?.name,
-            price: price,
-            quantity: 1,
-          }]
+          items: [
+            {
+              item_id: this.product?._id,
+              item_name: this.product?.name,
+              item_category: this.product?.category?.name,
+              price: price,
+              quantity: 1,
+            },
+          ],
         },
-        user_data: [{
-          em: this.utilsService.hashDataSha256(this.userService.getUserLocalDataByField('email')?.trim()?.toLowerCase() || ''),
-          ph: this.utilsService.hashDataSha256(this.utilsService.normalizeBdPhone(this.userService.getUserLocalDataByField('phoneNo')) || ''),
-          fn: this.utilsService.hashDataSha256(this.utilsService.normText(firstName) || ''),
-          ln: this.utilsService.hashDataSha256(this.utilsService.normText(lastName) || ''),
-          ct: this.userService.getUserLocalDataByField('division') ? this.utilsService.hashDataSha256(this.utilsService.normText(this.userService.getUserLocalDataByField('division')) || '') : '',
-          country: this.utilsService.hashDataSha256('Bangladesh'),
-          country_code: this.utilsService.hashDataSha256('BD')
-        }]
       });
     }
   }
@@ -391,29 +342,29 @@ export class LandingPage2Component implements OnInit, OnDestroy {
     this.title.setTitle(seoTitle);
 
     // Meta Tags
-    this.meta.updateTag({name: 'robots', content: 'index, follow'});
-    this.meta.updateTag({name: 'theme-color', content: '#01640D'});
-    this.meta.updateTag({name: 'description', content: seoDescription});
+    this.meta.updateTag({ name: 'robots', content: 'index, follow' });
+    this.meta.updateTag({ name: 'theme-color', content: '#01640D' });
+    this.meta.updateTag({ name: 'description', content: seoDescription });
 
     // Open Graph (og:)
-    this.meta.updateTag({property: 'og:title', content: seoTitle});
-    this.meta.updateTag({property: 'og:type', content: 'website'});
-    this.meta.updateTag({property: 'og:url', content: url});
-    this.meta.updateTag({property: 'og:image', content: imageUrl});
-    this.meta.updateTag({property: 'og:image:type', content: 'image/jpeg'});
-    this.meta.updateTag({property: 'og:image:width', content: '1200'}); // Recommended width
-    this.meta.updateTag({property: 'og:image:height', content: '630'}); // Recommended height
-    this.meta.updateTag({property: 'og:description', content: seoDescription});
-    this.meta.updateTag({property: 'og:locale', content: 'en_US'});
+    this.meta.updateTag({ property: 'og:title', content: seoTitle });
+    this.meta.updateTag({ property: 'og:type', content: 'website' });
+    this.meta.updateTag({ property: 'og:url', content: url });
+    this.meta.updateTag({ property: 'og:image', content: imageUrl });
+    this.meta.updateTag({ property: 'og:image:type', content: 'image/jpeg' });
+    this.meta.updateTag({ property: 'og:image:width', content: '1200' }); // Recommended width
+    this.meta.updateTag({ property: 'og:image:height', content: '630' }); // Recommended height
+    this.meta.updateTag({ property: 'og:description', content: seoDescription });
+    this.meta.updateTag({ property: 'og:locale', content: 'en_US' });
 
     // Twitter Tags
-    this.meta.updateTag({name: 'twitter:title', content: seoTitle});
-    this.meta.updateTag({name: 'twitter:card', content: 'summary_large_image'});
-    this.meta.updateTag({name: 'twitter:description', content: seoDescription});
-    this.meta.updateTag({name: 'twitter:image', content: imageUrl}); // Image for Twitter
+    this.meta.updateTag({ name: 'twitter:title', content: seoTitle });
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.updateTag({ name: 'twitter:description', content: seoDescription });
+    this.meta.updateTag({ name: 'twitter:image', content: imageUrl }); // Image for Twitter
 
     // Microsoft
-    this.meta.updateTag({name: 'msapplication-TileImage', content: imageUrl});
+    this.meta.updateTag({ name: 'msapplication-TileImage', content: imageUrl });
 
     // Canonical
     this.canonicalService.setCanonicalURL();
@@ -482,3 +433,4 @@ export class LandingPage2Component implements OnInit, OnDestroy {
     this.subscriptions?.forEach(sub => sub?.unsubscribe());
   }
 }
+

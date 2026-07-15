@@ -1,0 +1,49 @@
+<div class="container">
+  <h1 class="header">{{ singleLandingPage?.title }}</h1>
+  <!-- <div class="arrow-icon">
+      <img src="https://funnelbuilder.sgp1.digitaloceanspaces.com/builder/QDr1SPN6zvCX25x8TuQKgStvTuZy9odA.png" loading="lazy" alt="Image" style="width: 30%; height: 30%; max-width: 100%; box-shadow: rgb(0, 0, 0) 0px 0px 0px 0px inset; border-color: rgb(0, 0, 0); border-style: solid; border-width: 0px; border-radius: 0px; margin: -45px 0px 0px 220px; display: block; opacity: 1; padding: 0px; z-index: 0; transform: translateX(0px); background-size: cover; background-color: rgba(255, 255, 255, 0); background-repeat: no-repeat; background-position: center center; background-attachment: scroll;">
+    </div> -->
+
+  <div class="content">
+    <div class="main-card" *ngIf="singleLandingPage?.specifications.length > 0">
+      <!-- <h2>মূল বৈশিষ্ট্য:</h2>
+        <p class="text-lg font-bold mb-2">১০০% বিশুদ্ধ খাঁটি ও নিরাপদ</p>
+        <p>
+          আমাদের ছানা সদ্বেশ সম্পূর্ণরূপে খাঁটি ও বিশুদ্ধ, যা নিজস্ব কারখানায় প্রস্তুত করাই প্রতিটি প্রক্রিয়ার অঙ্গস্বরূপ থাকে। স্বাস্থ্যকর জীবনের জন্য এই ছানা সদ্বেশ এক অনন্য সম্পদ।
+        </p> -->
+      <h2>{{ singleLandingPage?.specifications[0].title }}</h2>
+      <p>{{ singleLandingPage?.specifications[0].value }}</p>
+
+    </div>
+
+    <div class="sub-cards">
+      <div class="sub-card" *ngFor="let feature of singleLandingPage?.specifications.slice(1)">
+        <h2>{{ feature.title }}</h2>
+        <p>{{ feature.value }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="btn-area">
+    <button class="order-button" (click)="onScrollWithNavigate('payment')">
+      {{ 'placeOrder'  | translate }}
+      <svg
+        data-v-e8d572f6=""
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        aria-hidden="true"
+        role="img"
+        class="icon mr-2"
+        width=".8em"
+        height=".8em"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          fill-rule="evenodd"
+          d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10M9.75 9a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-2.69l-4.72 4.72a.75.75 0 0 1-1.06-1.06l4.72-4.72H10.5A.75.75 0 0 1 9.75 9"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </button>
+  </div>
+</div>

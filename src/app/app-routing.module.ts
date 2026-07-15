@@ -288,10 +288,24 @@ const baseRoutes: Routes = [
       ),
   },
   {
-    path: 'promotion/:slug',
+    path: 'landing-page2/:slug',
     loadComponent: () =>
       import('../app/pages/landing-page2/landing-page2.component').then(
         (m) => m.LandingPage2Component
+      ),
+  },
+  {
+    path: 'promotion/:slug',
+    loadComponent: () =>
+      import('../app/pages/landing-page3/landing-page3.component').then(
+        (m) => m.LandingPage3Component
+      ),
+  },
+  {
+    path: 'landing-page3/:slug',
+    loadComponent: () =>
+      import('../app/pages/landing-page3/landing-page3.component').then(
+        (m) => m.LandingPage3Component
       ),
   },
   // {
