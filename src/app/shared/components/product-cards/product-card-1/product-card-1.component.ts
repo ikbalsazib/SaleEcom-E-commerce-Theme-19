@@ -48,7 +48,7 @@ import {TiktokPixelService} from "../../../../services/core/tiktok-pixel.service
   ],
   templateUrl: './product-card-1.component.html',
   styleUrl: './product-card-1.component.scss',
-  providers: [PricePipe],
+  providers: [PricePipe, ProductPricePipe],
 })
 export class ProductCard1Component implements OnInit, OnDestroy {
 
