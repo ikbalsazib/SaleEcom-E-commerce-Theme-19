@@ -1,0 +1,28 @@
+<div></div>
+<div class="container">
+  <div class="why-us" *ngIf="singleLandingPage?.whyBestTitle?.length && singleLandingPage?.whyBestTitle !==null">
+    <h2 class="title">{{ singleLandingPage?.whyBestTitle }}</h2>
+
+    <p *ngIf="singleLandingPage?.whyBestDescription" class="subtitle">{{ singleLandingPage?.whyBestDescription }}</p>
+
+    <!--    <div class="features">-->
+    <!--      <div class="feature-item left" *ngIf="singleLandingPage?.whyBest[0]?.title">{{singleLandingPage?.whyBest[0]?.title}}</div>-->
+    <!--      <div class="feature-item left" *ngIf="singleLandingPage?.whyBest[1]?.title">{{singleLandingPage?.whyBest[1]?.title}}</div>-->
+
+    <!--      <div class="product-image">-->
+    <!--        <img [src]="singleLandingPage?.whyBestImage" alt="ছানা সদ্বেশ">-->
+    <!--      </div>-->
+
+    <!--      <div *ngIf="singleLandingPage?.whyBest[2]?.title" class="feature-item right">{{singleLandingPage?.whyBest[2]?.title}}</div>-->
+    <!--      <div *ngIf="singleLandingPage?.whyBest[3]?.title" class="feature-item right">{{singleLandingPage?.whyBest[3]?.title}}</div>-->
+    <!--    </div>-->
+
+    <div class="btn-area" >
+      <button class="order-button" (click)="onScrollWithNavigate('payment')">
+        {{ 'placeOrder'  | translate }}
+        <svg data-v-e8d572f6="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="icon mr-2" width=".8em" height=".8em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10M9.75 9a.75.75 0 0 1 .75-.75H15a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-2.69l-4.72 4.72a.75.75 0 0 1-1.06-1.06l4.72-4.72H10.5A.75.75 0 0 1 9.75 9" clip-rule="evenodd"></path></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
