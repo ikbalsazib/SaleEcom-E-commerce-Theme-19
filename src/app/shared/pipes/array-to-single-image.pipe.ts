@@ -15,7 +15,7 @@ export class ArrayToSingleImagePipe implements PipeTransform {
         return images[0];
       }
     } else {
-      return `${environment.ftpBaseLink}/upload/static/placeholder.png?resolution=681_528`;
+      return `${environment.ftpPrefixPath}/placeholder.png?resolution=681_528`;
     }
   }
 
